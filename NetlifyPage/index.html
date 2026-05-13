@@ -1071,6 +1071,89 @@
       box-shadow: 0 8px 32px rgba(232, 184, 75, 0.4);
     }
 
+    /* Extended contact form */
+    .form-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin: 28px 0 16px;
+      opacity: 0.8;
+    }
+    .form-field select {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--bg2);
+      border: 1px solid var(--border-sub);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: border-color var(--transition);
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8070' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+    }
+    .form-field select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .form-field select option {
+      background: var(--bg2);
+      color: var(--text);
+    }
+    .form-radio-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .form-radio-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 10px 16px;
+      border: 1px solid var(--border-sub);
+      border-radius: 8px;
+      transition: all var(--transition);
+    }
+    .form-radio-label:hover { border-color: var(--accent); color: var(--text); }
+    .form-radio-label input[type="radio"] { display: none; }
+    .form-radio-label.checked {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+    .form-url-wrap {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      margin-top: 0;
+    }
+    .form-url-wrap.visible {
+      max-height: 80px;
+      margin-top: 12px;
+    }
+    .form-url-wrap input {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--bg2);
+      border: 1px solid var(--border-sub);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      transition: border-color var(--transition);
+    }
+    .form-url-wrap input:focus { outline: none; border-color: var(--accent); }
+
     /* ============================================
        FOOTER
     ============================================ */
@@ -1382,6 +1465,98 @@
             <label for="contactMessage" id="contactMessageLabel"></label>
             <textarea id="contactMessage" name="message" required></textarea>
           </div>
+
+          <!-- Block 1: Dein Projekt -->
+          <p class="form-section-label" id="formBlock1Label"></p>
+
+          <div class="form-field">
+            <label id="formHasWebsiteLabel"></label>
+            <div class="form-radio-group" id="formHasWebsiteGroup">
+              <label class="form-radio-label" id="radioYesLabel">
+                <input type="radio" name="has_website" value="yes" id="radioYes">
+                <span id="radioYesText"></span>
+              </label>
+              <label class="form-radio-label" id="radioNoLabel">
+                <input type="radio" name="has_website" value="no" id="radioNo">
+                <span id="radioNoText"></span>
+              </label>
+            </div>
+            <div class="form-url-wrap" id="formUrlWrap">
+              <input type="url" name="existing_url" id="formExistingUrl" placeholder="https://">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="formScope" id="formScopeLabel"></label>
+              <select id="formScope" name="scope">
+                <option value="" id="formScopeDefault"></option>
+                <option value="new" id="formScopeNew"></option>
+                <option value="redesign" id="formScopeRedesign"></option>
+                <option value="landing" id="formScopeLanding"></option>
+                <option value="uiux" id="formScopeUiux"></option>
+                <option value="unclear" id="formScopeUnclear"></option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="formIndustry" id="formIndustryLabel"></label>
+              <select id="formIndustry" name="industry">
+                <option value="" id="formIndustryDefault"></option>
+                <option value="restaurant" id="formInd1"></option>
+                <option value="dental" id="formInd2"></option>
+                <option value="craft" id="formInd3"></option>
+                <option value="retail" id="formInd4"></option>
+                <option value="service" id="formInd5"></option>
+                <option value="startup" id="formInd6"></option>
+                <option value="other" id="formInd7"></option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="formTimeline" id="formTimelineLabel"></label>
+              <select id="formTimeline" name="timeline">
+                <option value="" id="formTimelineDefault"></option>
+                <option value="asap" id="formTL1"></option>
+                <option value="1-3m" id="formTL2"></option>
+                <option value="3-6m" id="formTL3"></option>
+                <option value="flex" id="formTL4"></option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="formGoal" id="formGoalLabel"></label>
+              <select id="formGoal" name="goal">
+                <option value="" id="formGoalDefault"></option>
+                <option value="leads" id="formGoal1"></option>
+                <option value="booking" id="formGoal2"></option>
+                <option value="shop" id="formGoal3"></option>
+                <option value="brand" id="formGoal4"></option>
+                <option value="update" id="formGoal5"></option>
+                <option value="unclear" id="formGoal6"></option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Block 2: Noch etwas -->
+          <p class="form-section-label" id="formBlock2Label"></p>
+
+          <div class="form-field">
+            <label for="formInspo" id="formInspoLabel"></label>
+            <textarea name="inspiration" rows="2" id="formInspo"></textarea>
+          </div>
+
+          <div class="form-field">
+            <label for="formSource" id="formSourceLabel"></label>
+            <select id="formSource" name="source">
+              <option value="" id="formSourceDefault"></option>
+              <option value="google" id="formSrc1"></option>
+              <option value="referral" id="formSrc2"></option>
+              <option value="social" id="formSrc3"></option>
+              <option value="other" id="formSrc4"></option>
+            </select>
+          </div>
+
           <button type="submit" class="form-submit" id="contactSubmit"></button>
         </form>
       </div>
