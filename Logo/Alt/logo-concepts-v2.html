@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebZan — Logo Konzepte v2 (HZ Monogramm)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #f0f2f5; padding: 48px 20px; }
+
+  h1 { text-align: center; color: #0D1B3E; margin-bottom: 6px; font-size: 1.1rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  p.sub { text-align: center; color: #888; margin-bottom: 48px; font-size: .88rem; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 28px; max-width: 1120px; margin: 0 auto; }
+
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 36px 28px 28px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.08);
+  }
+  .label {
+    font-size: .68rem; font-weight: 800; letter-spacing: .18em;
+    text-transform: uppercase; color: #3D5AFE; margin-bottom: 24px;
+  }
+
+  .preview-light {
+    background: #f8f9ff;
+    border: 1px solid #e8ecff;
+    border-radius: 12px;
+    padding: 36px 20px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 10px;
+    min-height: 140px;
+  }
+  .preview-dark {
+    background: #0D1B3E;
+    border-radius: 12px;
+    padding: 36px 20px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 22px;
+    min-height: 140px;
+  }
+
+  .logo-lockup { display: flex; align-items: center; gap: 18px; }
+
+  .wordmark-wrap { display: flex; flex-direction: column; line-height: 1.1; }
+  .wrd-web { font-size: 11px; font-weight: 500; letter-spacing: .3em; text-transform: uppercase; color: #3D5AFE; }
+  .wrd-zan { font-size: 27px; font-weight: 800; color: #0D1B3E; letter-spacing: -.02em; }
+
+  .dark .wrd-web { color: #7B9BFF; }
+  .dark .wrd-zan { color: #fff; }
+
+  .meta { font-size: .81rem; color: #555; line-height: 1.75; }
+  .meta strong { color: #0D1B3E; display: block; margin-top: 12px; margin-bottom: 2px; font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; }
+  .swatches { display: flex; gap: 8px; margin-top: 6px; align-items: center; }
+  .sw { width: 26px; height: 26px; border-radius: 6px; border: 1px solid rgba(0,0,0,.08); }
+  .sw-label { font-size: .72rem; color: #aaa; }
+  .verdict {
+    margin-top: 16px;
+    background: #f5f7ff;
+    border-left: 3px solid #3D5AFE;
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    font-size: .8rem;
+    color: #444;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<h1>WebZan — HZ Monogramm · Precision Stil</h1>
+<p class="sub">Drei Variationen · Navy #0D1B3E · Electric Blue #3D5AFE · je hell + dunkel</p>
+
+<div class="grid">
+
+  <!-- ══════════════════════════════════════
+       LOGO A — "ARC" — HZ mit Bogen-Ligatur
+       ══════════════════════════════════════ -->
+  <div class="card">
+    <div class="label">Variation A — "Arc"</div>
+
+    <!-- HELL -->
+    <div class="preview-light">
+      <div class="logo-lockup">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Hintergrund -->
+          <rect width="64" height="64" rx="16" fill="url(#gradA)"/>
+          <defs>
+            <linearGradient id="gradA" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#3D5AFE"/>
+              <stop offset="100%" stop-color="#0D1B3E"/>
+            </linearGradient>
+          </defs>
+          <!-- H -->
+          <line x1="14" y1="18" x2="14" y2="46" stroke="white" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="26" y1="18" x2="26" y2="46" stroke="white" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="14" y1="32" x2="26" y2="32" stroke="white" stroke-width="3.2" stroke-linecap="round"/>
+          <!-- Z -->
+          <line x1="33" y1="18" x2="50" y2="18" stroke="white" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="50" y1="18" x2="33" y2="46" stroke="white" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="33" y1="46" x2="50" y2="46" stroke="white" stroke-width="3.2" stroke-linecap="round"/>
+          <!-- Geschwungener Bogen als Verbindung H→Z -->
+          <path d="M 14 50 Q 32 58 50 50" stroke="#7B9BFF" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div class="wordmark-wrap">
+          <span class="wrd-web">Web</span>
+          <span class="wrd-zan">Zan</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DUNKEL -->
+    <div class="preview-dark">
+      <div class="logo-lockup">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <rect width="64" height="64" rx="16" fill="url(#gradA2)"/>
+          <defs>
+            <linearGradient id="gradA2" x1="0" y1="0" x2="64" y2="64">
+              <stop offset="0%" stop-color="#3D5AFE"/>
+              <stop offset="100%" stop-color="#0D1B3E"/>
+            </linearGradient>
+          </defs>
+          <line x1="14" y1="18" x2="14" y2="46" stroke="white" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="26" y1="18" x2="26" y2="46" stroke="white" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="14" y1="32" x2="26" y2="32" stroke="white" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="33" y1="18" x2="50" y2="18" stroke="white" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="50" y1="18" x2="33" y2="46" stroke="white" stroke-width="3.2" stroke-linecap="round"/>
+          <line x1="33" y1="46" x2="50" y2="46" stroke="white" stroke-width="3.2" stroke-linecap="round"/>
+          <path d="M 14 50 Q 32 58 50 50" stroke="#7B9BFF" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        </svg>
+        <div class="wordmark-wrap dark">
+          <span class="wrd-web">Web</span>
+          <span class="wrd-zan">Zan</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <strong>Charakter</strong>
+      HZ klar lesbar, der geschwungene Bogen darunter verbindet beide Buchstaben — steht für Verbindung zu Kunden.
+      <strong>Palette</strong>
+      <div class="swatches">
+        <div class="sw" style="background:#0D1B3E"></div>
+        <div class="sw" style="background:linear-gradient(135deg,#3D5AFE,#0D1B3E)"></div>
+        <div class="sw" style="background:#7B9BFF"></div>
+        <div class="sw" style="background:#fff;border:1px solid #ddd"></div>
+        <span class="sw-label">#0D1B3E · #3D5AFE · #7B9BFF</span>
+      </div>
+    </div>
+    <div class="verdict">Klassisch und sauber — das HZ ist sofort lesbar, der Bogen bringt Eleganz ohne Ablenkung. Starkes Favicon.</div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       LOGO B — "Orbit" — HZ im Kreis-Emblem
+       ══════════════════════════════════════ -->
+  <div class="card">
+    <div class="label">Variation B — "Orbit"</div>
+
+    <div class="preview-light">
+      <div class="logo-lockup">
+        <svg width="68" height="68" viewBox="0 0 68 68" fill="none">
+          <defs>
+            <linearGradient id="gradB" x1="0" y1="0" x2="68" y2="68">
+              <stop offset="0%" stop-color="#3D5AFE"/>
+              <stop offset="100%" stop-color="#0A1628"/>
+            </linearGradient>
+          </defs>
+          <!-- Äußerer Ring -->
+          <circle cx="34" cy="34" r="32" stroke="url(#gradB)" stroke-width="2" fill="none"/>
+          <!-- Geschwungener Orbit-Bogen -->
+          <path d="M 10 48 Q 34 18 58 48" stroke="#3D5AFE" stroke-width="1.2" fill="none" opacity="0.35" stroke-dasharray="3,3"/>
+          <!-- Gefüllter Kreis Mitte -->
+          <circle cx="34" cy="34" r="26" fill="url(#gradB)"/>
+          <!-- H -->
+          <line x1="19" y1="22" x2="19" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <line x1="29" y1="22" x2="29" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <line x1="19" y1="34" x2="29" y2="34" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <!-- Z -->
+          <line x1="35" y1="22" x2="49" y2="22" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <line x1="49" y1="22" x2="35" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <line x1="35" y1="46" x2="49" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <!-- Kleiner Akzentpunkt -->
+          <circle cx="34" cy="12" r="2.5" fill="#3D5AFE"/>
+          <circle cx="34" cy="56" r="2.5" fill="#3D5AFE"/>
+        </svg>
+        <div class="wordmark-wrap">
+          <span class="wrd-web">Web</span>
+          <span class="wrd-zan">Zan</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-dark">
+      <div class="logo-lockup">
+        <svg width="68" height="68" viewBox="0 0 68 68" fill="none">
+          <defs>
+            <linearGradient id="gradB2" x1="0" y1="0" x2="68" y2="68">
+              <stop offset="0%" stop-color="#3D5AFE"/>
+              <stop offset="100%" stop-color="#0A1628"/>
+            </linearGradient>
+          </defs>
+          <circle cx="34" cy="34" r="32" stroke="#3D5AFE" stroke-width="1.5" fill="none" opacity="0.5"/>
+          <path d="M 10 48 Q 34 18 58 48" stroke="#7B9BFF" stroke-width="1.2" fill="none" opacity="0.3" stroke-dasharray="3,3"/>
+          <circle cx="34" cy="34" r="26" fill="url(#gradB2)"/>
+          <line x1="19" y1="22" x2="19" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <line x1="29" y1="22" x2="29" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <line x1="19" y1="34" x2="29" y2="34" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <line x1="35" y1="22" x2="49" y2="22" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <line x1="49" y1="22" x2="35" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <line x1="35" y1="46" x2="49" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="34" cy="12" r="2.5" fill="#7B9BFF"/>
+          <circle cx="34" cy="56" r="2.5" fill="#7B9BFF"/>
+        </svg>
+        <div class="wordmark-wrap dark">
+          <span class="wrd-web">Web</span>
+          <span class="wrd-zan">Zan</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <strong>Charakter</strong>
+      HZ im Kreis-Emblem mit geschwungenem Orbit-Bogen — Premium-Anmutung, wie ein Siegel oder Badge.
+      <strong>Palette</strong>
+      <div class="swatches">
+        <div class="sw" style="background:#0D1B3E"></div>
+        <div class="sw" style="background:#3D5AFE"></div>
+        <div class="sw" style="background:#7B9BFF"></div>
+        <div class="sw" style="background:#fff;border:1px solid #ddd"></div>
+        <span class="sw-label">#0D1B3E · #3D5AFE · #7B9BFF</span>
+      </div>
+    </div>
+    <div class="verdict">Premium und einprägsam — das Emblem wirkt wie ein Qualitätssiegel. Sehr stark auf Visitenkarten und als App-Icon.</div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       LOGO C — "Flow" — HZ mit Kurven-Serife
+       ══════════════════════════════════════ -->
+  <div class="card">
+    <div class="label">Variation C — "Flow"</div>
+
+    <div class="preview-light">
+      <div class="logo-lockup">
+        <svg width="72" height="64" viewBox="0 0 72 64" fill="none">
+          <defs>
+            <linearGradient id="gradC_h" x1="0" y1="0" x2="0" y2="64">
+              <stop offset="0%" stop-color="#3D5AFE"/>
+              <stop offset="100%" stop-color="#0D1B3E"/>
+            </linearGradient>
+            <linearGradient id="gradC_z" x1="0" y1="0" x2="72" y2="0">
+              <stop offset="0%" stop-color="#3D5AFE"/>
+              <stop offset="100%" stop-color="#6C7FFF"/>
+            </linearGradient>
+          </defs>
+
+          <!-- H mit geschwungenen Serifs -->
+          <!-- Linker Stamm mit Kurve unten -->
+          <path d="M 10 14 Q 10 14 10 44 Q 10 50 14 52" stroke="url(#gradC_h)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <!-- Linker Stamm oben mit Kurve -->
+          <path d="M 10 14 Q 10 10 13 10" stroke="url(#gradC_h)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <!-- Rechter Stamm -->
+          <path d="M 26 14 Q 26 10 23 10" stroke="url(#gradC_h)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <path d="M 26 14 Q 26 14 26 44 Q 26 50 22 52" stroke="url(#gradC_h)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <!-- Querbalken H (geschwungen) -->
+          <path d="M 10 31 Q 18 28 26 31" stroke="url(#gradC_h)" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+          <!-- Trennlinie -->
+          <line x1="32" y1="10" x2="32" y2="52" stroke="#e0e6ff" stroke-width="1"/>
+
+          <!-- Z mit Schwung -->
+          <!-- Obere Linie mit geschwungenem Ende -->
+          <path d="M 36 14 Q 36 10 40 10 L 60 10 Q 63 10 63 14" stroke="url(#gradC_z)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <!-- Diagonale (geschwungen) -->
+          <path d="M 63 14 Q 50 32 36 50" stroke="url(#gradC_z)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <!-- Untere Linie mit geschwungenem Ende -->
+          <path d="M 36 50 Q 36 54 40 54 L 60 54 Q 63 54 63 50" stroke="url(#gradC_z)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+
+          <!-- Geschwungener Akzent-Strich unten -->
+          <path d="M 8 58 Q 36 64 64 58" stroke="#3D5AFE" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/>
+        </svg>
+        <div class="wordmark-wrap">
+          <span class="wrd-web">Web</span>
+          <span class="wrd-zan">Zan</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-dark">
+      <div class="logo-lockup">
+        <svg width="72" height="64" viewBox="0 0 72 64" fill="none">
+          <defs>
+            <linearGradient id="gradC_h2" x1="0" y1="0" x2="0" y2="64">
+              <stop offset="0%" stop-color="#7B9BFF"/>
+              <stop offset="100%" stop-color="#3D5AFE"/>
+            </linearGradient>
+            <linearGradient id="gradC_z2" x1="0" y1="0" x2="72" y2="0">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="100%" stop-color="#7B9BFF"/>
+            </linearGradient>
+          </defs>
+          <path d="M 10 14 Q 10 14 10 44 Q 10 50 14 52" stroke="url(#gradC_h2)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <path d="M 10 14 Q 10 10 13 10" stroke="url(#gradC_h2)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <path d="M 26 14 Q 26 10 23 10" stroke="url(#gradC_h2)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <path d="M 26 14 Q 26 14 26 44 Q 26 50 22 52" stroke="url(#gradC_h2)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <path d="M 10 31 Q 18 28 26 31" stroke="url(#gradC_h2)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <line x1="32" y1="10" x2="32" y2="52" stroke="#ffffff15" stroke-width="1"/>
+          <path d="M 36 14 Q 36 10 40 10 L 60 10 Q 63 10 63 14" stroke="url(#gradC_z2)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <path d="M 63 14 Q 50 32 36 50" stroke="url(#gradC_z2)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <path d="M 36 50 Q 36 54 40 54 L 60 54 Q 63 54 63 50" stroke="url(#gradC_z2)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <path d="M 8 58 Q 36 64 64 58" stroke="#7B9BFF" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+        </svg>
+        <div class="wordmark-wrap dark">
+          <span class="wrd-web">Web</span>
+          <span class="wrd-zan">Zan</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <strong>Charakter</strong>
+      H und Z mit geschwungenen Enden — geometrisch aber fließend. Der geschwungene Bogen darunter verbindet beide Zeichen.
+      <strong>Palette</strong>
+      <div class="swatches">
+        <div class="sw" style="background:#0D1B3E"></div>
+        <div class="sw" style="background:#3D5AFE"></div>
+        <div class="sw" style="background:#7B9BFF"></div>
+        <div class="sw" style="background:#fff;border:1px solid #ddd"></div>
+        <span class="sw-label">#0D1B3E · #3D5AFE · #7B9BFF</span>
+      </div>
+    </div>
+    <div class="verdict">Am elegantesten der drei — die geschwungenen Enden geben dem HZ Persönlichkeit. Hebt sich von typischen Tech-Logos ab.</div>
+  </div>
+
+</div>
+
+<p style="text-align:center; margin-top:48px; color:#bbb; font-size:.8rem;">
+  WebZan · HZ Monogramm · Precision Stil · v2
+</p>
+
+</body>
+</html>

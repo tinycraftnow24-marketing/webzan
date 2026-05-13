@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Device Showcase — Layout-Varianten</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0e0e10;
+    color: #f0f0f0;
+    padding: 32px 24px 56px;
+    line-height: 1.6;
+  }
+  h1 { font-size: 22px; font-weight: 800; color: #E8B84B; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .sub { font-size: 13px; color: #666; margin-bottom: 36px; }
+
+  .options-list { display: flex; flex-direction: column; gap: 20px; }
+
+  .option {
+    border: 2px solid #2a2a30;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    background: #16161a;
+  }
+  .option:hover { border-color: #3a3a46; }
+  .option.selected { border-color: #E8B84B; }
+
+  .option-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #222;
+  }
+  .letter {
+    width: 28px; height: 28px;
+    background: rgba(232,184,75,0.12);
+    color: #E8B84B;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; flex-shrink: 0;
+  }
+  .option-header h3 { font-size: 15px; font-weight: 700; }
+  .option-header p { font-size: 12px; color: #888; margin-top: 1px; }
+
+  .preview-area {
+    padding: 24px 20px;
+    background: #1A1510;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ===== LAYOUT A: Horizontal Scroll — 3 nebeneinander =====
+     Jedes Gerät in eigener Sektion, horizontal scrollend
+  */
+  .layout-a {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    padding: 10px;
+  }
+  .device-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(232,184,75,0.15);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .device-card-label {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #E8B84B;
+    font-weight: 700;
+  }
+  .device-card-industry {
+    font-size: 11px;
+    font-weight: 700;
+    color: #e0e0e0;
+  }
+  .device-card-type {
+    font-size: 9px;
+    color: #666;
+    margin-top: -6px;
+  }
+
+  /* Phone mock */
+  .phone-mock {
+    width: 52px;
+    height: 90px;
+    background: #111;
+    border-radius: 10px;
+    border: 1.5px solid #333;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .phone-mock-inner {
+    position: absolute;
+    inset: 3px;
+    border-radius: 7px;
+    overflow: hidden;
+  }
+
+  /* Laptop mock */
+  .laptop-mock {
+    width: 120px;
+    flex-shrink: 0;
+  }
+  .laptop-screen {
+    width: 100%;
+    height: 70px;
+    background: #111;
+    border-radius: 5px 5px 0 0;
+    border: 1.5px solid #333;
+    border-bottom: none;
+    overflow: hidden;
+    position: relative;
+  }
+  .laptop-base {
+    height: 5px;
+    background: #222;
+    border-radius: 0 0 3px 3px;
+    border: 1px solid #333;
+    border-top: none;
+  }
+  .laptop-stand {
+    height: 3px;
+    background: #1a1a1a;
+    width: 60%;
+    margin: 0 auto;
+    border-radius: 0 0 3px 3px;
+  }
+
+  /* Tablet mock */
+  .tablet-mock {
+    width: 80px;
+    height: 105px;
+    background: #111;
+    border-radius: 8px;
+    border: 1.5px solid #333;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .tablet-mock-inner {
+    position: absolute;
+    inset: 4px;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  /* Fake website content */
+  .fake-site {
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 3px;
+  }
+  .fake-site.dental { background: linear-gradient(160deg, #f8f5f0, #ede9e3); }
+  .fake-site.restaurant { background: linear-gradient(160deg, #1a1208, #251a0a); }
+  .fake-site.craft { background: linear-gradient(160deg, #0d1520, #162030); }
+
+  .fs-hero {
+    height: 35%;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    padding: 3px;
+  }
+  .fs-hero.dental { background: #2c4a6e; }
+  .fs-hero.restaurant { background: #E8B84B22; border: 1px solid rgba(232,184,75,0.2); }
+  .fs-hero.craft { background: #1e3a5a; }
+
+  .fs-line { height: 2px; border-radius: 1px; margin-bottom: 1.5px; }
+  .fs-line.dental { background: rgba(44,74,110,0.3); }
+  .fs-line.restaurant { background: rgba(232,184,75,0.25); }
+  .fs-line.craft { background: rgba(30,90,150,0.3); }
+  .fs-line.short { width: 50%; }
+  .fs-line.med { width: 75%; }
+  .fs-line.full { width: 100%; }
+
+  .fs-section { padding: 2px 2px; }
+  .fs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5px; margin-top: 1.5px; }
+  .fs-card { height: 10px; border-radius: 1.5px; }
+  .fs-card.dental { background: rgba(44,74,110,0.15); }
+  .fs-card.restaurant { background: rgba(232,184,75,0.1); }
+  .fs-card.craft { background: rgba(30,90,150,0.15); }
+
+  /* ===== LAYOUT B: Fullscreen Sticky One-at-a-Time ===== */
+  .layout-b {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .sticky-section {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(232,184,75,0.12);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .sticky-device-area {
+    width: 90px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .sticky-text {
+    flex: 1;
+  }
+  .sticky-tag {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #E8B84B;
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+  .sticky-title { font-size: 13px; font-weight: 800; color: #f0f0f0; margin-bottom: 4px; }
+  .sticky-desc { font-size: 10px; color: #888; line-height: 1.5; }
+
+  /* ===== LAYOUT C: Cinematic Spotlight ===== */
+  .layout-c {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+  }
+  .cinema-device-stack {
+    position: relative;
+    width: 260px;
+    height: 160px;
+  }
+  .cinema-laptop {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+  }
+  .cinema-phone {
+    position: absolute;
+    right: 14px;
+    bottom: 8px;
+    width: 42px;
+    height: 75px;
+    background: #111;
+    border-radius: 8px;
+    border: 1.5px solid #444;
+    overflow: hidden;
+    z-index: 3;
+    transform: rotate(3deg);
+  }
+  .cinema-tablet {
+    position: absolute;
+    left: 10px;
+    bottom: 5px;
+    width: 65px;
+    height: 88px;
+    background: #111;
+    border-radius: 7px;
+    border: 1.5px solid #444;
+    overflow: hidden;
+    z-index: 2;
+    transform: rotate(-4deg);
+  }
+  .cinema-label {
+    text-align: center;
+  }
+  .cinema-industry-tabs {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .cinema-tab {
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 600;
+    border: 1px solid #333;
+    color: #666;
+  }
+  .cinema-tab.active {
+    background: rgba(232,184,75,0.12);
+    border-color: rgba(232,184,75,0.3);
+    color: #E8B84B;
+  }
+
+  /* Glow */
+  .glow-amber {
+    position: absolute;
+    width: 140px; height: 140px;
+    background: radial-gradient(circle, rgba(232,184,75,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .note {
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+    margin-top: 24px;
+    padding: 14px;
+    background: #13131a;
+    border-radius: 8px;
+    border: 1px solid #252535;
+    line-height: 1.7;
+  }
+  .note strong { color: #E8B84B; }
+</style>
+</head>
+<body>
+
+<h1>Device-Showcase — welches Layout?</h1>
+<p class="sub">3 Branchen-Demos (Zahnarzt, Restaurant, Handwerk) — wie sollen sie präsentiert werden?</p>
+
+<div class="options-list">
+
+  <!-- OPTION A -->
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="option-header">
+      <div class="letter">A</div>
+      <div>
+        <h3>Horizontal — 3 Karten nebeneinander</h3>
+        <p>Alle 3 Geräte gleichzeitig sichtbar, jede Branche auf einer Card</p>
+      </div>
+    </div>
+    <div class="preview-area">
+      <div class="glow-amber"></div>
+      <div class="layout-a">
+
+        <!-- Zahnarzt: Laptop -->
+        <div class="device-card">
+          <div class="device-card-label">01</div>
+          <div class="laptop-mock">
+            <div class="laptop-screen">
+              <div class="fake-site dental">
+                <div class="fs-hero dental"></div>
+                <div class="fs-section">
+                  <div class="fs-line dental full"></div>
+                  <div class="fs-line dental med"></div>
+                  <div class="fs-grid">
+                    <div class="fs-card dental"></div>
+                    <div class="fs-card dental"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="laptop-base"></div>
+            <div class="laptop-stand"></div>
+          </div>
+          <div class="device-card-industry">Zahnarztpraxis</div>
+          <div class="device-card-type">Laptop</div>
+        </div>
+
+        <!-- Restaurant: Phone -->
+        <div class="device-card">
+          <div class="device-card-label">02</div>
+          <div class="phone-mock">
+            <div class="phone-mock-inner">
+              <div class="fake-site restaurant">
+                <div class="fs-hero restaurant"></div>
+                <div class="fs-section">
+                  <div class="fs-line restaurant full"></div>
+                  <div class="fs-line restaurant short"></div>
+                  <div class="fs-grid">
+                    <div class="fs-card restaurant"></div>
+                    <div class="fs-card restaurant"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="device-card-industry">Restaurant</div>
+          <div class="device-card-type">Handy</div>
+        </div>
+
+        <!-- Handwerk: Tablet -->
+        <div class="device-card">
+          <div class="device-card-label">03</div>
+          <div class="tablet-mock">
+            <div class="tablet-mock-inner">
+              <div class="fake-site craft">
+                <div class="fs-hero craft"></div>
+                <div class="fs-section">
+                  <div class="fs-line craft full"></div>
+                  <div class="fs-line craft med"></div>
+                  <div class="fs-grid">
+                    <div class="fs-card craft"></div>
+                    <div class="fs-card craft"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="device-card-industry">Handwerk</div>
+          <div class="device-card-type">Tablet</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION B -->
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="option-header">
+      <div class="letter">B</div>
+      <div>
+        <h3>Vertikal Sticky — eine Branche nach der anderen</h3>
+        <p>Beim Scrollen wechselt das Gerät: erst Laptop, dann Handy, dann Tablet</p>
+      </div>
+    </div>
+    <div class="preview-area">
+      <div class="glow-amber"></div>
+      <div class="layout-b">
+
+        <div class="sticky-section" style="border-color:rgba(232,184,75,0.35); background:rgba(232,184,75,0.04);">
+          <div class="sticky-device-area">
+            <div class="laptop-mock" style="width:80px;">
+              <div class="laptop-screen" style="height:48px;">
+                <div class="fake-site dental">
+                  <div class="fs-hero dental"></div>
+                  <div class="fs-section"><div class="fs-line dental full"></div></div>
+                </div>
+              </div>
+              <div class="laptop-base"></div>
+            </div>
+          </div>
+          <div class="sticky-text">
+            <div class="sticky-tag">01 — Laptop</div>
+            <div class="sticky-title">Zahnarztpraxis</div>
+            <div class="sticky-desc">Seriös, vertrauenswürdig, clean. Termin-Buchung im Fokus.</div>
+          </div>
+        </div>
+
+        <div class="sticky-section" style="opacity:0.55;">
+          <div class="sticky-device-area">
+            <div class="phone-mock" style="width:36px;height:62px;">
+              <div class="phone-mock-inner">
+                <div class="fake-site restaurant">
+                  <div class="fs-hero restaurant"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sticky-text">
+            <div class="sticky-tag">02 — Handy</div>
+            <div class="sticky-title">Restaurant</div>
+            <div class="sticky-desc">Warm, appetitlich, GSAP-animiert. Speisekarte on scroll.</div>
+          </div>
+        </div>
+
+        <div class="sticky-section" style="opacity:0.35;">
+          <div class="sticky-device-area">
+            <div class="tablet-mock" style="width:54px;height:72px;">
+              <div class="tablet-mock-inner">
+                <div class="fake-site craft">
+                  <div class="fs-hero craft"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sticky-text">
+            <div class="sticky-tag">03 — Tablet</div>
+            <div class="sticky-title">Handwerk</div>
+            <div class="sticky-desc">Robust, professionell. Leistungen + Referenzen.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- OPTION C -->
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="option-header">
+      <div class="letter">C</div>
+      <div>
+        <h3>Cinematic Spotlight — 1 Branche fullscreen, Geräte gestapelt</h3>
+        <p>Alle 3 Geräte übereinander gestapelt, Branche per Tab wechselbar — maximale Wirkung</p>
+      </div>
+    </div>
+    <div class="preview-area">
+      <div class="glow-amber" style="width:200px;height:200px;opacity:1.5;"></div>
+      <div class="layout-c">
+        <div class="cinema-device-stack">
+          <!-- Laptop hinter -->
+          <div class="cinema-laptop">
+            <div class="laptop-screen" style="height:90px;">
+              <div class="fake-site restaurant" style="background:linear-gradient(160deg,#1a1208,#251a0a);">
+                <div class="fs-hero restaurant" style="height:45%;"></div>
+                <div class="fs-section">
+                  <div class="fs-line restaurant full"></div>
+                  <div class="fs-line restaurant med"></div>
+                  <div class="fs-grid">
+                    <div class="fs-card restaurant"></div>
+                    <div class="fs-card restaurant"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="laptop-base"></div>
+            <div class="laptop-stand"></div>
+          </div>
+          <!-- Tablet links -->
+          <div class="cinema-tablet">
+            <div class="fake-site restaurant" style="position:absolute;inset:3px;border-radius:4px;">
+              <div class="fs-hero restaurant"></div>
+              <div class="fs-section"><div class="fs-line restaurant full"></div></div>
+            </div>
+          </div>
+          <!-- Phone rechts -->
+          <div class="cinema-phone">
+            <div class="fake-site restaurant" style="position:absolute;inset:3px;border-radius:6px;">
+              <div class="fs-hero restaurant" style="height:40%;"></div>
+              <div class="fs-section"><div class="fs-line restaurant full"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cinema-label">
+          <div style="font-size:13px;font-weight:800;color:#f0f0f0;margin-bottom:4px;">Restaurant</div>
+          <div style="font-size:10px;color:#888;">Alle Geräte gleichzeitig — Handy, Laptop, Tablet</div>
+          <div class="cinema-industry-tabs">
+            <div class="cinema-tab">Zahnarzt</div>
+            <div class="cinema-tab active">Restaurant</div>
+            <div class="cinema-tab">Handwerk</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="note">
+  <strong>Animation gilt für alle Varianten gleich:</strong> beim Scrollen dreht sich das Gerät leicht (±8°), zoomt ran, und der Inhalt des Screens scrollt dabei von oben nach unten. Implementiert mit GSAP ScrollTrigger + CSS transform. Kein Video nötig.
+</div>
+
+<script>
+function toggleSelect(el) {
+  document.querySelectorAll('.option').forEach(function(o) { o.classList.remove('selected'); });
+  el.classList.add('selected');
+  if (window.recordChoice) window.recordChoice(el.dataset.choice, el.querySelector('h3').textContent);
+}
+</script>
+
+</body>
+</html>

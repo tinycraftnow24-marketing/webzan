@@ -295,19 +295,22 @@
     }
 
     /* ============================================
-       MENU OVERLAY
+       MENU DROPDOWN
     ============================================ */
     .menu-overlay {
       position: fixed;
-      inset: 0;
+      top: 68px;
+      right: 20px;
       z-index: 1000;
-      background: var(--overlay-bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      clip-path: circle(0% at calc(100% - 56px) 44px);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      min-width: 176px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.18);
+      opacity: 0;
+      transform: translateY(-8px) scale(0.97);
       pointer-events: none;
-      transition: background 0.4s ease;
+      transition: background var(--transition), border-color var(--transition);
     }
 
     .menu-overlay.is-open {
@@ -315,40 +318,45 @@
     }
 
     .menu-overlay-inner {
-      text-align: center;
+      padding: 6px 0;
     }
 
     .menu-overlay-nav {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-bottom: 48px;
+      gap: 0;
+      margin-bottom: 0;
     }
 
     .menu-overlay-nav a {
       display: block;
-      font-size: clamp(36px, 8vw, 72px);
-      font-weight: 900;
-      line-height: 1.1;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1;
       color: var(--text);
-      letter-spacing: -0.02em;
-      transition: color 0.2s ease;
-      opacity: 0;
-      transform: translateY(30px);
+      letter-spacing: 0.01em;
+      padding: 10px 20px;
+      transition: color 0.15s ease, background 0.15s ease;
+      opacity: 1;
+      transform: none;
     }
 
     .menu-overlay-nav a:hover {
       color: var(--accent);
+      background: var(--accent-dim);
     }
 
     .menu-overlay-controls {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 16px;
-      opacity: 0;
-      transform: translateY(20px);
+      gap: 8px;
+      opacity: 1;
+      transform: none;
+      padding: 8px 20px 8px;
+      border-top: 1px solid var(--border-sub);
+      margin-top: 4px;
     }
 
     /* ============================================
@@ -1160,6 +1168,8 @@
     }
     .form-url-wrap input:focus { outline: none; border-color: var(--accent); }
 
+    .required-star { color: var(--accent); margin-left: 2px; font-size: 0.85em; vertical-align: super; }
+
     /* ============================================
        FOOTER
     ============================================ */
@@ -1316,37 +1326,75 @@
     .dev-phone { width: 130px; height: 260px; background: #0d0d10; border-radius: 26px; border: 2px solid #2a2a30; box-shadow: 0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05); position: relative; overflow: hidden; }
     .dev-phone-notch { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 40px; height: 6px; background: #1a1a1a; border-radius: 3px; z-index: 3; }
     .dev-phone-screen { position: absolute; inset: 6px; border-radius: 20px; overflow: hidden; }
-    .fsite-craft { position:absolute; inset:0; background:linear-gradient(160deg,#0e1825,#152235); display:flex; flex-direction:column; }
-    .fc-hero { height:40%; background:#1e3a5a; flex-shrink:0; position:relative; overflow:hidden; display:flex; align-items:flex-end; padding:8px; }
-    .fc-hero-text { display:flex; flex-direction:column; gap:3px; }
-    .fc-line { height:3px; border-radius:1.5px; background:rgba(255,255,255,0.6); }
-    .fc-body { padding:8px; display:flex; flex-direction:column; gap:4px; }
-    .fc-bline { height:2.5px; border-radius:1.5px; background:rgba(30,90,150,0.3); }
-    .fc-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-top:4px; }
-    .fc-card { height:28px; border-radius:4px; background:rgba(30,90,150,0.12); border:1px solid rgba(30,90,150,0.2); }
-    .fsite-dental { position:absolute; inset:0; background:#f5f2ee; display:flex; flex-direction:column; }
-    .fd-nav { height:8%; background:#fff; border-bottom:1px solid #e0ddd8; flex-shrink:0; display:flex; align-items:center; padding:0 8px; }
-    .fd-logo { width:30px; height:4px; background:#2c4a6e; border-radius:2px; }
-    .fd-links { display:flex; gap:6px; margin-left:auto; }
-    .fd-link { width:18px; height:3px; background:#ccc; border-radius:1.5px; }
-    .fd-hero { height:40%; background:linear-gradient(135deg,#2c4a6e,#3a5f8a); flex-shrink:0; position:relative; overflow:hidden; display:flex; align-items:flex-end; padding:10px; }
-    .fd-hero::before { content:''; position:absolute; top:-30%; right:-15%; width:70%; height:130%; background:rgba(255,255,255,0.06); border-radius:50%; }
-    .fd-h-text { display:flex; flex-direction:column; gap:3px; }
-    .fd-h-line { height:3px; border-radius:1.5px; background:rgba(255,255,255,0.75); }
-    .fd-body { padding:8px; display:flex; flex-direction:column; gap:4px; }
-    .fd-bline { height:2.5px; border-radius:1.5px; background:rgba(44,74,110,0.2); }
-    .fd-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; margin-top:4px; }
-    .fd-card { height:22px; border-radius:4px; background:rgba(44,74,110,0.07); border:1px solid rgba(44,74,110,0.14); }
-    .fd-btn { width:48px; height:9px; background:#2c4a6e; border-radius:4px; margin-top:6px; }
-    .fsite-resto { position:absolute; inset:0; background:#1a1208; display:flex; flex-direction:column; }
-    .fr-hero { height:45%; background:linear-gradient(160deg,#0e0b04,#1e1608); flex-shrink:0; position:relative; overflow:hidden; border-bottom:1px solid rgba(232,184,75,0.15); display:flex; align-items:flex-end; padding:8px; }
-    .fr-hero::before { content:''; position:absolute; top:0; right:0; width:55%; height:100%; background:radial-gradient(ellipse,rgba(232,184,75,0.1),transparent 70%); }
-    .fr-h-text { display:flex; flex-direction:column; gap:3px; }
-    .fr-h-line { height:3px; border-radius:1.5px; background:rgba(232,184,75,0.65); }
-    .fr-body { padding:8px; display:flex; flex-direction:column; gap:4px; }
-    .fr-bline { height:2.5px; border-radius:1.5px; background:rgba(232,184,75,0.18); }
-    .fr-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-top:4px; }
-    .fr-card { height:28px; border-radius:4px; background:rgba(232,184,75,0.06); border:1px solid rgba(232,184,75,0.12); }
+    /* — Craft (Tablet, dark industrial) — */
+    .fsite-craft { position:absolute; inset:0; background:#0e1825; display:flex; flex-direction:column; overflow:hidden; }
+    .fc-nav { height:14px; background:#0d1722; border-bottom:1px solid rgba(255,255,255,0.07); flex-shrink:0; display:flex; align-items:center; padding:0 7px; gap:5px; }
+    .fc-nav-logo { width:6px; height:6px; border-radius:1px; background:#E8B84B; flex-shrink:0; }
+    .fc-nav-links { display:flex; gap:4px; margin-left:auto; }
+    .fc-nav-link { width:13px; height:2px; border-radius:1px; background:rgba(255,255,255,0.22); }
+    .fc-hero { flex:0 0 38%; background:linear-gradient(148deg,#1a2d4a 0%,#0d1520 100%); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end; padding:7px; gap:3px; }
+    .fc-hero::before { content:''; position:absolute; top:0; right:0; width:55%; height:100%; background:radial-gradient(ellipse at 75% 40%,rgba(30,90,150,0.28),transparent 65%); }
+    .fc-hero::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,#E8B84B 0%,transparent 60%); }
+    .fc-hero-badge { width:28px; height:2.5px; border-radius:1px; background:rgba(232,184,75,0.7); }
+    .fc-hero-h1 { width:76%; height:5px; border-radius:2px; background:rgba(255,255,255,0.88); }
+    .fc-hero-h2 { width:54%; height:5px; border-radius:2px; background:rgba(255,255,255,0.88); }
+    .fc-hero-sub { width:85%; height:2px; border-radius:1px; background:rgba(255,255,255,0.3); }
+    .fc-hero-btn { width:34px; height:8px; border-radius:3px; background:#E8B84B; margin-top:3px; }
+    .fc-body { flex:1; padding:7px; display:flex; flex-direction:column; gap:4px; overflow:hidden; }
+    .fc-section-label { width:24px; height:2px; border-radius:1px; background:rgba(232,184,75,0.5); }
+    .fc-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; }
+    .fc-card { background:rgba(30,90,150,0.1); border:1px solid rgba(30,90,150,0.18); border-radius:4px; padding:4px; display:flex; flex-direction:column; gap:2px; }
+    .fc-card-img { width:100%; height:14px; border-radius:2px; background:linear-gradient(135deg,rgba(30,90,150,0.35),rgba(14,24,37,0.5)); }
+    .fc-card-t { width:68%; height:2.5px; border-radius:1px; background:rgba(255,255,255,0.5); }
+    .fc-card-sub { width:48%; height:2px; border-radius:1px; background:rgba(255,255,255,0.18); }
+    .fc-footer-bar { margin-top:auto; height:9px; border-radius:3px; background:#E8B84B; opacity:0.75; }
+
+    /* — Dental (Laptop, clean professional) — */
+    .fsite-dental { position:absolute; inset:0; background:#f8f9fb; display:flex; flex-direction:column; overflow:hidden; }
+    .fd-nav { height:16px; background:#ffffff; border-bottom:1px solid #dce6f0; flex-shrink:0; display:flex; align-items:center; padding:0 8px; gap:5px; }
+    .fd-logo { width:22px; height:3.5px; background:#1e3d6e; border-radius:2px; }
+    .fd-links { display:flex; gap:5px; margin-left:auto; }
+    .fd-link { width:15px; height:2.5px; background:#b0bfce; border-radius:1.5px; }
+    .fd-nav-btn { width:20px; height:7px; border-radius:3px; background:#1e3d6e; flex-shrink:0; }
+    .fd-hero { flex:0 0 40%; display:flex; flex-shrink:0; }
+    .fd-hero-left { flex:0 0 58%; background:linear-gradient(135deg,#1e3d6e 0%,#2e5caa 100%); display:flex; flex-direction:column; justify-content:center; padding:8px; gap:3px; }
+    .fd-hero-right { flex:1; background:#ddeaf8; display:flex; align-items:center; justify-content:center; }
+    .fd-hero-img { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#2a5499,#4a84c8); border:3px solid rgba(255,255,255,0.55); }
+    .fd-h-eyebrow { width:22px; height:2px; border-radius:1px; background:rgba(232,184,75,0.85); }
+    .fd-h-big { height:5px; border-radius:2px; background:rgba(255,255,255,0.92); width:88%; }
+    .fd-h-big2 { height:5px; border-radius:2px; background:rgba(255,255,255,0.92); width:66%; }
+    .fd-h-sub { height:2px; border-radius:1px; background:rgba(255,255,255,0.38); width:90%; }
+    .fd-h-sub2 { height:2px; border-radius:1px; background:rgba(255,255,255,0.38); width:68%; }
+    .fd-h-cta { width:30px; height:7px; border-radius:3px; background:rgba(255,255,255,0.9); margin-top:3px; }
+    .fd-body { flex:1; padding:6px 8px; display:flex; flex-direction:column; gap:5px; overflow:hidden; }
+    .fd-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; }
+    .fd-service { background:#ffffff; border:1px solid #e0eaf4; border-radius:4px; padding:5px; display:flex; flex-direction:column; gap:3px; box-shadow:0 1px 3px rgba(0,0,0,0.05); }
+    .fd-svc-icon { width:11px; height:11px; border-radius:2px; background:#ddeaf8; border:1px solid #c0d8ee; }
+    .fd-svc-t { width:80%; height:2.5px; border-radius:1px; background:#1e3d6e; opacity:0.65; }
+    .fd-svc-sub { width:60%; height:2px; border-radius:1px; background:#b0bfce; }
+    .fd-testimonial { background:#f0f5fa; border-radius:4px; padding:5px; border-left:2px solid #2a5499; display:flex; flex-direction:column; gap:2px; }
+    .fd-test-line { height:2px; border-radius:1px; background:rgba(30,61,110,0.28); }
+    .fd-test-author { width:36px; height:2px; border-radius:1px; background:#2a5499; opacity:0.45; margin-top:2px; }
+
+    /* — Resto (Phone, dark elegant) — */
+    .fsite-resto { position:absolute; inset:0; background:#1a1208; display:flex; flex-direction:column; overflow:hidden; }
+    .fr-hero { flex:0 0 44%; background:linear-gradient(160deg,#0d0a05,#1a1208); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end; padding:7px; gap:3px; border-bottom:1px solid rgba(232,184,75,0.12); }
+    .fr-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 65% 35%,rgba(232,184,75,0.1),transparent 55%),radial-gradient(ellipse at 20% 80%,rgba(160,80,15,0.15),transparent 50%); }
+    .fr-hero-tag { width:26px; height:2px; border-radius:1px; background:rgba(232,184,75,0.62); }
+    .fr-hero-h1 { width:82%; height:5px; border-radius:2px; background:rgba(232,184,75,0.88); }
+    .fr-hero-h2 { width:60%; height:5px; border-radius:2px; background:rgba(232,184,75,0.88); }
+    .fr-hero-divider { width:18px; height:1px; background:rgba(232,184,75,0.38); }
+    .fr-hero-sub { width:92%; height:2px; border-radius:1px; background:rgba(245,240,232,0.25); }
+    .fr-hero-sub2 { width:70%; height:2px; border-radius:1px; background:rgba(245,240,232,0.25); }
+    .fr-hero-cta { width:36px; height:8px; border-radius:10px; border:1px solid rgba(232,184,75,0.55); background:transparent; margin-top:2px; }
+    .fr-section { flex:1; padding:7px; display:flex; flex-direction:column; gap:5px; overflow:hidden; }
+    .fr-section-label { width:28px; height:2px; border-radius:1px; background:rgba(232,184,75,0.42); }
+    .fr-dish { display:flex; gap:5px; align-items:center; }
+    .fr-dish-img { width:28px; height:20px; border-radius:3px; background:linear-gradient(135deg,rgba(232,184,75,0.16),rgba(160,70,15,0.22)); border:1px solid rgba(232,184,75,0.14); flex-shrink:0; }
+    .fr-dish-body { display:flex; flex-direction:column; gap:2px; flex:1; }
+    .fr-dish-name { width:72%; height:2.5px; border-radius:1px; background:rgba(245,240,232,0.6); }
+    .fr-dish-price { width:28%; height:2px; border-radius:1px; background:rgba(232,184,75,0.52); }
+    .fr-reserve-btn { margin-top:auto; height:10px; border-radius:4px; background:#E8B84B; opacity:0.82; }
     @media (max-width: 767px) {
       .showcase-track { flex-direction: column; transform: none !important; }
       .showcase-panel { min-width: 100%; height: auto; padding: 48px 0; }
@@ -1501,25 +1549,33 @@
             <div class="dev-tablet">
               <div class="dev-tablet-screen">
                 <div class="fsite-craft" id="craftScroll">
-                  <div class="fc-hero">
-                    <div class="fc-hero-text">
-                      <div class="fc-line" style="width:40px"></div>
-                      <div class="fc-line" style="width:70px"></div>
-                      <div class="fc-line" style="width:55px"></div>
+                  <div class="fc-nav">
+                    <div class="fc-nav-logo"></div>
+                    <div class="fc-nav-links">
+                      <div class="fc-nav-link"></div>
+                      <div class="fc-nav-link"></div>
+                      <div class="fc-nav-link"></div>
                     </div>
                   </div>
+                  <div class="fc-hero">
+                    <div class="fc-hero-badge"></div>
+                    <div class="fc-hero-h1"></div>
+                    <div class="fc-hero-h2"></div>
+                    <div class="fc-hero-sub"></div>
+                    <div class="fc-hero-sub" style="width:65%"></div>
+                    <div class="fc-hero-btn"></div>
+                  </div>
                   <div class="fc-body">
-                    <div class="fc-bline" style="width:100%"></div>
-                    <div class="fc-bline" style="width:75%"></div>
+                    <div class="fc-section-label"></div>
                     <div class="fc-grid">
-                      <div class="fc-card"></div><div class="fc-card"></div>
-                      <div class="fc-card"></div><div class="fc-card"></div>
+                      <div class="fc-card"><div class="fc-card-img"></div><div class="fc-card-t"></div><div class="fc-card-sub"></div></div>
+                      <div class="fc-card"><div class="fc-card-img"></div><div class="fc-card-t"></div><div class="fc-card-sub"></div></div>
                     </div>
-                    <div class="fc-bline" style="width:90%;margin-top:6px"></div>
-                    <div class="fc-bline" style="width:60%"></div>
                     <div class="fc-grid">
-                      <div class="fc-card"></div><div class="fc-card"></div>
+                      <div class="fc-card"><div class="fc-card-img"></div><div class="fc-card-t"></div><div class="fc-card-sub"></div></div>
+                      <div class="fc-card"><div class="fc-card-img"></div><div class="fc-card-t"></div><div class="fc-card-sub"></div></div>
                     </div>
+                    <div class="fc-footer-bar"></div>
                   </div>
                 </div>
               </div>
@@ -1543,23 +1599,32 @@
                       <div class="fd-links">
                         <div class="fd-link"></div><div class="fd-link"></div><div class="fd-link"></div>
                       </div>
+                      <div class="fd-nav-btn"></div>
                     </div>
                     <div class="fd-hero">
-                      <div class="fd-h-text">
-                        <div class="fd-h-line" style="width:50px"></div>
-                        <div class="fd-h-line" style="width:90px"></div>
-                        <div class="fd-h-line" style="width:70px"></div>
+                      <div class="fd-hero-left">
+                        <div class="fd-h-eyebrow"></div>
+                        <div class="fd-h-big"></div>
+                        <div class="fd-h-big2"></div>
+                        <div class="fd-h-sub"></div>
+                        <div class="fd-h-sub2"></div>
+                        <div class="fd-h-cta"></div>
+                      </div>
+                      <div class="fd-hero-right">
+                        <div class="fd-hero-img"></div>
                       </div>
                     </div>
                     <div class="fd-body">
-                      <div class="fd-bline" style="width:100%"></div>
-                      <div class="fd-bline" style="width:70%"></div>
                       <div class="fd-grid">
-                        <div class="fd-card"></div><div class="fd-card"></div><div class="fd-card"></div>
+                        <div class="fd-service"><div class="fd-svc-icon"></div><div class="fd-svc-t"></div><div class="fd-svc-sub"></div></div>
+                        <div class="fd-service"><div class="fd-svc-icon"></div><div class="fd-svc-t"></div><div class="fd-svc-sub"></div></div>
+                        <div class="fd-service"><div class="fd-svc-icon"></div><div class="fd-svc-t"></div><div class="fd-svc-sub"></div></div>
                       </div>
-                      <div class="fd-btn"></div>
-                      <div class="fd-bline" style="width:100%;margin-top:8px"></div>
-                      <div class="fd-bline" style="width:55%"></div>
+                      <div class="fd-testimonial">
+                        <div class="fd-test-line"></div>
+                        <div class="fd-test-line" style="width:80%"></div>
+                        <div class="fd-test-author"></div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1582,23 +1647,25 @@
               <div class="dev-phone-screen">
                 <div class="fsite-resto" id="restoScroll">
                   <div class="fr-hero">
-                    <div class="fr-h-text">
-                      <div class="fr-h-line" style="width:35px"></div>
-                      <div class="fr-h-line" style="width:60px"></div>
-                      <div class="fr-h-line" style="width:48px"></div>
-                    </div>
+                    <div class="fr-hero-tag"></div>
+                    <div class="fr-hero-h1"></div>
+                    <div class="fr-hero-h2"></div>
+                    <div class="fr-hero-divider"></div>
+                    <div class="fr-hero-sub"></div>
+                    <div class="fr-hero-sub2"></div>
+                    <div class="fr-hero-cta"></div>
                   </div>
-                  <div class="fr-body">
-                    <div class="fr-bline" style="width:100%"></div>
-                    <div class="fr-bline" style="width:68%"></div>
-                    <div class="fr-grid">
-                      <div class="fr-card"></div><div class="fr-card"></div>
+                  <div class="fr-section">
+                    <div class="fr-section-label"></div>
+                    <div class="fr-dish">
+                      <div class="fr-dish-img"></div>
+                      <div class="fr-dish-body"><div class="fr-dish-name"></div><div class="fr-dish-price"></div></div>
                     </div>
-                    <div class="fr-bline" style="width:85%;margin-top:6px"></div>
-                    <div class="fr-bline" style="width:55%"></div>
-                    <div class="fr-grid">
-                      <div class="fr-card"></div><div class="fr-card"></div>
+                    <div class="fr-dish">
+                      <div class="fr-dish-img"></div>
+                      <div class="fr-dish-body"><div class="fr-dish-name"></div><div class="fr-dish-price"></div></div>
                     </div>
+                    <div class="fr-reserve-btn"></div>
                   </div>
                 </div>
               </div>
@@ -2065,6 +2132,11 @@
           '<span class="service-arrow">&#8594;</span>';
         grid.appendChild(card);
       });
+      // If section already visible, skip intro animation
+      var rect = grid.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.9) {
+        gsap.set(grid.querySelectorAll('.service-card'), { opacity: 1, y: 0 });
+      }
     }
 
     function renderProjects(l) {
@@ -2102,6 +2174,11 @@
           '</div>';
         list.appendChild(li);
       });
+      // If section already visible, skip intro animation
+      var rect = list.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.9) {
+        gsap.set(list.querySelectorAll('.process-item'), { opacity: 1, x: 0 });
+      }
     }
 
     function renderOverlayNav(l) {
@@ -2207,19 +2284,19 @@
       if (contactSub) contactSub.textContent = c.contact.sub;
 
       var contactNameLabel = document.getElementById('contactNameLabel');
-      if (contactNameLabel) contactNameLabel.textContent = c.contact.name;
+      if (contactNameLabel) contactNameLabel.innerHTML = c.contact.name + ' <span class="required-star" aria-hidden="true">*</span>';
 
       var contactName = document.getElementById('contactName');
       if (contactName) contactName.placeholder = c.contact.name;
 
       var contactEmailLabel = document.getElementById('contactEmailLabel');
-      if (contactEmailLabel) contactEmailLabel.textContent = c.contact.email;
+      if (contactEmailLabel) contactEmailLabel.innerHTML = c.contact.email + ' <span class="required-star" aria-hidden="true">*</span>';
 
       var contactEmail = document.getElementById('contactEmail');
       if (contactEmail) contactEmail.placeholder = c.contact.email;
 
       var contactMessageLabel = document.getElementById('contactMessageLabel');
-      if (contactMessageLabel) contactMessageLabel.textContent = c.contact.message;
+      if (contactMessageLabel) contactMessageLabel.innerHTML = c.contact.message + ' <span class="required-star" aria-hidden="true">*</span>';
 
       var contactMessage = document.getElementById('contactMessage');
       if (contactMessage) contactMessage.placeholder = c.contact.message;
@@ -2667,7 +2744,7 @@
     });
 
     /* ==========================================
-       MENU OVERLAY
+       MENU DROPDOWN
     ========================================== */
     var menuOpen = false;
 
@@ -2677,33 +2754,13 @@
       hamburger.setAttribute('aria-expanded', 'true');
       menuOverlay.classList.add('is-open');
       menuOverlay.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
 
-      // Circle clip-path expand
       gsap.to(menuOverlay, {
-        clipPath: 'circle(150% at calc(100% - 56px) 44px)',
-        duration: 0.7,
-        ease: 'power4.inOut'
-      });
-
-      // Stagger links in
-      var links = menuOverlay.querySelectorAll('.ol-link');
-      gsap.to(links, {
         opacity: 1,
         y: 0,
-        duration: 0.5,
-        ease: 'power3.out',
-        stagger: 0.07,
-        delay: 0.25
-      });
-
-      // Controls
-      gsap.to('#overlayControls', {
-        opacity: 1,
-        y: 0,
-        duration: 0.4,
-        ease: 'power3.out',
-        delay: 0.55
+        scale: 1,
+        duration: 0.22,
+        ease: 'power2.out'
       });
     }
 
@@ -2712,39 +2769,32 @@
       hamburger.classList.remove('open');
       hamburger.setAttribute('aria-expanded', 'false');
 
-      var links = menuOverlay.querySelectorAll('.ol-link');
-
-      // Fade links out first
-      gsap.to([links, '#overlayControls'], {
-        opacity: 0,
-        y: 20,
-        duration: 0.2,
-        ease: 'power2.in'
-      });
-
-      // Collapse circle
       gsap.to(menuOverlay, {
-        clipPath: 'circle(0% at calc(100% - 56px) 44px)',
-        duration: 0.5,
-        ease: 'power4.inOut',
-        delay: 0.1,
+        opacity: 0,
+        y: -8,
+        scale: 0.97,
+        duration: 0.18,
+        ease: 'power2.in',
         onComplete: function () {
           menuOverlay.classList.remove('is-open');
           menuOverlay.setAttribute('aria-hidden', 'true');
-          document.body.style.overflow = '';
-
-          // Reset link positions for next open
-          gsap.set(links, { opacity: 0, y: 30 });
-          gsap.set('#overlayControls', { opacity: 0, y: 20 });
         }
       });
     }
 
-    hamburger.addEventListener('click', function () {
+    hamburger.addEventListener('click', function (e) {
+      e.stopPropagation();
       if (menuOpen) {
         closeMenu();
       } else {
         openMenu();
+      }
+    });
+
+    // Close on outside click
+    document.addEventListener('click', function (e) {
+      if (menuOpen && !menuOverlay.contains(e.target) && e.target !== hamburger) {
+        closeMenu();
       }
     });
 

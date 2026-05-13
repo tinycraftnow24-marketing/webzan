@@ -1,0 +1,58 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "color": {
+      "palette": [
+        { "slug": "primary", "name": "Primary", "color": "#000000" },
+        { "slug": "secondary", "name": "Secondary", "color": "#ffffff" },
+        { "slug": "accent", "name": "Accent", "color": "#0073aa" }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        {
+          "slug": "sans",
+          "name": "Sans",
+          "fontFamily": "system-ui, -apple-system, sans-serif"
+        }
+      ],
+      "fontSizes": [
+        { "slug": "sm",   "name": "Small",       "size": "0.875rem" },
+        { "slug": "base", "name": "Base",         "size": "1rem" },
+        { "slug": "lg",   "name": "Large",        "size": "1.25rem" },
+        { "slug": "xl",   "name": "Extra Large",  "size": "1.5rem" },
+        { "slug": "2xl",  "name": "2XL",          "size": "2rem" },
+        { "slug": "3xl",  "name": "3XL",          "size": "3rem" }
+      ]
+    },
+    "spacing": {
+      "spacingSizes": [
+        { "slug": "sm",  "name": "Small",  "size": "1rem" },
+        { "slug": "md",  "name": "Medium", "size": "2rem" },
+        { "slug": "lg",  "name": "Large",  "size": "4rem" },
+        { "slug": "xl",  "name": "XL",     "size": "8rem" }
+      ]
+    },
+    "layout": {
+      "contentSize": "800px",
+      "wideSize": "1200px"
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "#ffffff",
+      "text": "#000000"
+    },
+    "typography": {
+      "fontFamily": "var(--wp--preset--font-family--sans)",
+      "fontSize": "var(--wp--preset--font-size--base)",
+      "lineHeight": "1.6"
+    }
+  },
+  "templateParts": [
+    { "name": "header", "title": "Header", "area": "header" },
+    { "name": "footer", "title": "Footer", "area": "footer" }
+  ]
+}

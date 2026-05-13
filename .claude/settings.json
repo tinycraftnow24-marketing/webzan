@@ -1,0 +1,30 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash 'C:/Projekte/wp-sites/.claude/hooks/block-rm-projects.sh'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash 'C:/Projekte/wp-sites/.claude/hooks/emoji-detector.sh'"
+          },
+          {
+            "type": "command",
+            "command": "bash 'C:/Projekte/wp-sites/.claude/hooks/style-tag-detector.sh'"
+          }
+        ]
+      }
+    ]
+  }
+}

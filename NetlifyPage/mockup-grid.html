@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebZan — Webdesign aus Berlin</title>
+  <link rel="icon" type="image/png" href="assets/logo/favicon-32.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+  <style>
+    /* ===== CSS CUSTOM PROPERTIES ===== */
+    :root {
+      --accent: #E8B84B;
+      --accent-dim: rgba(232, 184, 75, 0.15);
+      --accent-border: rgba(232, 184, 75, 0.12);
+      --transition-speed: 0.35s;
+    }
+
+    [data-theme="dark"] {
+      --bg: #1A1510;
+      --bg2: #221B12;
+      --text: #F5F0E8;
+      --muted: #8A8070;
+      --border: rgba(232, 184, 75, 0.12);
+      --nav-bg: rgba(26, 21, 16, 0.85);
+      --card-bg: #221B12;
+      --input-bg: #2A2218;
+    }
+
+    [data-theme="light"] {
+      --bg: #FAFAF8;
+      --bg2: #F0EDE6;
+      --text: #1A1510;
+      --muted: #6A6050;
+      --border: rgba(26, 21, 16, 0.08);
+      --nav-bg: rgba(250, 250, 248, 0.85);
+      --card-bg: #F0EDE6;
+      --input-bg: #E8E5DE;
+    }
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: auto;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    .eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    .section-label.animated {
+      opacity: 1;
+      transform: translateX(0);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    /* ===== LAYOUT ===== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section {
+      padding: 6rem 0;
+    }
+
+    /* ===== FLOAT ANIMATION ===== */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+
+    /* ===== NAV ===== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      padding: 0 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-logo-img {
+      height: 28px;
+      width: auto;
+    }
+
+    [data-theme="dark"] .logo-light { display: none; }
+    [data-theme="dark"] .logo-dark { display: block; }
+    [data-theme="light"] .logo-dark { display: none; }
+    [data-theme="light"] .logo-light { display: block; }
+
+    .nav-logo-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+
+    .nav-links a {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .lang-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .lang-btn {
+      padding: 0.3rem 0.6rem;
+      color: var(--muted);
+      background: transparent;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      color: #1A1510;
+    }
+
+    .theme-toggle {
+      padding: 0.3rem 0.5rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      color: var(--text);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    /* Mobile nav menu */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      z-index: 999;
+      padding: 1.5rem 2rem;
+      transform: translateY(-100%);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .mobile-menu.open {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .mobile-menu-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .mobile-menu-links a {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding-top: 64px;
+      background-color: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      padding: 4rem 2rem 4rem 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      padding-right: 4rem;
+    }
+
+    .hero-eyebrow {
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-headline {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 440px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.75rem;
+      background: var(--accent);
+      color: #1A1510;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    .btn-scroll {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 0.2s ease;
+    }
+
+    .btn-scroll:hover {
+      color: var(--text);
+    }
+
+    .hero-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      position: relative;
+      padding: 4rem 2rem;
+    }
+
+    /* Decorative grid pattern */
+    .hero-bg-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(232, 184, 75, 0.18) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    [data-theme="light"] .hero-bg-pattern {
+      background-image: radial-gradient(circle, rgba(26, 21, 16, 0.12) 1px, transparent 1px);
+      opacity: 0.6;
+    }
+
+    .hero-logo-wrap {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .hero-logo-img {
+      height: 200px;
+      width: auto;
+      filter: drop-shadow(0 8px 32px rgba(232, 184, 75, 0.25));
+    }
+
+    .hero-logo-accent {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+    }
+
+    /* ===== STATS ===== */
+    .stats {
+      background: var(--bg2);
+      padding: 3.5rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 1rem 2rem;
+      position: relative;
+    }
+
+    .stat-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 48px;
+      background: var(--border);
+    }
+
+    .stat-value {
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ===== SERVICES ===== */
+    .services {
+      background: var(--bg);
+    }
+
+    .services-list {
+      border-top: 1px solid var(--border);
+    }
+
+    .service-item {
+      position: relative;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .service-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .service-item:hover::before,
+    .service-item.active::before {
+      width: 4px;
+    }
+
+    .service-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.6rem 1.5rem 1.6rem 2rem;
+      gap: 1rem;
+    }
+
+    .service-left {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .service-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      min-width: 2rem;
+    }
+
+    .service-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
+      transition: color 0.2s ease;
+    }
+
+    .service-item:hover .service-title {
+      color: var(--accent);
+    }
+
+    .service-arrow {
+      font-size: 1rem;
+      color: var(--muted);
+      transition: transform 0.3s ease, color 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .service-item.active .service-arrow {
+      transform: rotate(90deg);
+      color: var(--accent);
+    }
+
+    .service-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+
+    .service-item.active .service-body {
+      max-height: 120px;
+    }
+
+    .service-desc {
+      padding: 0 2rem 1.5rem 4.5rem;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    /* ===== PROJECTS ===== */
+    .projects {
+      background: var(--bg2);
+    }
+
+    .projects-note {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      padding: 0.75rem 1rem;
+      border-left: 3px solid var(--accent-border);
+      background: var(--accent-dim);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 1.25rem;
+    }
+
+    .project-card {
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    .project-card.animated {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s ease;
+    }
+
+    .project-card:hover {
+      border-color: rgba(232, 184, 75, 0.3);
+    }
+
+    .project-card:nth-child(1) {
+      grid-row: 1;
+    }
+
+    .project-card:nth-child(2) {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .project-card:nth-child(3) {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+
+    .project-thumb {
+      height: 200px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card:nth-child(1) .project-thumb {
+      height: 240px;
+    }
+
+    .project-card:nth-child(3) .project-thumb {
+      height: 160px;
+    }
+
+    /* CSS gradient art thumbnails */
+    .thumb-1 {
+      background:
+        linear-gradient(135deg, #E8B84B 0%, #C4943A 40%, #1A1510 100%);
+      background-image:
+        linear-gradient(135deg, rgba(232,184,75,0.9) 0%, rgba(196,148,58,0.7) 40%, rgba(26,21,16,0.95) 100%),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 24px,
+          rgba(232,184,75,0.06) 24px,
+          rgba(232,184,75,0.06) 25px
+        ),
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 24px,
+          rgba(232,184,75,0.06) 24px,
+          rgba(232,184,75,0.06) 25px
+        );
+    }
+
+    .thumb-2 {
+      background: radial-gradient(ellipse at 50% 50%, rgba(232,184,75,0.4) 0%, rgba(196,148,58,0.1) 40%, #1A1510 80%);
+    }
+
+    .thumb-2::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,184,75,0.8) 0%, rgba(232,184,75,0.1) 70%, transparent 100%);
+      box-shadow: 0 0 40px rgba(232,184,75,0.5);
+    }
+
+    .thumb-3 {
+      background:
+        repeating-linear-gradient(
+          45deg,
+          rgba(232,184,75,0.12) 0px,
+          rgba(232,184,75,0.12) 1px,
+          transparent 1px,
+          transparent 18px
+        ),
+        repeating-linear-gradient(
+          -45deg,
+          rgba(196,148,58,0.08) 0px,
+          rgba(196,148,58,0.08) 1px,
+          transparent 1px,
+          transparent 18px
+        ),
+        linear-gradient(180deg, #221B12 0%, #2A2218 100%);
+    }
+
+    [data-theme="light"] .thumb-1 {
+      background-image:
+        linear-gradient(135deg, rgba(232,184,75,0.85) 0%, rgba(196,148,58,0.65) 40%, rgba(26,21,16,0.8) 100%),
+        repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(26,21,16,0.06) 24px, rgba(26,21,16,0.06) 25px),
+        repeating-linear-gradient(90deg, transparent, transparent 24px, rgba(26,21,16,0.06) 24px, rgba(26,21,16,0.06) 25px);
+    }
+
+    [data-theme="light"] .thumb-2 {
+      background: radial-gradient(ellipse at 50% 50%, rgba(232,184,75,0.5) 0%, rgba(196,148,58,0.2) 40%, #F0EDE6 80%);
+    }
+
+    [data-theme="light"] .thumb-3 {
+      background:
+        repeating-linear-gradient(45deg, rgba(26,21,16,0.08) 0px, rgba(26,21,16,0.08) 1px, transparent 1px, transparent 18px),
+        repeating-linear-gradient(-45deg, rgba(26,21,16,0.05) 0px, rgba(26,21,16,0.05) 1px, transparent 1px, transparent 18px),
+        linear-gradient(180deg, #F0EDE6 0%, #E8E5DE 100%);
+    }
+
+    .project-info {
+      padding: 1.25rem 1.5rem;
+    }
+
+    .project-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .project-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.01em;
+    }
+
+    .project-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* ===== PROCESS ===== */
+    .process {
+      background: var(--bg);
+    }
+
+    .process-timeline {
+      position: relative;
+      padding-left: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .timeline-line {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--accent);
+      transform-origin: top;
+      transform: scaleY(0);
+    }
+
+    .process-step {
+      position: relative;
+      padding: 0 0 3rem 2.5rem;
+    }
+
+    .process-step:last-child {
+      padding-bottom: 0;
+    }
+
+    .step-dot {
+      position: absolute;
+      left: -0.35rem;
+      top: 0.35rem;
+      width: 0.7rem;
+      height: 0.7rem;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(232,184,75,0.4);
+    }
+
+    .step-num {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      margin-bottom: 0.5rem;
+    }
+
+    .step-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.02em;
+    }
+
+    .step-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 480px;
+    }
+
+    /* ===== ABOUT ===== */
+    .about {
+      background: var(--bg2);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .about-initial {
+      font-size: 8rem;
+      font-weight: 900;
+      line-height: 0.85;
+      color: var(--accent);
+      letter-spacing: -0.05em;
+      user-select: none;
+    }
+
+    .about-content {}
+
+    .about-text {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: var(--text);
+      font-weight: 300;
+      max-width: 560px;
+    }
+
+    /* ===== CONTACT ===== */
+    .contact {
+      background: var(--bg);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .contact-headline {
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .contact-sub {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .contact-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+      border-bottom: 1px solid rgba(232,184,75,0.3);
+      padding-bottom: 2px;
+      transition: border-color 0.2s ease;
+    }
+
+    .contact-email:hover {
+      border-color: var(--accent);
+    }
+
+    /* Form */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .form-input,
+    .form-textarea {
+      padding: 0.8rem 1rem;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: border-color 0.2s ease, background 0.2s ease;
+      outline: none;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      border-color: rgba(232,184,75,0.5);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+      line-height: 1.6;
+    }
+
+    .form-submit {
+      align-self: flex-start;
+      padding: 0.85rem 2rem;
+      background: var(--accent);
+      color: #1A1510;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 4px;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      border: none;
+      font-family: inherit;
+    }
+
+    .form-submit:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 3rem 0 2rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-logo-img {
+      height: 22px;
+      width: auto;
+    }
+
+    .footer-logo-text {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .footer-tagline {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .footer-col-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .footer-links a {
+      font-size: 0.85rem;
+      color: var(--muted);
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    .footer-bottom {
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-copy {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .footer-legal {
+      font-size: 0.78rem;
+      color: var(--muted);
+      transition: color 0.2s ease;
+    }
+
+    .footer-legal:hover {
+      color: var(--text);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+    }
+
+    @media (max-width: 768px) {
+      section {
+        padding: 4rem 0;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-top: 64px;
+      }
+
+      .hero-left {
+        padding: 3rem 1.5rem 1.5rem;
+        margin-left: 0;
+        max-width: 100%;
+      }
+
+      .hero-right {
+        padding: 1.5rem 1.5rem 3rem;
+      }
+
+      .hero-logo-img {
+        height: 140px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .stat-item:not(:last-child)::after {
+        display: none;
+      }
+
+      .stat-item:not(:last-child) {
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .project-card:nth-child(1),
+      .project-card:nth-child(2),
+      .project-card:nth-child(3) {
+        grid-column: auto;
+        grid-row: auto;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .about-initial {
+        font-size: 5rem;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .container {
+        padding: 0 1.25rem;
+      }
+
+      .hero-left {
+        padding-right: 1.25rem;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1023px) {
+      .hero-left {
+        padding-right: 2rem;
+      }
+
+      .contact-grid {
+        gap: 2.5rem;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+      }
+
+      .footer-grid > *:first-child {
+        grid-column: 1 / -1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="WebZan Home">
+        <img src="assets/logo/webzan-logo-amber-dark-1024.png" alt="WebZan Logo" class="nav-logo-img logo-dark">
+        <img src="assets/logo/webzan-logo-transparent-1024.png" alt="WebZan Logo" class="nav-logo-img logo-light">
+        <span class="nav-logo-text">WebZan</span>
+      </a>
+
+      <div class="nav-right">
+        <ul class="nav-links" id="nav-links">
+          <li><a href="#services" data-i18n="nav.services">Services</a></li>
+          <li><a href="#projects" data-i18n="nav.work">Projekte</a></li>
+          <li><a href="#process" data-i18n="nav.process">Prozess</a></li>
+          <li><a href="#about" data-i18n="nav.about">Über mich</a></li>
+          <li><a href="#contact" data-i18n="nav.contact">Kontakt</a></li>
+        </ul>
+
+        <div class="nav-controls">
+          <div class="lang-switcher" role="group" aria-label="Language switcher">
+            <button class="lang-btn active" data-lang="de" aria-pressed="true">DE</button>
+            <button class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+          </div>
+          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">☀</button>
+        </div>
+
+        <button class="hamburger" id="hamburger" aria-label="Toggle mobile menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <ul class="mobile-menu-links">
+      <li><a href="#services" data-i18n="nav.services">Services</a></li>
+      <li><a href="#projects" data-i18n="nav.work">Projekte</a></li>
+      <li><a href="#process" data-i18n="nav.process">Prozess</a></li>
+      <li><a href="#about" data-i18n="nav.about">Über mich</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">Kontakt</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero" aria-label="Hero">
+    <div class="hero-left">
+      <p class="eyebrow hero-eyebrow" data-i18n="hero.eyebrow">Webdesign · Berlin</p>
+      <h1 class="hero-headline" data-i18n="hero.headline">Websites die überzeugen.</h1>
+      <p class="hero-sub" data-i18n="hero.sub">Für KMUs, Startups und Kreative — von der simplen WordPress-Seite bis zur komplexen Motion-Website.</p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn-primary" data-i18n="cta">Kontakt aufnehmen</a>
+        <a href="#services" class="btn-scroll">↓ Mehr entdecken</a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-bg-pattern" aria-hidden="true"></div>
+      <div class="hero-logo-wrap" id="hero-logo-wrap">
+        <img src="assets/logo/webzan-logo-amber-dark-1024.png" alt="WebZan" class="hero-logo-img logo-dark" id="hero-logo-dark">
+        <img src="assets/logo/webzan-logo-transparent-1024.png" alt="WebZan" class="hero-logo-img logo-light" id="hero-logo-light">
+        <div class="hero-logo-accent" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STATS ===== -->
+  <div class="stats" id="stats-section" aria-label="Statistics">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-value" data-stat-value="4+" id="stat-0">4+</div>
+        <div class="stat-label" data-i18n="stats.0.label">Jahre Erfahrung</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" data-stat-value="20+" id="stat-1">20+</div>
+        <div class="stat-label" data-i18n="stats.1.label">Projekte</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value" data-stat-value="100%" id="stat-2">100%</div>
+        <div class="stat-label" data-i18n="stats.2.label">Remote möglich</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SERVICES ===== -->
+  <section class="services" id="services">
+    <div class="container">
+      <p class="section-label" data-i18n="services.label">— Services</p>
+
+      <ul class="services-list" id="services-list" role="list">
+        <li class="service-item" data-index="0">
+          <div class="service-header" role="button" tabindex="0" aria-expanded="false">
+            <div class="service-left">
+              <span class="service-num" data-i18n="services.items.0.num">01</span>
+              <span class="service-title" data-i18n="services.items.0.title">WordPress Websites</span>
+            </div>
+            <span class="service-arrow" aria-hidden="true">→</span>
+          </div>
+          <div class="service-body" aria-hidden="true">
+            <p class="service-desc" data-i18n="services.items.0.desc">Professionelle CMS-Lösungen, die du selbst pflegen kannst. Schnell, sicher, skalierbar — für jedes Budget.</p>
+          </div>
+        </li>
+        <li class="service-item" data-index="1">
+          <div class="service-header" role="button" tabindex="0" aria-expanded="false">
+            <div class="service-left">
+              <span class="service-num" data-i18n="services.items.1.num">02</span>
+              <span class="service-title" data-i18n="services.items.1.title">Motion Websites</span>
+            </div>
+            <span class="service-arrow" aria-hidden="true">→</span>
+          </div>
+          <div class="service-body" aria-hidden="true">
+            <p class="service-desc" data-i18n="services.items.1.desc">GSAP-animierte Erlebnisse für Brands die auffallen wollen. Premium-Design in Bewegung das begeistert.</p>
+          </div>
+        </li>
+        <li class="service-item" data-index="2">
+          <div class="service-header" role="button" tabindex="0" aria-expanded="false">
+            <div class="service-left">
+              <span class="service-num" data-i18n="services.items.2.num">03</span>
+              <span class="service-title" data-i18n="services.items.2.title">Landing Pages</span>
+            </div>
+            <span class="service-arrow" aria-hidden="true">→</span>
+          </div>
+          <div class="service-body" aria-hidden="true">
+            <p class="service-desc" data-i18n="services.items.2.desc">Conversion-optimierte Seiten für Kampagnen, Produkte und Services — präzise auf dein Ziel ausgerichtet.</p>
+          </div>
+        </li>
+        <li class="service-item" data-index="3">
+          <div class="service-header" role="button" tabindex="0" aria-expanded="false">
+            <div class="service-left">
+              <span class="service-num" data-i18n="services.items.3.num">04</span>
+              <span class="service-title" data-i18n="services.items.3.title">UI/UX & Branding</span>
+            </div>
+            <span class="service-arrow" aria-hidden="true">→</span>
+          </div>
+          <div class="service-body" aria-hidden="true">
+            <p class="service-desc" data-i18n="services.items.3.desc">Von der visuellen Identität bis zum fertigen Interface-Design. Konsistenz über alle Touchpoints.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== PROJECTS ===== -->
+  <section class="projects" id="projects">
+    <div class="container">
+      <p class="section-label" data-i18n="projects.label">— Konzeptprojekte</p>
+      <p class="projects-note" data-i18n="projects.note">Eigenentwicklungen zur Demonstration verschiedener Design-Stile und Technologien.</p>
+
+      <div class="projects-grid" id="projects-grid">
+        <article class="project-card">
+          <div class="project-thumb thumb-1" aria-hidden="true"></div>
+          <div class="project-info">
+            <p class="project-tag" data-i18n="projects.items.0.tag">Motion Website</p>
+            <h3 class="project-title" data-i18n="projects.items.0.title">Restaurant Orbit</h3>
+            <p class="project-desc" data-i18n="projects.items.0.desc">Premium-Gastronomie-Website mit GSAP-Animationen und Dark-Mode-Design.</p>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-thumb thumb-2" aria-hidden="true"></div>
+          <div class="project-info">
+            <p class="project-tag" data-i18n="projects.items.1.tag">WordPress</p>
+            <h3 class="project-title" data-i18n="projects.items.1.title">Studio Bold</h3>
+            <p class="project-desc" data-i18n="projects.items.1.desc">Editorial-Website für ein Berliner Kreativstudio. Sauber, schnell, skalierbar.</p>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-thumb thumb-3" aria-hidden="true"></div>
+          <div class="project-info">
+            <p class="project-tag" data-i18n="projects.items.2.tag">Landing Page</p>
+            <h3 class="project-title" data-i18n="projects.items.2.title">Product Launch</h3>
+            <p class="project-desc" data-i18n="projects.items.2.desc">Conversion-optimierte Launch-Seite mit Scroll-Animationen.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROCESS ===== -->
+  <section class="process" id="process">
+    <div class="container">
+      <p class="section-label" data-i18n="process.label">— Prozess</p>
+      <h2 style="font-size: clamp(1.8rem, 3vw, 2.8rem); font-weight: 900; letter-spacing: -0.03em; margin-bottom: 3.5rem; color: var(--text);" data-i18n="process.headline">Wie wir zusammenarbeiten</h2>
+
+      <div class="process-timeline" id="process-timeline">
+        <div class="timeline-line" id="timeline-line"></div>
+
+        <div class="process-step">
+          <div class="step-dot" aria-hidden="true"></div>
+          <div class="step-content">
+            <div class="step-num" data-i18n="process.steps.0.num">01</div>
+            <h3 class="step-title" data-i18n="process.steps.0.title">Kennenlernen</h3>
+            <p class="step-desc" data-i18n="process.steps.0.desc">Wir besprechen dein Business, Ziele und was eine neue Website für dich leisten soll.</p>
+          </div>
+        </div>
+
+        <div class="process-step">
+          <div class="step-dot" aria-hidden="true"></div>
+          <div class="step-content">
+            <div class="step-num" data-i18n="process.steps.1.num">02</div>
+            <h3 class="step-title" data-i18n="process.steps.1.title">Konzept & Design</h3>
+            <p class="step-desc" data-i18n="process.steps.1.desc">Moodboards, Wireframes und visuelles Konzept — abgestimmt auf deine Marke.</p>
+          </div>
+        </div>
+
+        <div class="process-step">
+          <div class="step-dot" aria-hidden="true"></div>
+          <div class="step-content">
+            <div class="step-num" data-i18n="process.steps.2.num">03</div>
+            <h3 class="step-title" data-i18n="process.steps.2.title">Entwicklung</h3>
+            <p class="step-desc" data-i18n="process.steps.2.desc">Clean Code, mobile-first, moderne Technologien. Fokus auf Qualität und Performance.</p>
+          </div>
+        </div>
+
+        <div class="process-step">
+          <div class="step-dot" aria-hidden="true"></div>
+          <div class="step-content">
+            <div class="step-num" data-i18n="process.steps.3.num">04</div>
+            <h3 class="step-title" data-i18n="process.steps.3.title">Launch & Support</h3>
+            <p class="step-desc" data-i18n="process.steps.3.desc">Go-Live, Übergabe und Support damit alles reibungslos läuft.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="about" id="about">
+    <div class="container">
+      <p class="section-label" data-i18n="about.label">— Über mich</p>
+      <div class="about-grid">
+        <div class="about-initial" aria-hidden="true">H</div>
+        <div class="about-content">
+          <p class="about-text" data-i18n="about.text">Ich bin Hendrik — Freelance-Webdesigner aus Berlin. Ich baue digitale Auftritte die nicht nur gut aussehen, sondern wirklich für dein Business arbeiten. Von einfach bis außergewöhnlich.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <p class="section-label" data-i18n="contact.label">— Kontakt</p>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h2 class="contact-headline" data-i18n="contact.headline">Projekt anfragen</h2>
+          <p class="contact-sub" data-i18n="contact.sub">Ein Projekt im Kopf? Schreib mir direkt oder nutze das Formular.</p>
+          <a href="mailto:hallo@webzan.de" class="contact-email" data-i18n="contact.email">hallo@webzan.de</a>
+        </div>
+
+        <form
+          class="contact-form"
+          name="contact-grid"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          id="contact-form"
+        >
+          <input type="hidden" name="form-name" value="contact-grid">
+          <input type="hidden" name="bot-field" style="display:none;">
+
+          <div class="form-field">
+            <label class="form-label" for="form-name-field" data-i18n="contact.name">Name</label>
+            <input
+              class="form-input"
+              type="text"
+              id="form-name-field"
+              name="name"
+              required
+              autocomplete="name"
+              data-i18n-placeholder="contact.name"
+              placeholder="Name"
+            >
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="form-email-field" data-i18n="contact.emailField">E-Mail</label>
+            <input
+              class="form-input"
+              type="email"
+              id="form-email-field"
+              name="email"
+              required
+              autocomplete="email"
+              data-i18n-placeholder="contact.emailField"
+              placeholder="E-Mail"
+            >
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="form-message-field" data-i18n-label="contact.message">Projekt</label>
+            <textarea
+              class="form-textarea"
+              id="form-message-field"
+              name="message"
+              required
+              data-i18n-placeholder="contact.message"
+              placeholder="Projekt beschreiben..."
+            ></textarea>
+          </div>
+
+          <button type="submit" class="form-submit" data-i18n="contact.send">Senden</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="assets/logo/webzan-logo-amber-dark-1024.png" alt="WebZan" class="footer-logo-img logo-dark">
+            <img src="assets/logo/webzan-logo-transparent-1024.png" alt="WebZan" class="footer-logo-img logo-light">
+            <span class="footer-logo-text">WebZan</span>
+          </div>
+          <p class="footer-tagline" data-i18n="footer.tagline">Webdesign aus Berlin</p>
+        </div>
+
+        <div class="footer-nav">
+          <p class="footer-col-title">Navigation</p>
+          <ul class="footer-links">
+            <li><a href="#services" data-i18n="footer.links.0">Services</a></li>
+            <li><a href="#projects" data-i18n="footer.links.1">Projekte</a></li>
+            <li><a href="#process" data-i18n="footer.links.2">Prozess</a></li>
+            <li><a href="#contact" data-i18n="footer.links.3">Kontakt</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-social">
+          <p class="footer-col-title">Kontakt</p>
+          <ul class="footer-links">
+            <li><a href="mailto:hallo@webzan.de">hallo@webzan.de</a></li>
+            <li><a href="#contact" data-i18n="nav.contact">Kontakt</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span class="footer-copy" data-i18n="footer.copy">© 2026 WebZan</span>
+        <a href="#" class="footer-legal" data-i18n="footer.imprint">Impressum</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ===================================================
+       CONTENT DATA
+    =================================================== */
+    const content = {
+      de: {
+        nav: { services: 'Services', work: 'Projekte', process: 'Prozess', about: 'Über mich', contact: 'Kontakt' },
+        hero: {
+          eyebrow: 'Webdesign · Berlin',
+          headline: 'Websites die überzeugen.',
+          sub: 'Für KMUs, Startups und Kreative — von der simplen WordPress-Seite bis zur komplexen Motion-Website.'
+        },
+        cta: 'Kontakt aufnehmen',
+        stats: [
+          { value: '4+', label: 'Jahre Erfahrung' },
+          { value: '20+', label: 'Projekte' },
+          { value: '100%', label: 'Remote möglich' }
+        ],
+        services: {
+          label: '— Services',
+          items: [
+            { num: '01', title: 'WordPress Websites', desc: 'Professionelle CMS-Lösungen, die du selbst pflegen kannst. Schnell, sicher, skalierbar — für jedes Budget.' },
+            { num: '02', title: 'Motion Websites', desc: 'GSAP-animierte Erlebnisse für Brands die auffallen wollen. Premium-Design in Bewegung das begeistert.' },
+            { num: '03', title: 'Landing Pages', desc: 'Conversion-optimierte Seiten für Kampagnen, Produkte und Services — präzise auf dein Ziel ausgerichtet.' },
+            { num: '04', title: 'UI/UX & Branding', desc: 'Von der visuellen Identität bis zum fertigen Interface-Design. Konsistenz über alle Touchpoints.' }
+          ]
+        },
+        projects: {
+          label: '— Konzeptprojekte',
+          note: 'Eigenentwicklungen zur Demonstration verschiedener Design-Stile und Technologien.',
+          items: [
+            { tag: 'Motion Website', title: 'Restaurant Orbit', desc: 'Premium-Gastronomie-Website mit GSAP-Animationen und Dark-Mode-Design.' },
+            { tag: 'WordPress', title: 'Studio Bold', desc: 'Editorial-Website für ein Berliner Kreativstudio. Sauber, schnell, skalierbar.' },
+            { tag: 'Landing Page', title: 'Product Launch', desc: 'Conversion-optimierte Launch-Seite mit Scroll-Animationen.' }
+          ]
+        },
+        process: {
+          label: '— Prozess',
+          headline: 'Wie wir zusammenarbeiten',
+          steps: [
+            { num: '01', title: 'Kennenlernen', desc: 'Wir besprechen dein Business, Ziele und was eine neue Website für dich leisten soll.' },
+            { num: '02', title: 'Konzept & Design', desc: 'Moodboards, Wireframes und visuelles Konzept — abgestimmt auf deine Marke.' },
+            { num: '03', title: 'Entwicklung', desc: 'Clean Code, mobile-first, moderne Technologien. Fokus auf Qualität und Performance.' },
+            { num: '04', title: 'Launch & Support', desc: 'Go-Live, Übergabe und Support damit alles reibungslos läuft.' }
+          ]
+        },
+        about: {
+          label: '— Über mich',
+          text: 'Ich bin Hendrik — Freelance-Webdesigner aus Berlin. Ich baue digitale Auftritte die nicht nur gut aussehen, sondern wirklich für dein Business arbeiten. Von einfach bis außergewöhnlich.'
+        },
+        contact: {
+          label: '— Kontakt',
+          headline: 'Projekt anfragen',
+          sub: 'Ein Projekt im Kopf? Schreib mir direkt oder nutze das Formular.',
+          email: 'hallo@webzan.de',
+          name: 'Name',
+          emailField: 'E-Mail',
+          message: 'Projekt beschreiben...',
+          send: 'Senden'
+        },
+        footer: {
+          tagline: 'Webdesign aus Berlin',
+          links: ['Services', 'Projekte', 'Prozess', 'Kontakt'],
+          copy: '© 2026 WebZan',
+          imprint: 'Impressum'
+        }
+      },
+      en: {
+        nav: { services: 'Services', work: 'Work', process: 'Process', about: 'About', contact: 'Contact' },
+        hero: {
+          eyebrow: 'Web Design · Berlin',
+          headline: 'Websites that convince.',
+          sub: 'For SMEs, startups and creatives — from simple WordPress sites to complex motion websites.'
+        },
+        cta: 'Get in touch',
+        stats: [
+          { value: '4+', label: 'Years Experience' },
+          { value: '20+', label: 'Projects' },
+          { value: '100%', label: 'Remote possible' }
+        ],
+        services: {
+          label: '— Services',
+          items: [
+            { num: '01', title: 'WordPress Websites', desc: 'Professional CMS solutions you can manage yourself. Fast, secure, scalable — for every budget.' },
+            { num: '02', title: 'Motion Websites', desc: 'GSAP-animated experiences for brands that want to stand out. Premium design in motion.' },
+            { num: '03', title: 'Landing Pages', desc: 'Conversion-optimized pages for campaigns, products and services — precisely targeted.' },
+            { num: '04', title: 'UI/UX & Branding', desc: 'From visual identity to finished interface design. Consistency across all touchpoints.' }
+          ]
+        },
+        projects: {
+          label: '— Concept Projects',
+          note: 'In-house developments demonstrating various design styles and technologies.',
+          items: [
+            { tag: 'Motion Website', title: 'Restaurant Orbit', desc: 'Premium restaurant website with GSAP animations and dark mode.' },
+            { tag: 'WordPress', title: 'Studio Bold', desc: 'Editorial website for a Berlin creative studio. Clean, fast, scalable.' },
+            { tag: 'Landing Page', title: 'Product Launch', desc: 'Conversion-optimized launch page with scroll animations.' }
+          ]
+        },
+        process: {
+          label: '— Process',
+          headline: 'How we work together',
+          steps: [
+            { num: '01', title: 'Discovery', desc: "We discuss your business, goals and what a new website should do for you." },
+            { num: '02', title: 'Concept & Design', desc: 'Moodboards, wireframes and visual concept — tailored to your brand.' },
+            { num: '03', title: 'Development', desc: 'Clean code, mobile-first, modern technologies. Focused on quality and performance.' },
+            { num: '04', title: 'Launch & Support', desc: 'Go-live, handover and support so everything runs smoothly.' }
+          ]
+        },
+        about: {
+          label: '— About me',
+          text: "I'm Hendrik — a freelance web designer from Berlin. I build digital presences that don't just look good, but actually work for your business. From simple to extraordinary."
+        },
+        contact: {
+          label: '— Contact',
+          headline: 'Start a project',
+          sub: 'Got a project in mind? Write to me directly or use the form.',
+          email: 'hallo@webzan.de',
+          name: 'Name',
+          emailField: 'Email',
+          message: 'Describe your project...',
+          send: 'Send'
+        },
+        footer: {
+          tagline: 'Web Design from Berlin',
+          links: ['Services', 'Work', 'Process', 'Contact'],
+          copy: '© 2026 WebZan',
+          imprint: 'Imprint'
+        }
+      }
+    };
+
+    /* ===================================================
+       STATE
+    =================================================== */
+    let currentLang = 'de';
+    let currentTheme = 'dark';
+    let statsAnimated = false;
+
+    /* ===================================================
+       LANGUAGE SYSTEM — data-i18n attribute walker
+    =================================================== */
+    function getNestedValue(obj, path) {
+      return path.split('.').reduce((acc, key) => {
+        if (acc === undefined || acc === null) return undefined;
+        // handle numeric array indices
+        return acc[key];
+      }, obj);
+    }
+
+    function applyLanguage(lang) {
+      const data = content[lang];
+      if (!data) return;
+      currentLang = lang;
+
+      // Update html lang attribute
+      document.documentElement.lang = lang;
+
+      // Walk all data-i18n elements
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const val = getNestedValue(data, key);
+        if (val !== undefined && typeof val === 'string') {
+          el.textContent = val;
+        }
+      });
+
+      // Placeholders
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        const val = getNestedValue(data, key);
+        if (val !== undefined) el.placeholder = val;
+      });
+
+      // Labels for form fields that use data-i18n-label
+      document.querySelectorAll('[data-i18n-label]').forEach(el => {
+        const key = el.getAttribute('data-i18n-label');
+        const val = getNestedValue(data, key);
+        if (val !== undefined) el.textContent = val;
+      });
+
+      // Special: contact email is a link, update href and text
+      const emailEl = document.querySelector('.contact-email');
+      if (emailEl) {
+        emailEl.textContent = data.contact.email;
+        emailEl.href = 'mailto:' + data.contact.email;
+      }
+
+      // Update stat labels separately (they reference stats.0.label etc.)
+      [0, 1, 2].forEach(i => {
+        const labelEl = document.querySelector('[data-i18n="stats.' + i + '.label"]');
+        if (labelEl && data.stats[i]) labelEl.textContent = data.stats[i].label;
+      });
+
+      // Update language button states
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        const isActive = btn.getAttribute('data-lang') === lang;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+
+      // Re-run section label animation classes (labels update to new content)
+      // Labels with section-label class need text updated via data-i18n already done above
+    }
+
+    /* ===================================================
+       THEME TOGGLE
+    =================================================== */
+    function setTheme(theme) {
+      currentTheme = theme;
+      document.documentElement.setAttribute('data-theme', theme);
+      const toggleBtn = document.getElementById('theme-toggle');
+      if (toggleBtn) {
+        toggleBtn.textContent = theme === 'dark' ? '☀' : '🌙';
+        toggleBtn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      }
+    }
+
+    /* ===================================================
+       MOBILE MENU
+    =================================================== */
+    function initMobileMenu() {
+      const hamburger = document.getElementById('hamburger');
+      const mobileMenu = document.getElementById('mobile-menu');
+      let menuOpen = false;
+
+      function toggleMenu() {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle('open', menuOpen);
+        hamburger.setAttribute('aria-expanded', menuOpen ? 'true' : 'false');
+        mobileMenu.setAttribute('aria-hidden', menuOpen ? 'false' : 'true');
+
+        const spans = hamburger.querySelectorAll('span');
+        if (menuOpen) {
+          spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+          spans[1].style.opacity = '0';
+          spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+        } else {
+          spans[0].style.transform = '';
+          spans[1].style.opacity = '';
+          spans[2].style.transform = '';
+        }
+      }
+
+      if (hamburger) hamburger.addEventListener('click', toggleMenu);
+
+      // Close on mobile nav link click
+      if (mobileMenu) {
+        mobileMenu.querySelectorAll('a').forEach(a => {
+          a.addEventListener('click', () => {
+            if (menuOpen) toggleMenu();
+          });
+        });
+      }
+    }
+
+    /* ===================================================
+       SERVICES ACCORDION
+    =================================================== */
+    function initServices() {
+      const items = document.querySelectorAll('.service-item');
+
+      items.forEach(item => {
+        const header = item.querySelector('.service-header');
+        const arrow = item.querySelector('.service-arrow');
+        const body = item.querySelector('.service-body');
+
+        function toggleItem() {
+          const isActive = item.classList.contains('active');
+
+          // Close all
+          items.forEach(other => {
+            other.classList.remove('active');
+            const otherArrow = other.querySelector('.service-arrow');
+            const otherBody = other.querySelector('.service-body');
+            if (otherArrow) gsap.to(otherArrow, { rotation: 0, duration: 0.3, ease: 'power2.out' });
+            if (otherBody) otherBody.setAttribute('aria-hidden', 'true');
+            const otherHeader = other.querySelector('.service-header');
+            if (otherHeader) otherHeader.setAttribute('aria-expanded', 'false');
+          });
+
+          // Open clicked if it was closed
+          if (!isActive) {
+            item.classList.add('active');
+            if (arrow) gsap.to(arrow, { rotation: 90, duration: 0.3, ease: 'power2.out' });
+            if (body) body.setAttribute('aria-hidden', 'false');
+            if (header) header.setAttribute('aria-expanded', 'true');
+          }
+        }
+
+        if (header) {
+          header.addEventListener('click', toggleItem);
+          header.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              toggleItem();
+            }
+          });
+        }
+      });
+    }
+
+    /* ===================================================
+       STATS COUNTER
+    =================================================== */
+    function animateCounter(el, target) {
+      const isPercent = target.includes('%');
+      const isPlus = target.includes('+');
+      const num = parseInt(target, 10);
+      const obj = { val: 0 };
+
+      gsap.to(obj, {
+        val: num,
+        duration: 1.5,
+        ease: 'power2.out',
+        onUpdate: function() {
+          el.textContent = Math.round(obj.val) + (isPlus ? '+' : '') + (isPercent ? '%' : '');
+        }
+      });
+    }
+
+    function initStatsCounter() {
+      const statEls = [
+        document.getElementById('stat-0'),
+        document.getElementById('stat-1'),
+        document.getElementById('stat-2')
+      ];
+      const targets = ['4+', '20+', '100%'];
+
+      ScrollTrigger.create({
+        trigger: '#stats-section',
+        start: 'top 80%',
+        onEnter: () => {
+          if (statsAnimated) return;
+          statsAnimated = true;
+          statEls.forEach((el, i) => {
+            if (el) animateCounter(el, targets[i]);
+          });
+        }
+      });
+    }
+
+    /* ===================================================
+       PROCESS TIMELINE
+    =================================================== */
+    function initTimeline() {
+      const line = document.getElementById('timeline-line');
+      if (!line) return;
+
+      gsap.to(line, {
+        scaleY: 1,
+        duration: 1.5,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '#process-timeline',
+          start: 'top 75%',
+          end: 'bottom 25%',
+          scrub: 1
+        }
+      });
+    }
+
+    /* ===================================================
+       PROJECT CARDS STAGGER
+    =================================================== */
+    function initProjectCards() {
+      const cards = document.querySelectorAll('.project-card');
+
+      ScrollTrigger.create({
+        trigger: '#projects-grid',
+        start: 'top 80%',
+        onEnter: () => {
+          gsap.to(cards, {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+            stagger: 0.12,
+            ease: 'power2.out',
+            onStart: function() {
+              cards.forEach(c => c.classList.add('animated'));
+            }
+          });
+        }
+      });
+    }
+
+    /* ===================================================
+       SECTION LABELS FADE IN
+    =================================================== */
+    function initSectionLabels() {
+      document.querySelectorAll('.section-label').forEach(label => {
+        ScrollTrigger.create({
+          trigger: label,
+          start: 'top 88%',
+          onEnter: () => {
+            label.classList.add('animated');
+          }
+        });
+      });
+    }
+
+    /* ===================================================
+       HERO ENTRANCE ANIMATION
+    =================================================== */
+    function initHeroAnimation() {
+      const heroLeft = document.querySelector('.hero-left');
+      const heroRight = document.querySelector('.hero-logo-wrap');
+
+      if (!heroLeft) return;
+
+      const leftChildren = heroLeft.children;
+
+      gsap.set(leftChildren, { x: -30, opacity: 0 });
+      gsap.set(heroRight, { x: 30, opacity: 0, scale: 0.9 });
+
+      gsap.to(leftChildren, {
+        x: 0,
+        opacity: 1,
+        duration: 0.7,
+        stagger: 0.1,
+        ease: 'power2.out',
+        delay: 0.2
+      });
+
+      gsap.to(heroRight, {
+        x: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 0.9,
+        ease: 'power2.out',
+        delay: 0.5
+      });
+    }
+
+    /* ===================================================
+       HERO LOGO FLOAT
+    =================================================== */
+    function initLogoFloat() {
+      const logoWrap = document.getElementById('hero-logo-wrap');
+      if (!logoWrap) return;
+
+      gsap.to(logoWrap, {
+        y: -15,
+        duration: 3,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+        delay: 1.2
+      });
+    }
+
+    /* ===================================================
+       LENIS SMOOTH SCROLL
+    =================================================== */
+    function initLenis() {
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smooth: true
+      });
+
+      lenis.on('scroll', ScrollTrigger.update);
+
+      gsap.ticker.add(time => {
+        lenis.raf(time * 1000);
+      });
+
+      gsap.ticker.lagSmoothing(0);
+
+      // Smooth anchor scroll
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', e => {
+          const target = document.querySelector(anchor.getAttribute('href'));
+          if (target) {
+            e.preventDefault();
+            lenis.scrollTo(target, { offset: -70, duration: 1.4 });
+          }
+        });
+      });
+    }
+
+    /* ===================================================
+       INIT ALL
+    =================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
+      // Register GSAP plugins
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Init Lenis (must come before ScrollTrigger-dependent inits)
+      initLenis();
+
+      // Hero
+      initHeroAnimation();
+      initLogoFloat();
+
+      // Scroll-driven
+      initStatsCounter();
+      initTimeline();
+      initProjectCards();
+      initSectionLabels();
+
+      // Interactive
+      initServices();
+      initMobileMenu();
+
+      // Language
+      applyLanguage('de');
+
+      // Language switcher buttons
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const lang = btn.getAttribute('data-lang');
+          applyLanguage(lang);
+        });
+      });
+
+      // Theme toggle
+      const themeBtn = document.getElementById('theme-toggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          setTheme(newTheme);
+        });
+      }
+
+      // Initialize theme display
+      setTheme('dark');
+    });
+  </script>
+</body>
+</html>

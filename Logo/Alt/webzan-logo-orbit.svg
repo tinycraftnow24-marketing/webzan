@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+
+    <!-- 1. Inner circle: off-center radial for 3D light illusion -->
+    <radialGradient id="innerGrad" cx="35%" cy="30%" r="70%" fx="35%" fy="30%">
+      <stop offset="0%"   stop-color="#6B8FFF"/>
+      <stop offset="30%"  stop-color="#3D5AFE"/>
+      <stop offset="65%"  stop-color="#1E2D7A"/>
+      <stop offset="100%" stop-color="#060E28"/>
+    </radialGradient>
+
+    <!-- 2. Outer ring stroke gradient -->
+    <linearGradient id="ringGrad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#5B7FFF"/>
+      <stop offset="50%"  stop-color="#3D5AFE"/>
+      <stop offset="100%" stop-color="#0A1628"/>
+    </linearGradient>
+
+    <!-- 3. Ambient halo behind ring -->
+    <radialGradient id="haloGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="75%"  stop-color="#3D5AFE" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#3D5AFE" stop-opacity="0.08"/>
+    </radialGradient>
+
+    <!-- 4. Glow filter for inner circle -->
+    <filter id="glowCircle" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- 5. Glow filter for accent dots -->
+    <filter id="glowDot" x="-150%" y="-150%" width="400%" height="400%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+  </defs>
+
+  <!-- Layer 1: Background -->
+  <rect width="512" height="512" fill="#0D1B3E"/>
+
+  <!-- Layer 2: Ambient halo -->
+  <rect width="512" height="512" fill="url(#haloGrad)"/>
+
+  <!-- Layer 3: Outer ring -->
+  <circle cx="256" cy="256" r="216" stroke="url(#ringGrad)" stroke-width="3" fill="none"/>
+
+  <!-- Layer 4: Inner ring detail -->
+  <circle cx="256" cy="256" r="200" stroke="#3D5AFE" stroke-width="1" fill="none" opacity="0.3"/>
+
+  <!-- Layer 5: Primary orbit arc -->
+  <path d="M 105 362 Q 256 136 407 362" stroke="#3D5AFE" stroke-width="2.5" fill="none" opacity="0.45" stroke-dasharray="12,10" stroke-linecap="round"/>
+
+  <!-- Layer 6: Secondary orbit arc -->
+  <path d="M 128 380 Q 256 118 384 380" stroke="#7B9BFF" stroke-width="1.2" fill="none" opacity="0.2" stroke-dasharray="8,14" stroke-linecap="round"/>
+
+  <!-- Layer 7: Inner filled circle with glow -->
+  <circle cx="256" cy="256" r="196" fill="url(#innerGrad)" filter="url(#glowCircle)"/>
+
+  <!-- Layer 8: HZ monogram — optically centered, block spans x=162–350 -->
+  <!-- H — left stem -->
+  <line x1="162" y1="166" x2="162" y2="347" stroke="white" stroke-width="22" stroke-linecap="round"/>
+  <!-- H — right stem -->
+  <line x1="237" y1="166" x2="237" y2="347" stroke="white" stroke-width="22" stroke-linecap="round"/>
+  <!-- H — crossbar -->
+  <line x1="162" y1="241" x2="237" y2="241" stroke="white" stroke-width="22" stroke-linecap="round"/>
+  <!-- Z — top bar -->
+  <line x1="253" y1="166" x2="350" y2="166" stroke="white" stroke-width="22" stroke-linecap="round"/>
+  <!-- Z — diagonal -->
+  <line x1="350" y1="166" x2="253" y2="347" stroke="white" stroke-width="22" stroke-linecap="round"/>
+  <!-- Z — bottom bar -->
+  <line x1="253" y1="347" x2="350" y2="347" stroke="white" stroke-width="22" stroke-linecap="round"/>
+
+  <!-- Layer 9: Top accent dot -->
+  <circle cx="256" cy="136" r="10" fill="#5B7FFF" filter="url(#glowDot)"/>
+
+  <!-- Layer 10: Bottom accent dot -->
+  <circle cx="256" cy="376" r="10" fill="#5B7FFF" filter="url(#glowDot)"/>
+
+</svg>

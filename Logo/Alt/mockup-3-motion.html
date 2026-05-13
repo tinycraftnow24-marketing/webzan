@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebZan — Motion Design</title>
+<style>
+/* ─── RESET ─── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#152342;
+  --navy2:#1a2d55;
+  --blue:#3D5AFE;
+  --blue2:#536DFE;
+  --violet:#7B2FFF;
+  --glow:rgba(61,90,254,.35);
+  --glass:rgba(255,255,255,.09);
+  --border:rgba(255,255,255,.16);
+  --text:#F0F2FF;
+  --muted:rgba(210,218,255,.62);
+  --white:#fff;
+}
+html{scroll-behavior:smooth;overflow-x:hidden;}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--navy);color:var(--text);overflow-x:hidden;
+  cursor:none;
+}
+@media(hover:none){body{cursor:auto;}}
+
+/* ─── SCROLL PROGRESS ─── */
+#progress{
+  position:fixed;top:0;left:0;height:2px;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  z-index:1000;width:0%;transition:width .1s;
+}
+
+/* ─── CUSTOM CURSOR ─── */
+#cursor{
+  position:fixed;width:16px;height:16px;border-radius:50%;
+  background:var(--blue);pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:transform .08s,width .2s,height .2s,background .2s;
+  mix-blend-mode:screen;
+}
+#cursor-ring{
+  position:fixed;width:40px;height:40px;border-radius:50%;
+  border:1px solid rgba(61,90,254,.5);pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:transform .15s,width .25s,height .25s,opacity .2s;
+}
+body:has(a:hover) #cursor,body:has(button:hover) #cursor{width:24px;height:24px;}
+body:has(a:hover) #cursor-ring,body:has(button:hover) #cursor-ring{width:56px;height:56px;opacity:.3;}
+@media(hover:none){#cursor,#cursor-ring{display:none;}}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:20px 6%;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .4s,padding .4s,box-shadow .4s;
+}
+nav.scrolled{
+  background:rgba(5,13,31,.88);backdrop-filter:blur(20px);
+  padding:14px 6%;box-shadow:0 1px 0 var(--border);
+}
+.logo-wrap{display:flex;align-items:center;gap:14px;text-decoration:none;}
+.logo-wrap svg{transition:transform .4s;}
+.logo-wrap:hover svg{transform:rotate(15deg) scale(1.05);}
+.wm{display:flex;flex-direction:column;line-height:1.1;}
+.wm-web{font-size:9px;font-weight:600;letter-spacing:.35em;text-transform:uppercase;color:var(--blue2);}
+.wm-zan{font-size:20px;font-weight:800;color:var(--white);letter-spacing:-.02em;}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{
+  color:var(--muted);text-decoration:none;font-size:.875rem;
+  font-weight:500;letter-spacing:.01em;transition:color .2s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;
+  height:1px;background:var(--blue);transform:scaleX(0);
+  transition:transform .3s;transform-origin:left;
+}
+.nav-links a:hover{color:var(--white);}
+.nav-links a:hover::after{transform:scaleX(1);}
+.nav-cta{
+  background:var(--blue);color:#fff;padding:10px 22px;border-radius:8px;
+  font-size:.85rem;font-weight:700;text-decoration:none;
+  box-shadow:0 0 0 0 var(--glow);
+  transition:box-shadow .3s,transform .2s,background .2s;
+}
+.nav-cta:hover{
+  background:var(--blue2);
+  box-shadow:0 0 28px var(--glow);
+  transform:translateY(-1px);
+}
+/* Hamburger */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.hamburger span{
+  display:block;width:24px;height:2px;background:var(--text);
+  border-radius:2px;transition:all .3s;
+}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-menu{
+  display:none;position:fixed;inset:0;background:rgba(5,13,31,.97);
+  z-index:99;flex-direction:column;align-items:center;justify-content:center;
+  gap:32px;
+}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{
+  color:var(--text);text-decoration:none;font-size:1.8rem;
+  font-weight:800;letter-spacing:-.02em;
+  transition:color .2s;
+}
+.mobile-menu a:hover{color:var(--blue);}
+@media(max-width:768px){
+  .nav-links,.nav-cta{display:none;}
+  .hamburger{display:flex;}
+}
+
+/* ─── CANVAS ─── */
+#canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ─── GLOBAL BG LAYERS (fixed, behind everything) ─── */
+#bg-beams{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.beam{
+  position:absolute;
+  width:1px;
+  background:linear-gradient(to bottom,transparent,rgba(61,90,254,.35),rgba(123,47,255,.2),transparent);
+  transform-origin:top center;
+}
+.beam-1{height:60vh;left:15%;top:0;animation:beamDrift 14s ease-in-out infinite alternate;}
+.beam-2{height:80vh;left:35%;top:5%;animation:beamDrift 18s ease-in-out infinite alternate-reverse;opacity:.6;}
+.beam-3{height:50vh;left:60%;top:0;animation:beamDrift 11s ease-in-out infinite alternate;}
+.beam-4{height:70vh;left:80%;top:10%;animation:beamDrift 16s ease-in-out infinite alternate-reverse;opacity:.5;}
+.beam-5{height:45vh;left:5%;top:20%;animation:beamDrift 20s ease-in-out infinite alternate;opacity:.4;}
+@keyframes beamDrift{
+  from{opacity:.15;transform:scaleX(1) translateY(0);}
+  to{opacity:.55;transform:scaleX(2.5) translateY(40px);}
+}
+
+/* Horizontal sweep lines */
+.hline{
+  position:absolute;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(61,90,254,.12),rgba(61,90,254,.08),transparent);
+  animation:hlineSweep 6s ease-in-out infinite;
+}
+.hline-1{top:22%;animation-delay:0s;}
+.hline-2{top:55%;animation-delay:-2s;}
+.hline-3{top:80%;animation-delay:-4s;}
+@keyframes hlineSweep{
+  0%,100%{opacity:0;transform:scaleX(.3);transform-origin:left;}
+  50%{opacity:1;transform:scaleX(1);}
+}
+
+/* Ambient floating blobs (page-wide, slower than hero orbs) */
+.ambient{
+  position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;
+  animation:ambientFloat 25s ease-in-out infinite alternate;
+}
+.amb-1{width:500px;height:500px;background:rgba(61,90,254,.06);top:60%;left:-10%;animation-delay:0s;}
+.amb-2{width:400px;height:400px;background:rgba(123,47,255,.05);top:120%;right:-5%;animation-delay:-8s;}
+.amb-3{width:350px;height:350px;background:rgba(0,180,216,.04);top:180%;left:40%;animation-delay:-15s;}
+.amb-4{width:450px;height:450px;background:rgba(61,90,254,.05);top:260%;right:10%;animation-delay:-5s;}
+@keyframes ambientFloat{
+  from{transform:translate(0,0) scale(1);}
+  to{transform:translate(50px,30px) scale(1.15);}
+}
+
+/* ─── HERO ─── */
+.hero{
+  position:relative;z-index:1;
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:120px 6% 80px;
+  overflow:hidden;
+}
+/* Animated gradient orbs */
+.orb{
+  position:absolute;border-radius:50%;filter:blur(90px);
+  pointer-events:none;
+}
+.orb-1{
+  width:60vw;height:60vw;max-width:700px;max-height:700px;
+  background:radial-gradient(circle,rgba(61,90,254,.38),transparent 70%);
+  top:-20%;left:-10%;
+  animation:orbDrift 12s ease-in-out infinite alternate;
+}
+.orb-2{
+  width:50vw;height:50vw;max-width:600px;max-height:600px;
+  background:radial-gradient(circle,rgba(123,47,255,.3),transparent 70%);
+  bottom:-20%;right:-10%;
+  animation:orbDrift 16s ease-in-out infinite alternate-reverse;
+}
+.orb-3{
+  width:40vw;height:40vw;max-width:400px;max-height:400px;
+  background:radial-gradient(circle,rgba(0,180,216,.22),transparent 70%);
+  top:40%;left:50%;transform:translateX(-50%);
+  animation:orbDrift 20s ease-in-out infinite alternate;
+}
+@keyframes orbDrift{
+  from{transform:translate(0,0) scale(1);}
+  to{transform:translate(30px,20px) scale(1.1);}
+}
+
+/* Dot grid overlay — animates opacity */
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,.07) 1px,transparent 1px);
+  background-size:28px 28px;pointer-events:none;
+  animation:gridPulse 8s ease-in-out infinite;
+}
+@keyframes gridPulse{0%,100%{opacity:.5;}50%{opacity:1;}}
+
+/* Badge */
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--glass);border:1px solid var(--border);
+  backdrop-filter:blur(12px);
+  padding:7px 18px;border-radius:100px;margin-bottom:36px;
+  font-size:.72rem;font-weight:700;letter-spacing:.1em;
+  color:var(--blue2);text-transform:uppercase;
+  opacity:0;animation:fadeUp .8s ease .3s forwards;
+}
+.pulse-dot{
+  width:7px;height:7px;background:var(--blue);
+  border-radius:50%;animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 var(--glow);}50%{opacity:.5;box-shadow:0 0 0 6px transparent;}}
+
+/* Headline */
+.hero-h1{
+  font-size:clamp(2.8rem,8vw,7rem);
+  font-weight:900;color:var(--white);
+  line-height:1.02;letter-spacing:-.04em;
+  max-width:900px;
+}
+.word{
+  display:inline-block;overflow:hidden;
+}
+.word-inner{
+  display:inline-block;
+  transform:translateY(110%);
+  transition:transform .7s cubic-bezier(.22,1,.36,1);
+}
+.word-inner.visible{transform:translateY(0);}
+.gradient-word{
+  background:linear-gradient(135deg,var(--blue),#8B9FFF 50%,#00C8FF);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  background-size:200%;
+  animation:gradientShift 4s ease infinite alternate;
+}
+@keyframes gradientShift{
+  from{background-position:0%;}
+  to{background-position:100%;}
+}
+
+/* Subline */
+.hero-sub{
+  margin-top:24px;font-size:clamp(.95rem,2vw,1.2rem);
+  color:var(--muted);max-width:540px;line-height:1.75;
+  opacity:0;animation:fadeUp .8s ease .9s forwards;
+}
+
+/* CTAs */
+.hero-ctas{
+  margin-top:44px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;
+  opacity:0;animation:fadeUp .8s ease 1.1s forwards;
+}
+.btn-primary{
+  background:var(--blue);color:#fff;
+  padding:16px 36px;border-radius:12px;
+  font-size:1rem;font-weight:800;text-decoration:none;
+  position:relative;overflow:hidden;
+  box-shadow:0 8px 32px var(--glow);
+  transition:transform .2s,box-shadow .2s;
+}
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+  transform:translateX(-100%);
+  transition:transform .4s;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 20px 50px var(--glow);}
+.btn-primary:hover::before{transform:translateX(0);}
+.btn-ghost{
+  color:var(--text);padding:16px 36px;border-radius:12px;
+  font-size:1rem;font-weight:600;text-decoration:none;
+  border:1px solid var(--border);background:var(--glass);
+  backdrop-filter:blur(8px);
+  transition:border-color .2s,background .2s,transform .2s;
+}
+.btn-ghost:hover{
+  border-color:var(--blue);
+  background:rgba(61,90,254,.08);
+  transform:translateY(-3px);
+}
+
+/* Stats */
+.hero-stats{
+  margin-top:72px;display:flex;gap:56px;flex-wrap:wrap;justify-content:center;
+  opacity:0;animation:fadeUp .8s ease 1.3s forwards;
+}
+.stat{text-align:center;}
+.stat-num{
+  font-size:clamp(1.8rem,4vw,2.5rem);font-weight:900;
+  color:var(--white);letter-spacing:-.04em;
+  display:flex;align-items:baseline;gap:4px;justify-content:center;
+}
+.stat-num .suffix{font-size:.5em;color:var(--blue);}
+.stat-label{font-size:.75rem;color:var(--muted);margin-top:6px;letter-spacing:.04em;}
+
+/* Scroll indicator */
+.scroll-hint{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:var(--muted);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;
+  opacity:0;animation:fadeUp 1s ease 1.8s forwards;
+}
+.scroll-line{
+  width:1px;height:52px;
+  background:linear-gradient(to bottom,var(--blue),transparent);
+  animation:scrollAnim 2.2s ease-in-out infinite;
+}
+@keyframes scrollAnim{
+  0%{transform:scaleY(0);transform-origin:top;opacity:0;}
+  40%{transform:scaleY(1);transform-origin:top;opacity:1;}
+  60%{transform:scaleY(1);transform-origin:bottom;opacity:1;}
+  100%{transform:scaleY(0);transform-origin:bottom;opacity:0;}
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(28px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ─── ANIMATION CLASSES ─── */
+.anim{opacity:0;transform:translateY(40px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1);}
+.anim.visible{opacity:1;transform:translateY(0);}
+.anim-left{opacity:0;transform:translateX(-40px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1);}
+.anim-left.visible{opacity:1;transform:translateX(0);}
+.anim-right{opacity:0;transform:translateX(40px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1);}
+.anim-right.visible{opacity:1;transform:translateX(0);}
+.anim-scale{opacity:0;transform:scale(.92);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);}
+.anim-scale.visible{opacity:1;transform:scale(1);}
+/* Stagger delays */
+.d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}.d4{transition-delay:.4s;}
+
+/* ─── SECTION BASE ─── */
+.section{
+  position:relative;z-index:1;
+  padding:100px 6%;max-width:1280px;margin:0 auto;
+}
+.section-full{position:relative;z-index:1;padding:100px 6%;}
+.s-label{
+  display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:14px;
+  position:relative;padding-left:20px;
+}
+.s-label::before{
+  content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:10px;height:2px;background:var(--blue);border-radius:1px;
+}
+.s-title{
+  font-size:clamp(1.8rem,4vw,3.2rem);font-weight:900;
+  color:var(--white);letter-spacing:-.03em;line-height:1.12;
+}
+.s-sub{
+  font-size:1rem;color:var(--muted);line-height:1.75;
+  max-width:520px;margin-top:14px;
+}
+
+/* ─── CLIP REVEAL ─── */
+.clip-reveal{
+  display:inline-block;
+  clip-path:inset(0 100% 0 0);
+  transition:clip-path .8s cubic-bezier(.22,1,.36,1);
+}
+.clip-reveal.visible{clip-path:inset(0 0% 0 0);}
+
+/* ─── LEISTUNGEN ─── */
+.services-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:20px;margin-top:56px;
+}
+.s-card{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:20px;padding:32px 28px;
+  backdrop-filter:blur(12px);
+  transition:border-color .3s,transform .4s cubic-bezier(.22,1,.36,1),box-shadow .3s;
+  position:relative;overflow:hidden;cursor:default;
+}
+.s-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(61,90,254,.12),transparent 70%);
+  opacity:0;transition:opacity .3s;
+}
+.s-card:hover{
+  border-color:rgba(61,90,254,.5);
+  transform:translateY(-6px) scale(1.01);
+  box-shadow:0 24px 60px rgba(0,0,0,.3),0 0 0 1px rgba(61,90,254,.2);
+}
+.s-card:hover::before{opacity:1;}
+.card-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:rgba(61,90,254,.12);border:1px solid rgba(61,90,254,.2);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;transition:transform .3s,background .3s;
+}
+.s-card:hover .card-icon{transform:scale(1.1) rotate(5deg);background:rgba(61,90,254,.2);}
+.s-card h3{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:10px;}
+.s-card p{font-size:.855rem;color:var(--muted);line-height:1.65;}
+
+/* ─── AI SERVICES ─── */
+.ai-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:20px;margin-top:56px;
+}
+@media(max-width:900px){.ai-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:580px){.ai-grid{grid-template-columns:1fr;}}
+.ai-card{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:20px;padding:28px 24px;
+  backdrop-filter:blur(12px);position:relative;overflow:hidden;
+  transition:border-color .3s,transform .4s cubic-bezier(.22,1,.36,1),box-shadow .3s;
+  cursor:default;
+}
+.ai-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(123,47,255,.5),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.ai-card:hover{
+  border-color:rgba(123,47,255,.4);
+  transform:translateY(-5px);
+  box-shadow:0 20px 50px rgba(0,0,0,.3);
+}
+.ai-card:hover::before{opacity:1;}
+.ai-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--violet);background:rgba(123,47,255,.1);border:1px solid rgba(123,47,255,.2);
+  padding:3px 10px;border-radius:100px;margin-bottom:14px;
+}
+.ai-icon{
+  width:48px;height:48px;border-radius:14px;
+  background:rgba(123,47,255,.1);border:1px solid rgba(123,47,255,.2);
+  display:flex;align-items:center;justify-content:center;margin-bottom:16px;
+  transition:transform .3s,background .3s;
+}
+.ai-card:hover .ai-icon{transform:scale(1.1) rotate(-5deg);background:rgba(123,47,255,.2);}
+.ai-card h3{font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:8px;}
+.ai-card p{font-size:.83rem;color:var(--muted);line-height:1.65;}
+.ai-tag{
+  display:inline-block;margin-top:14px;
+  font-size:.7rem;font-weight:600;color:rgba(180,150,255,.7);
+  letter-spacing:.04em;
+}
+
+/* ─── PROZESS ─── */
+.process-section{background:rgba(61,90,254,.03);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.process-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;margin-top:56px;max-width:1200px;margin-left:auto;margin-right:auto;
+}
+.proc-step{
+  padding:32px 24px;border-right:1px solid var(--border);
+  position:relative;
+}
+.proc-step:last-child{border-right:none;}
+.proc-num{
+  font-size:3.5rem;font-weight:900;
+  color:rgba(61,90,254,.12);
+  line-height:1;margin-bottom:16px;letter-spacing:-.05em;
+  transition:color .3s;
+}
+.proc-step:hover .proc-num{color:rgba(61,90,254,.3);}
+.proc-step h3{font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:8px;}
+.proc-step p{font-size:.82rem;color:var(--muted);line-height:1.65;}
+.proc-line{
+  position:absolute;top:52px;right:-1px;
+  width:1px;height:40px;background:var(--blue);opacity:0;
+  transition:opacity .3s;
+}
+.proc-step:hover .proc-line{opacity:.5;}
+@media(max-width:768px){
+  .process-grid{grid-template-columns:1fr 1fr;}
+  .proc-step{border-right:none;border-bottom:1px solid var(--border);}
+  .proc-step:nth-child(odd){border-right:1px solid var(--border);}
+}
+
+/* ─── PRICING ─── */
+.pricing-section{padding:100px 6%;}
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:24px;max-width:1000px;margin:56px auto 0;
+}
+.p-card{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:24px;padding:40px 32px;
+  backdrop-filter:blur(12px);position:relative;overflow:hidden;
+  transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .3s,border-color .3s;
+}
+.p-card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 30px 80px rgba(0,0,0,.4);
+}
+.p-card.featured{
+  border-color:rgba(61,90,254,.5);
+  background:rgba(61,90,254,.07);
+}
+.p-card.featured::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--blue),var(--blue2),transparent);
+}
+.p-card.featured::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(61,90,254,.1),transparent 60%);
+  pointer-events:none;
+}
+.badge{
+  display:inline-block;background:var(--blue);color:#fff;
+  font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 12px;border-radius:100px;margin-bottom:16px;
+  box-shadow:0 4px 16px var(--glow);
+}
+.p-name{font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.p-price{font-size:3.2rem;font-weight:900;color:var(--white);letter-spacing:-.05em;line-height:1;}
+.p-price sup{font-size:1.2rem;vertical-align:top;margin-top:.5em;font-weight:600;}
+.p-cycle{font-size:.78rem;color:var(--muted);margin-top:6px;margin-bottom:28px;}
+.p-features{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:32px;}
+.p-features li{
+  font-size:.875rem;color:var(--text);
+  display:flex;align-items:center;gap:10px;
+}
+.p-features li::before{
+  content:'';width:18px;height:18px;border-radius:50%;flex-shrink:0;
+  background:rgba(61,90,254,.15);border:1.5px solid var(--blue);
+  transition:transform .2s;
+}
+.p-features li:hover::before{transform:scale(1.2);}
+.p-features li.dim{color:var(--muted);}
+.p-features li.dim::before{border-color:var(--border);background:none;}
+.p-btn{
+  display:block;text-align:center;padding:14px;border-radius:12px;
+  font-size:.9rem;font-weight:700;text-decoration:none;
+  border:1px solid var(--border);color:var(--text);
+  transition:all .25s;position:relative;overflow:hidden;
+}
+.p-btn::before{
+  content:'';position:absolute;inset:0;
+  background:var(--blue);transform:translateY(100%);transition:transform .3s;
+}
+.p-btn span{position:relative;z-index:1;}
+.p-btn:hover{border-color:var(--blue);color:#fff;}
+.p-btn:hover::before{transform:translateY(0);}
+.p-card.featured .p-btn{
+  background:var(--blue);border-color:var(--blue);color:#fff;
+  box-shadow:0 8px 28px var(--glow);
+}
+.p-card.featured .p-btn::before{background:var(--blue2);}
+
+/* ─── BRANCHEN ─── */
+.branchen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px;}
+@media(max-width:900px){.branchen-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:580px){.branchen-grid{grid-template-columns:1fr;}}
+.br-card{
+  border-radius:20px;overflow:hidden;
+  border:1px solid var(--border);
+  background:var(--glass);backdrop-filter:blur(12px);
+  transition:border-color .3s,transform .4s cubic-bezier(.22,1,.36,1),box-shadow .3s;
+  cursor:default;
+}
+.br-card:hover{
+  border-color:rgba(61,90,254,.4);
+  transform:translateY(-6px);
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+.br-top{
+  height:120px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.8rem;
+  background:rgba(61,90,254,.06);
+  border-bottom:1px solid var(--border);
+  transition:background .3s;
+}
+.br-card:hover .br-top{background:rgba(61,90,254,.12);}
+.br-body{padding:24px;}
+.br-body h3{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:8px;}
+.br-body p{font-size:.83rem;color:var(--muted);line-height:1.65;}
+
+/* ─── ÜBER MICH ─── */
+.ueber-section{
+  padding:100px 6%;
+  background:rgba(61,90,254,.03);
+  border-top:1px solid var(--border);
+}
+.ueber-inner{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1.2fr;gap:72px;align-items:center;
+}
+.ueber-visual{
+  display:flex;align-items:center;justify-content:center;
+}
+.ueber-card{
+  width:100%;max-width:380px;
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:24px;padding:40px 36px;backdrop-filter:blur(16px);
+  position:relative;
+}
+.ueber-card::before{
+  content:'';position:absolute;top:0;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--blue),transparent);
+}
+.hz-big{
+  font-size:7rem;font-weight:900;letter-spacing:-.05em;
+  background:linear-gradient(135deg,var(--blue),#8B9FFF);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;line-height:1;margin-bottom:16px;
+  animation:gradientShift 4s ease infinite alternate;
+}
+.ueber-card-name{font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:4px;}
+.ueber-card-role{font-size:.82rem;color:var(--muted);}
+.skill-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+.skill-tag{
+  font-size:.72rem;font-weight:600;letter-spacing:.06em;
+  background:rgba(61,90,254,.12);border:1px solid rgba(61,90,254,.25);
+  color:var(--blue2);padding:5px 12px;border-radius:100px;
+  transition:background .2s,transform .2s;
+}
+.skill-tag:hover{background:rgba(61,90,254,.25);transform:translateY(-2px);}
+.ueber-text .s-title{margin-bottom:20px;}
+.ueber-text p{color:var(--muted);line-height:1.8;font-size:.95rem;margin-bottom:16px;}
+.ueber-text p strong{color:var(--text);}
+@media(max-width:768px){
+  .ueber-inner{grid-template-columns:1fr;gap:40px;}
+  .ueber-visual{order:-1;}
+}
+
+/* ─── CTA ─── */
+.cta-section{padding:100px 6%;text-align:center;}
+.cta-box{
+  max-width:720px;margin:0 auto;
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:28px;padding:80px 48px;
+  backdrop-filter:blur(20px);position:relative;overflow:hidden;
+}
+.cta-box::before{
+  content:'';position:absolute;top:0;left:15%;right:15%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--blue),var(--blue2),transparent);
+}
+.cta-orb{
+  position:absolute;bottom:-80px;left:50%;transform:translateX(-50%);
+  width:400px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(61,90,254,.2),transparent 70%);
+  pointer-events:none;
+}
+.cta-box h2{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:900;color:var(--white);letter-spacing:-.03em;line-height:1.1;margin-bottom:16px;}
+.cta-box p{color:var(--muted);font-size:1rem;line-height:1.7;margin-bottom:44px;}
+.btn-glow{
+  display:inline-block;background:var(--blue);color:#fff;
+  padding:18px 44px;border-radius:14px;font-size:1rem;font-weight:800;
+  text-decoration:none;position:relative;
+  box-shadow:0 0 0 0 var(--glow),0 8px 32px var(--glow);
+  animation:glowPulse 2.5s ease-in-out infinite;
+  transition:transform .2s;
+}
+.btn-glow:hover{transform:translateY(-3px);}
+@keyframes glowPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(61,90,254,.5),0 8px 32px var(--glow);}
+  50%{box-shadow:0 0 0 16px rgba(61,90,254,0),0 8px 32px var(--glow);}
+}
+
+/* ─── FOOTER ─── */
+footer{
+  position:relative;z-index:1;
+  border-top:1px solid var(--border);
+  padding:36px 6%;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+}
+footer p{font-size:.8rem;color:var(--muted);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-size:.8rem;color:var(--muted);text-decoration:none;transition:color .2s;}
+.footer-links a:hover{color:var(--white);}
+
+/* ─── MOBILE TWEAKS ─── */
+@media(max-width:768px){
+  .pricing-grid{grid-template-columns:1fr;}
+  .branchen-grid{grid-template-columns:1fr;}
+  .hero-stats{gap:28px;}
+  .cta-box{padding:48px 28px;}
+}
+@media(max-width:600px){
+  .services-grid{grid-template-columns:1fr;}
+}
+
+/* ─── PORTFOLIO ─── */
+.portfolio-section{position:relative;z-index:1;padding:100px 6%;border-top:1px solid var(--border);}
+.portfolio-inner{max-width:1200px;margin:0 auto;}
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:40px;margin-bottom:48px;}
+.filter-btn{
+  padding:8px 20px;border-radius:100px;font-size:.8rem;font-weight:700;
+  letter-spacing:.04em;border:1px solid var(--border);background:var(--glass);
+  color:var(--muted);cursor:pointer;transition:all .25s;backdrop-filter:blur(8px);
+}
+.filter-btn:hover,.filter-btn.active{
+  background:var(--blue);border-color:var(--blue);color:#fff;
+  box-shadow:0 4px 20px var(--glow);
+}
+.portfolio-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+}
+@media(max-width:900px){.portfolio-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:580px){.portfolio-grid{grid-template-columns:1fr;}}
+.port-item{
+  transition:opacity .4s,transform .4s;
+}
+.port-item.hidden{opacity:0;pointer-events:none;transform:scale(.95);}
+.browser{
+  border-radius:14px;overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:0 16px 48px rgba(0,0,0,.35);
+  transition:transform .4s cubic-bezier(.22,1,.36,1),box-shadow .4s;
+  position:relative;
+}
+.browser:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 32px 72px rgba(0,0,0,.45);}
+.browser-bar{
+  background:rgba(255,255,255,.06);border-bottom:1px solid var(--border);
+  padding:10px 14px;display:flex;align-items:center;gap:10px;
+}
+.dots{display:flex;gap:5px;}
+.dot-r{width:10px;height:10px;border-radius:50%;background:#FF5F57;}
+.dot-y{width:10px;height:10px;border-radius:50%;background:#FEBC2E;}
+.dot-g{width:10px;height:10px;border-radius:50%;background:#28C840;}
+.url-bar{
+  flex:1;background:rgba(255,255,255,.06);border-radius:5px;
+  padding:4px 10px;font-size:.68rem;color:var(--muted);letter-spacing:.02em;
+}
+.browser-screen{
+  height:200px;position:relative;overflow:hidden;cursor:pointer;
+}
+.screen-bg{
+  position:absolute;inset:0;
+  transition:transform .5s cubic-bezier(.22,1,.36,1);
+}
+.browser:hover .screen-bg{transform:scale(1.04);}
+.screen-overlay{
+  position:absolute;inset:0;
+  background:rgba(5,13,31,.65);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .3s;backdrop-filter:blur(2px);
+}
+.browser:hover .screen-overlay{opacity:1;}
+.screen-overlay span{
+  background:var(--blue);color:#fff;
+  padding:10px 22px;border-radius:8px;
+  font-size:.82rem;font-weight:700;
+  box-shadow:0 8px 24px var(--glow);
+}
+.port-meta{padding:16px 18px 20px;background:var(--glass);backdrop-filter:blur(8px);}
+.port-tag{
+  display:inline-block;font-size:.65rem;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:8px;
+}
+.tag-handwerk{background:rgba(255,160,50,.12);color:#FFA032;border:1px solid rgba(255,160,50,.25);}
+.tag-gastro{background:rgba(255,80,80,.12);color:#FF6B6B;border:1px solid rgba(255,80,80,.25);}
+.tag-coaching{background:rgba(61,90,254,.15);color:#7B9BFF;border:1px solid rgba(61,90,254,.3);}
+.tag-shop{background:rgba(0,200,150,.12);color:#00C896;border:1px solid rgba(0,200,150,.25);}
+.tag-praxis{background:rgba(100,200,255,.12);color:#64C8FF;border:1px solid rgba(100,200,255,.25);}
+.tag-dienst{background:rgba(180,130,255,.12);color:#B482FF;border:1px solid rgba(180,130,255,.25);}
+.port-meta h3{font-size:.92rem;font-weight:700;color:var(--white);margin-bottom:4px;}
+.port-meta p{font-size:.78rem;color:var(--muted);}
+
+/* ─── TESTIMONIALS ─── */
+.testi-section{position:relative;z-index:1;padding:100px 0;border-top:1px solid var(--border);}
+.testi-header{padding:0 6%;max-width:1200px;margin:0 auto 56px;text-align:center;}
+.testi-runner{overflow:hidden;position:relative;}
+.testi-runner::before,.testi-runner::after{
+  content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none;
+}
+.testi-runner::before{left:0;background:linear-gradient(to right,var(--navy),transparent);}
+.testi-runner::after{right:0;background:linear-gradient(to left,var(--navy),transparent);}
+.testi-row{display:flex;gap:20px;margin-bottom:20px;width:max-content;}
+.testi-row-1{animation:testiScroll 40s linear infinite;}
+.testi-row-2{animation:testiScroll 40s linear infinite reverse;}
+.testi-runner:hover .testi-row{animation-play-state:paused;}
+@keyframes testiScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.testi-card{
+  width:320px;flex-shrink:0;
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:16px;padding:24px;backdrop-filter:blur(12px);
+  transition:border-color .3s,transform .3s;cursor:default;
+}
+.testi-card:hover{border-color:rgba(61,90,254,.4);transform:translateY(-4px);}
+.testi-stars{display:flex;gap:3px;margin-bottom:14px;}
+.testi-stars span{color:#FFB800;font-size:1rem;}
+.testi-quote{
+  font-size:.875rem;color:var(--text);line-height:1.7;margin-bottom:18px;
+  font-style:italic;
+}
+.testi-quote::before{content:'"';color:var(--blue);font-size:1.4rem;font-style:normal;line-height:0;vertical-align:-.3em;margin-right:2px;}
+.testi-author{display:flex;align-items:center;gap:12px;}
+.testi-avatar{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;font-weight:800;color:#fff;flex-shrink:0;
+}
+.testi-name{font-size:.85rem;font-weight:700;color:var(--white);}
+.testi-role{font-size:.75rem;color:var(--muted);}
+
+/* ─── MOCKUP LABEL ─── */
+.ml{
+  position:fixed;top:0;right:0;z-index:9999;
+  background:linear-gradient(90deg,var(--blue),var(--violet));
+  color:#fff;font-size:.65rem;font-weight:800;letter-spacing:.12em;
+  text-transform:uppercase;padding:6px 16px;border-radius:0 0 0 10px;
+}
+</style>
+</head>
+<body>
+
+<!-- Scroll progress -->
+<div id="progress"></div>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Mockup label -->
+<div class="ml">Mockup 3 — Motion Design</div>
+
+<!-- Canvas -->
+<canvas id="canvas"></canvas>
+
+<!-- Global background beams & ambient blobs -->
+<div id="bg-beams">
+  <div class="beam beam-1"></div>
+  <div class="beam beam-2"></div>
+  <div class="beam beam-3"></div>
+  <div class="beam beam-4"></div>
+  <div class="beam beam-5"></div>
+  <div class="hline hline-1"></div>
+  <div class="hline hline-2"></div>
+  <div class="hline hline-3"></div>
+  <div class="ambient amb-1"></div>
+  <div class="ambient amb-2"></div>
+  <div class="ambient amb-3"></div>
+  <div class="ambient amb-4"></div>
+</div>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#leistungen" onclick="closeMobile()">Leistungen</a>
+  <a href="#ki" onclick="closeMobile()">KI-Tools</a>
+  <a href="#pakete" onclick="closeMobile()">Pakete</a>
+  <a href="#branchen" onclick="closeMobile()">Branchen</a>
+  <a href="#ueber" onclick="closeMobile()">Über mich</a>
+  <a href="#kontakt" onclick="closeMobile()" style="color:var(--blue);">Erstgespräch →</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo-wrap">
+    <svg width="42" height="42" viewBox="0 0 68 68" fill="none">
+      <defs>
+        <linearGradient id="lg1" x1="0" y1="0" x2="68" y2="68">
+          <stop offset="0%" stop-color="#3D5AFE"/>
+          <stop offset="100%" stop-color="#0A1628"/>
+        </linearGradient>
+      </defs>
+      <circle cx="34" cy="34" r="32" stroke="#3D5AFE" stroke-width="1.5" fill="none" opacity="0.5"/>
+      <path d="M 10 48 Q 34 18 58 48" stroke="#7B9BFF" stroke-width="1.2" fill="none" opacity="0.35" stroke-dasharray="3,3"/>
+      <circle cx="34" cy="34" r="26" fill="url(#lg1)"/>
+      <line x1="19" y1="22" x2="19" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      <line x1="29" y1="22" x2="29" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      <line x1="19" y1="34" x2="29" y2="34" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      <line x1="35" y1="22" x2="49" y2="22" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      <line x1="49" y1="22" x2="35" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      <line x1="35" y1="46" x2="49" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="34" cy="6" r="2.5" fill="#3D5AFE"/>
+      <circle cx="34" cy="62" r="2.5" fill="#3D5AFE"/>
+    </svg>
+    <div class="wm">
+      <span class="wm-web">Web</span>
+      <span class="wm-zan">Zan</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#leistungen">Leistungen</a></li>
+    <li><a href="#ki">KI-Tools</a></li>
+    <li><a href="#pakete">Pakete</a></li>
+    <li><a href="#branchen">Branchen</a></li>
+    <li><a href="#ueber">Über mich</a></li>
+  </ul>
+  <a href="#kontakt" class="nav-cta">Erstgespräch buchen</a>
+  <div class="hamburger" id="hamburger" onclick="toggleMobile()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="hero-badge">
+    <div class="pulse-dot"></div>
+    Webdesign · WordPress · SEO
+  </div>
+
+  <h1 class="hero-h1" id="heroTitle">
+    <span class="word"><span class="word-inner">Ihre</span></span>&nbsp;
+    <span class="word"><span class="word-inner">Website.</span></span><br>
+    <span class="word"><span class="word-inner gradient-word">Ihr&nbsp;Wachstum.</span></span>
+  </h1>
+
+  <p class="hero-sub">Professionelle WordPress-Websites für Handwerker, Gastronomen und Coaches — persönlich, schnell und zu fairen Festpreisen.</p>
+
+  <div class="hero-ctas">
+    <a href="#kontakt" class="btn-primary">Kostenloses Erstgespräch</a>
+    <a href="#leistungen" class="btn-ghost">Leistungen ansehen</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num"><span class="counter" data-target="48">0</span><span class="suffix">h</span></div>
+      <div class="stat-label">Erste Antwort</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><span class="counter" data-target="5">0</span><span class="suffix">★</span></div>
+      <div class="stat-label">Kundenbewertung</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num"><span class="counter" data-target="100">0</span><span class="suffix">%</span></div>
+      <div class="stat-label">Persönlich</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- PROZESS -->
+<section class="process-section section-full">
+  <div style="max-width:1200px;margin:0 auto;padding:0 0 0 0;">
+    <div class="anim" style="text-align:center;margin-bottom:0;">
+      <div class="s-label" style="margin:0 auto 14px;display:table;">So läuft's ab</div>
+      <h2 class="s-title" style="text-align:center;">Von der Idee zum Launch.</h2>
+    </div>
+    <div class="process-grid">
+      <div class="proc-step anim d1">
+        <div class="proc-num">01</div>
+        <h3>Erstgespräch</h3>
+        <p>Wir sprechen über Ihr Unternehmen, Ihre Ziele und was Ihre Website wirklich leisten soll.</p>
+        <div class="proc-line"></div>
+      </div>
+      <div class="proc-step anim d2">
+        <div class="proc-num">02</div>
+        <h3>Konzept & Mockup</h3>
+        <p>Sie erhalten einen visuellen Entwurf, bevor eine Zeile Code geschrieben wird.</p>
+        <div class="proc-line"></div>
+      </div>
+      <div class="proc-step anim d3">
+        <div class="proc-num">03</div>
+        <h3>Umsetzung</h3>
+        <p>Schnelle, saubere Entwicklung. Regelmäßige Updates — Sie wissen immer wo's steht.</p>
+        <div class="proc-line"></div>
+      </div>
+      <div class="proc-step anim d4">
+        <div class="proc-num">04</div>
+        <h3>Launch & Übergabe</h3>
+        <p>Ihre Website geht live. Ich erkläre Ihnen alles und bleibe langfristig erreichbar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANCHEN -->
+<section id="branchen" style="position:relative;z-index:1;padding:100px 6%;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="anim">
+      <div class="s-label">Für wen ich arbeite</div>
+      <h2 class="s-title">Jede Branche.<br>Eine Ansprechperson.</h2>
+      <p class="s-sub">Ob Handwerk, Gastronomie oder Coaching — ich kenne die Anforderungen und baue Websites, die in Ihrer Branche wirklich funktionieren.</p>
+    </div>
+    <div class="branchen-grid">
+      <div class="br-card anim d1">
+        <div class="br-top">🔧</div>
+        <div class="br-body">
+          <h3>Handwerk & Gewerbe</h3>
+          <p>Klare Leistungsseiten, Kontaktformulare und lokale Google-Sichtbarkeit — mehr Aufträge, weniger Aufwand.</p>
+        </div>
+      </div>
+      <div class="br-card anim d2">
+        <div class="br-top">🍽️</div>
+        <div class="br-body">
+          <h3>Gastronomie</h3>
+          <p>Speisekarte, Öffnungszeiten, Online-Reservierung — Ihr Restaurant verdient eine Website, die Appetit macht.</p>
+        </div>
+      </div>
+      <div class="br-card anim d3">
+        <div class="br-top">🎯</div>
+        <div class="br-body">
+          <h3>Coaches & Berater</h3>
+          <p>Vertrauen aufbauen, Expertise zeigen, Leads gewinnen — Ihre Website ist Ihr bester Verkäufer.</p>
+        </div>
+      </div>
+      <div class="br-card anim d1">
+        <div class="br-top">🏥</div>
+        <div class="br-body">
+          <h3>Praxen & Gesundheit</h3>
+          <p>Seriöse Präsenz, Online-Terminbuchung und DSGVO-konformes Design für Arzt-, Zahnarzt- und Therapiepraxen.</p>
+        </div>
+      </div>
+      <div class="br-card anim d2">
+        <div class="br-top">🛍️</div>
+        <div class="br-body">
+          <h3>Einzelhandel & Shops</h3>
+          <p>Lokale Geschäfte und Boutiquen die online sichtbar werden — mit oder ohne eigenem Online-Shop.</p>
+        </div>
+      </div>
+      <div class="br-card anim d3">
+        <div class="br-top">🏢</div>
+        <div class="br-body">
+          <h3>Dienstleister & Büros</h3>
+          <p>Steuerberater, Anwälte, Agenturen — professionelle Außendarstellung die Kompetenz sofort kommuniziert.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio-section">
+  <div class="portfolio-inner">
+    <div class="anim">
+      <div class="s-label">Referenzen</div>
+      <h2 class="s-title">Websites, die wirken.<br>Ergebnisse, die überzeugen.</h2>
+      <p class="s-sub">Jedes Projekt maßgeschneidert — kein Template, keine Kompromisse.</p>
+    </div>
+    <div class="filter-row anim">
+      <button class="filter-btn active" data-filter="all">Alle</button>
+      <button class="filter-btn" data-filter="handwerk">Handwerk</button>
+      <button class="filter-btn" data-filter="gastro">Gastronomie</button>
+      <button class="filter-btn" data-filter="coaching">Coaching</button>
+      <button class="filter-btn" data-filter="shop">Shop</button>
+      <button class="filter-btn" data-filter="praxis">Praxis</button>
+    </div>
+    <div class="portfolio-grid">
+
+      <div class="port-item anim d1" data-cat="handwerk">
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="dots"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div></div>
+            <div class="url-bar">www.sanitaer-mueller.de</div>
+          </div>
+          <div class="browser-screen">
+            <div class="screen-bg" style="background:linear-gradient(135deg,#1a2a4a 0%,#0d1b3e 40%,#1e3a5f 100%);">
+              <div style="padding:20px;">
+                <div style="width:60%;height:12px;background:rgba(255,255,255,.15);border-radius:4px;margin-bottom:10px;"></div>
+                <div style="width:40%;height:8px;background:rgba(61,90,254,.4);border-radius:4px;margin-bottom:20px;"></div>
+                <div style="display:flex;gap:10px;">
+                  <div style="flex:1;height:80px;background:rgba(255,255,255,.05);border-radius:8px;border:1px solid rgba(255,255,255,.08);"></div>
+                  <div style="flex:1;height:80px;background:rgba(255,255,255,.05);border-radius:8px;border:1px solid rgba(255,255,255,.08);"></div>
+                  <div style="flex:1;height:80px;background:rgba(255,255,255,.05);border-radius:8px;border:1px solid rgba(255,255,255,.08);"></div>
+                </div>
+              </div>
+            </div>
+            <div class="screen-overlay"><span>Projekt ansehen →</span></div>
+          </div>
+        </div>
+        <div class="port-meta">
+          <span class="port-tag tag-handwerk">Handwerk</span>
+          <h3>Sanitär Müller GmbH</h3>
+          <p>WordPress · SEO · Kontaktformular</p>
+        </div>
+      </div>
+
+      <div class="port-item anim d2" data-cat="gastro">
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="dots"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div></div>
+            <div class="url-bar">www.trattoria-bella.de</div>
+          </div>
+          <div class="browser-screen">
+            <div class="screen-bg" style="background:linear-gradient(135deg,#2d1a0e 0%,#4a2010 50%,#1a0a05 100%);">
+              <div style="padding:20px;text-align:center;">
+                <div style="width:50%;height:14px;background:rgba(255,160,80,.3);border-radius:4px;margin:0 auto 8px;"></div>
+                <div style="width:30%;height:8px;background:rgba(255,160,80,.15);border-radius:4px;margin:0 auto 18px;"></div>
+                <div style="width:120px;height:36px;background:rgba(255,120,40,.3);border-radius:6px;margin:0 auto 16px;"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                  <div style="height:50px;background:rgba(255,255,255,.04);border-radius:6px;border:1px solid rgba(255,160,80,.15);"></div>
+                  <div style="height:50px;background:rgba(255,255,255,.04);border-radius:6px;border:1px solid rgba(255,160,80,.15);"></div>
+                </div>
+              </div>
+            </div>
+            <div class="screen-overlay"><span>Projekt ansehen →</span></div>
+          </div>
+        </div>
+        <div class="port-meta">
+          <span class="port-tag tag-gastro">Gastronomie</span>
+          <h3>Trattoria Bella</h3>
+          <p>WordPress · Speisekarte · Reservierung</p>
+        </div>
+      </div>
+
+      <div class="port-item anim d3" data-cat="coaching">
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="dots"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div></div>
+            <div class="url-bar">www.coach-fischer.de</div>
+          </div>
+          <div class="browser-screen">
+            <div class="screen-bg" style="background:linear-gradient(135deg,#0a0a1a 0%,#1a1040 50%,#0d0820 100%);">
+              <div style="padding:20px;">
+                <div style="width:70%;height:16px;background:linear-gradient(90deg,#3D5AFE,#8B9FFF);border-radius:4px;margin-bottom:8px;opacity:.6;"></div>
+                <div style="width:50%;height:8px;background:rgba(139,159,255,.2);border-radius:4px;margin-bottom:16px;"></div>
+                <div style="width:100px;height:32px;background:rgba(61,90,254,.4);border-radius:6px;margin-bottom:16px;"></div>
+                <div style="width:100%;height:60px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(61,90,254,.15);"></div>
+              </div>
+            </div>
+            <div class="screen-overlay"><span>Projekt ansehen →</span></div>
+          </div>
+        </div>
+        <div class="port-meta">
+          <span class="port-tag tag-coaching">Coaching</span>
+          <h3>Business Coach Fischer</h3>
+          <p>WordPress · Blog · Lead-Formular</p>
+        </div>
+      </div>
+
+      <div class="port-item anim d1" data-cat="shop">
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="dots"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div></div>
+            <div class="url-bar">www.naturkosmetik-shop.de</div>
+          </div>
+          <div class="browser-screen">
+            <div class="screen-bg" style="background:linear-gradient(135deg,#0a2010 0%,#153020 50%,#0a1a0a 100%);">
+              <div style="padding:16px;">
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;">
+                  <div style="height:60px;background:rgba(0,200,100,.08);border-radius:6px;border:1px solid rgba(0,200,100,.15);"></div>
+                  <div style="height:60px;background:rgba(0,200,100,.08);border-radius:6px;border:1px solid rgba(0,200,100,.15);"></div>
+                  <div style="height:60px;background:rgba(0,200,100,.08);border-radius:6px;border:1px solid rgba(0,200,100,.15);"></div>
+                </div>
+                <div style="width:80%;height:8px;background:rgba(0,200,100,.2);border-radius:4px;margin-bottom:6px;"></div>
+                <div style="width:50%;height:8px;background:rgba(0,200,100,.1);border-radius:4px;"></div>
+              </div>
+            </div>
+            <div class="screen-overlay"><span>Projekt ansehen →</span></div>
+          </div>
+        </div>
+        <div class="port-meta">
+          <span class="port-tag tag-shop">Online-Shop</span>
+          <h3>Naturkosmetik Hoffmann</h3>
+          <p>WooCommerce · SEO · Produktkatalog</p>
+        </div>
+      </div>
+
+      <div class="port-item anim d2" data-cat="praxis">
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="dots"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div></div>
+            <div class="url-bar">www.zahnarzt-weber.de</div>
+          </div>
+          <div class="browser-screen">
+            <div class="screen-bg" style="background:linear-gradient(135deg,#071828 0%,#0e2540 50%,#051020 100%);">
+              <div style="padding:20px;">
+                <div style="width:55%;height:12px;background:rgba(100,200,255,.3);border-radius:4px;margin-bottom:8px;"></div>
+                <div style="width:75%;height:8px;background:rgba(100,200,255,.15);border-radius:4px;margin-bottom:16px;"></div>
+                <div style="display:flex;gap:8px;">
+                  <div style="width:110px;height:30px;background:rgba(100,200,255,.25);border-radius:6px;"></div>
+                  <div style="width:90px;height:30px;background:rgba(255,255,255,.05);border-radius:6px;border:1px solid rgba(100,200,255,.2);"></div>
+                </div>
+              </div>
+            </div>
+            <div class="screen-overlay"><span>Projekt ansehen →</span></div>
+          </div>
+        </div>
+        <div class="port-meta">
+          <span class="port-tag tag-praxis">Praxis</span>
+          <h3>Zahnarztpraxis Weber</h3>
+          <p>WordPress · Terminbuchung · DSGVO</p>
+        </div>
+      </div>
+
+      <div class="port-item anim d3" data-cat="handwerk">
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="dots"><div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div></div>
+            <div class="url-bar">www.elektro-bauer.de</div>
+          </div>
+          <div class="browser-screen">
+            <div class="screen-bg" style="background:linear-gradient(135deg,#1a1500 0%,#2d2200 50%,#1a1200 100%);">
+              <div style="padding:20px;">
+                <div style="width:65%;height:12px;background:rgba(255,190,30,.3);border-radius:4px;margin-bottom:8px;"></div>
+                <div style="width:40%;height:8px;background:rgba(255,190,30,.15);border-radius:4px;margin-bottom:16px;"></div>
+                <div style="width:100%;height:70px;background:rgba(255,190,30,.05);border-radius:8px;border:1px solid rgba(255,190,30,.12);display:flex;align-items:center;justify-content:center;">
+                  <div style="width:60%;height:8px;background:rgba(255,190,30,.2);border-radius:4px;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="screen-overlay"><span>Projekt ansehen →</span></div>
+          </div>
+        </div>
+        <div class="port-meta">
+          <span class="port-tag tag-handwerk">Handwerk</span>
+          <h3>Elektro Bauer</h3>
+          <p>WordPress · Google Maps · SEO</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- LEISTUNGEN -->
+<section id="leistungen" style="position:relative;z-index:1;padding:100px 6%;border-top:1px solid var(--border);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="anim">
+      <div class="s-label">Was ich biete</div>
+      <h2 class="s-title">Alles aus einer Hand —<br>kein Agentur-Pingpong.</h2>
+      <p class="s-sub">Von der ersten Idee bis zum fertigen Launch. Sie haben einen Ansprechpartner: mich.</p>
+    </div>
+    <div class="services-grid">
+      <div class="s-card anim d1">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#3D5AFE" stroke-width="2"/><path d="M8 21h8M12 17v4" stroke="#3D5AFE" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>WordPress-Website</h3>
+        <p>Modern, schnell, mobile-optimiert. Individuell auf Ihr Unternehmen zugeschnitten — kein Template von der Stange.</p>
+      </div>
+      <div class="s-card anim d2">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18" stroke="#3D5AFE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17 6 23 6 23 12" stroke="#3D5AFE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Redesign</h3>
+        <p>Ihre alte Website bekommt ein frisches Gesicht — mehr Geschwindigkeit, besseres SEO, mehr Conversions.</p>
+      </div>
+      <div class="s-card anim d3">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="#3D5AFE" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="6" x2="21" y2="6" stroke="#3D5AFE" stroke-width="2"/><path d="M16 10a4 4 0 01-8 0" stroke="#3D5AFE" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Online-Shop</h3>
+        <p>WooCommerce-Shops die wirklich verkaufen — übersichtlich, sicher und für alle Geräte optimiert.</p>
+      </div>
+      <div class="s-card anim d4">
+        <div class="card-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="#3D5AFE" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke="#3D5AFE" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>SEO-Optimierung</h3>
+        <p>Damit Google Ihr Unternehmen findet. Nachhaltig, transparent — ohne Abonnementfallen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KI-SERVICES -->
+<section id="ki" style="position:relative;z-index:1;padding:100px 6%;border-top:1px solid var(--border);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="anim">
+      <div class="s-label">KI-gestützte Erweiterungen</div>
+      <h2 class="s-title">Mehr als eine Website —<br>smarte Werkzeuge für Ihr Wachstum.</h2>
+      <p class="s-sub">Moderne KI-Tools die ich nahtlos in Ihre Website integriere — ohne dass Sie sich darum kümmern müssen.</p>
+    </div>
+    <div class="ai-grid">
+
+      <div class="ai-card anim d1">
+        <div class="ai-badge">✦ KI</div>
+        <div class="ai-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#7B2FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>KI-Chatbot Integration</h3>
+        <p>Ein intelligenter Assistent auf Ihrer Website beantwortet Kundenfragen rund um die Uhr — automatisch, ohne Ihr Zutun.</p>
+        <span class="ai-tag">ab 149 € einmalig</span>
+      </div>
+
+      <div class="ai-card anim d2">
+        <div class="ai-badge">✦ KI</div>
+        <div class="ai-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 20h9" stroke="#7B2FFF" stroke-width="2" stroke-linecap="round"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="#7B2FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>KI-Content Paket</h3>
+        <p>Professionelle Texte, SEO-Artikel und passende Bilder für Ihre Website — vollständig KI-generiert und von mir kuratiert.</p>
+        <span class="ai-tag">ab 199 € pro Paket</span>
+      </div>
+
+      <div class="ai-card anim d3">
+        <div class="ai-badge">✦ KI</div>
+        <div class="ai-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#7B2FFF" stroke-width="2"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14" stroke="#7B2FFF" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Prozess-Automatisierung</h3>
+        <p>Kontaktformulare, die automatisch E-Mails versenden, Leads speichern und Sie im CRM benachrichtigen — ohne manuelle Arbeit.</p>
+        <span class="ai-tag">ab 299 € einmalig</span>
+      </div>
+
+      <div class="ai-card anim d1">
+        <div class="ai-badge">✦ KI</div>
+        <div class="ai-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#7B2FFF" stroke-width="2"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#7B2FFF" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Logo & Branding</h3>
+        <p>KI-gestütztes Logo-Design und ein konsistentes visuelles Erscheinungsbild für Ihr Unternehmen — schnell, günstig, professionell.</p>
+        <span class="ai-tag">ab 249 € einmalig</span>
+      </div>
+
+      <div class="ai-card anim d2">
+        <div class="ai-badge">✦ KI</div>
+        <div class="ai-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke="#7B2FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>SEO-Analyse & Bericht</h3>
+        <p>Monatlicher KI-gestützter Bericht über Ihre Google-Rankings, Seitengeschwindigkeit und konkrete Verbesserungsvorschläge.</p>
+        <span class="ai-tag">ab 49 €/Monat</span>
+      </div>
+
+      <div class="ai-card anim d3">
+        <div class="ai-badge">✦ KI</div>
+        <div class="ai-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#7B2FFF" stroke-width="2"/><path d="M8 21h8M12 17v4" stroke="#7B2FFF" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Social Media Starter</h3>
+        <p>KI-generierte Post-Vorlagen, Bildkonzepte und ein Redaktionsplan für Instagram, Facebook & Co. — startklar in 48 Stunden.</p>
+        <span class="ai-tag">ab 179 € einmalig</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pakete" class="pricing-section">
+  <div style="text-align:center;" class="anim">
+    <div class="s-label" style="display:table;margin:0 auto 14px;">Transparente Festpreise</div>
+    <h2 class="s-title">Kein Kleingedrucktes.<br>Kein Stundensatz-Schock.</h2>
+  </div>
+  <div class="pricing-grid">
+    <div class="p-card anim-scale d1">
+      <div class="p-name">Starter</div>
+      <div class="p-price"><sup>€</sup>599</div>
+      <div class="p-cycle">Einmalig · zzgl. MwSt.</div>
+      <ul class="p-features">
+        <li>1–3 Seiten</li>
+        <li>Responsive Design</li>
+        <li>Kontaktformular</li>
+        <li>Basis-SEO</li>
+        <li>1 Revision</li>
+        <li class="dim">Blog</li>
+        <li class="dim">Online-Shop</li>
+      </ul>
+      <a href="#kontakt" class="p-btn"><span>Jetzt anfragen</span></a>
+    </div>
+    <div class="p-card featured anim-scale d2">
+      <span class="badge">Beliebtestes Paket</span>
+      <div class="p-name">Business</div>
+      <div class="p-price"><sup>€</sup>1.099</div>
+      <div class="p-cycle">Einmalig · zzgl. MwSt.</div>
+      <ul class="p-features">
+        <li>bis 7 Seiten</li>
+        <li>Responsive Design</li>
+        <li>Kontaktformular</li>
+        <li>Erweitertes SEO</li>
+        <li>2 Revisionen</li>
+        <li>Blog-Bereich</li>
+        <li class="dim">Online-Shop</li>
+      </ul>
+      <a href="#kontakt" class="p-btn"><span>Jetzt anfragen</span></a>
+    </div>
+    <div class="p-card anim-scale d3">
+      <div class="p-name">Premium</div>
+      <div class="p-price"><sup>€</sup>1.899</div>
+      <div class="p-cycle">Einmalig · zzgl. MwSt.</div>
+      <ul class="p-features">
+        <li>bis 15 Seiten</li>
+        <li>Responsive Design</li>
+        <li>Kontaktformular</li>
+        <li>Erweitertes SEO</li>
+        <li>3 Revisionen</li>
+        <li>Blog-Bereich</li>
+        <li>Shop möglich</li>
+      </ul>
+      <a href="#kontakt" class="p-btn"><span>Jetzt anfragen</span></a>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:24px;font-size:.82rem;color:var(--muted);" class="anim">
+    + Wartung & Support ab <strong style="color:var(--text);">39 €/Monat</strong> &nbsp;·&nbsp; Hosting-Setup einmalig 49 €
+  </p>
+</section>
+
+<!-- ÜBER MICH -->
+<section id="ueber" class="ueber-section">
+  <div class="ueber-inner">
+    <div class="ueber-visual anim-left">
+      <div class="ueber-card">
+        <div class="hz-big">HZ</div>
+        <div class="ueber-card-name">Hendrik Zanzig</div>
+        <div class="ueber-card-role">Webdesigner · Projektmanager · Bioinformatiker</div>
+        <div class="skill-tags">
+          <span class="skill-tag">WordPress</span>
+          <span class="skill-tag">Projektmanagement</span>
+          <span class="skill-tag">SEO</span>
+          <span class="skill-tag">Strukturiertes Denken</span>
+          <span class="skill-tag">Nahbarkeit</span>
+        </div>
+      </div>
+    </div>
+    <div class="ueber-text anim-right">
+      <div class="s-label">Über mich</div>
+      <h2 class="s-title">Webdesigner mit Struktur im Kopf.</h2>
+      <p>Ich habe Bioinformatik studiert und arbeite hauptberuflich als <strong>Projektmanager in der Softwarebranche</strong>. Websites baue ich schon lange — angefangen mit eigenen Projekten, dann für Freunde und Vereine. Irgendwann wurde aus dem Hobby eine Berufung.</p>
+      <p>Mit WebZan helfe ich kleinen Unternehmen dabei, online professionell aufzutreten — <strong>ohne Agentur-Chaos und ohne Wochen voller Missverständnisse.</strong> Bei mir haben Sie einen einzigen Ansprechpartner: mich. Ich höre zu, ich plane, ich setze um.</p>
+      <p>Mein Versprechen: <strong>schnelle Ergebnisse, die trotzdem hochwertig sind.</strong> Offenheit über jeden Schritt. Und eine Zusammenarbeit, bei der Sie sich nicht erklären müssen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <div class="testi-header anim">
+    <div class="s-label" style="display:table;margin:0 auto 14px;">Was Kunden sagen</div>
+    <h2 class="s-title">Vertrauen, das überzeugt.</h2>
+    <p class="s-sub" style="margin:12px auto 0;">Echte Rückmeldungen von Unternehmern, die ihre Website mit WebZan gebaut haben.</p>
+  </div>
+  <div class="testi-runner">
+    <!-- ROW 1 -->
+    <div class="testi-row testi-row-1">
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Hendrik hat unsere Vorstellungen auf Anhieb verstanden. Kein langes Hin und Her — die Website war in 3 Wochen fertig und übertrifft alles, was wir erwartet hatten.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#FF6B35,#FF9A00);">KM</div>
+          <div><div class="testi-name">Klaus Müller</div><div class="testi-role">Inhaber · Sanitär Müller GmbH</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Endlich ein Webdesigner der zuhört! Unsere Speisekarte ist jetzt online, Reservierungen kommen direkt rein. Gäste finden uns viel leichter bei Google.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#FF5252,#FF1744);">SR</div>
+          <div><div class="testi-name">Sofia Russo</div><div class="testi-role">Inhaberin · Trattoria Bella</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Der direkte Kontakt zu Hendrik macht alles so viel einfacher. Keine Agentur-Bürokratie, keine Missverständnisse. Einfach gemacht was ich wollte — und noch besser.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#3D5AFE,#536DFE);">TF</div>
+          <div><div class="testi-name">Thomas Fischer</div><div class="testi-role">Business Coach · München</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Unser Online-Shop läuft seit dem Launch reibungslos. Die SEO-Optimierung hat bereits nach 6 Wochen zu deutlich mehr organischen Besuchern geführt.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#00C896,#00897B);">LH</div>
+          <div><div class="testi-name">Laura Hoffmann</div><div class="testi-role">Inhaberin · Naturkosmetik Hoffmann</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Sehr professionelle Arbeit zu einem fairen Preis. Hendrik erklärt alles verständlich und ist auch nach dem Launch noch ansprechbar. Klare Empfehlung!</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#64C8FF,#0091EA);">MW</div>
+          <div><div class="testi-name">Dr. Markus Weber</div><div class="testi-role">Zahnarzt · Praxis Weber</div></div>
+        </div>
+      </div>
+      <!-- Duplicate for seamless loop -->
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Hendrik hat unsere Vorstellungen auf Anhieb verstanden. Kein langes Hin und Her — die Website war in 3 Wochen fertig und übertrifft alles, was wir erwartet hatten.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#FF6B35,#FF9A00);">KM</div>
+          <div><div class="testi-name">Klaus Müller</div><div class="testi-role">Inhaber · Sanitär Müller GmbH</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Endlich ein Webdesigner der zuhört! Unsere Speisekarte ist jetzt online, Reservierungen kommen direkt rein. Gäste finden uns viel leichter bei Google.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#FF5252,#FF1744);">SR</div>
+          <div><div class="testi-name">Sofia Russo</div><div class="testi-role">Inhaberin · Trattoria Bella</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Der direkte Kontakt zu Hendrik macht alles so viel einfacher. Keine Agentur-Bürokratie, keine Missverständnisse. Einfach gemacht was ich wollte — und noch besser.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#3D5AFE,#536DFE);">TF</div>
+          <div><div class="testi-name">Thomas Fischer</div><div class="testi-role">Business Coach · München</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Unser Online-Shop läuft seit dem Launch reibungslos. Die SEO-Optimierung hat bereits nach 6 Wochen zu deutlich mehr organischen Besuchern geführt.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#00C896,#00897B);">LH</div>
+          <div><div class="testi-name">Laura Hoffmann</div><div class="testi-role">Inhaberin · Naturkosmetik Hoffmann</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Sehr professionelle Arbeit zu einem fairen Preis. Hendrik erklärt alles verständlich und ist auch nach dem Launch noch ansprechbar. Klare Empfehlung!</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#64C8FF,#0091EA);">MW</div>
+          <div><div class="testi-name">Dr. Markus Weber</div><div class="testi-role">Zahnarzt · Praxis Weber</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- ROW 2 (reverse direction) -->
+    <div class="testi-row testi-row-2">
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Ich hatte vorher Angst, dass eine Website zu teuer und zu kompliziert wird. WebZan hat beides widerlegt — faire Preise, klarer Prozess, tolles Ergebnis.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#B482FF,#7B2FFF);">AB</div>
+          <div><div class="testi-name">Anna Becker</div><div class="testi-role">Life Coach · Hamburg</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Seit der neuen Website bekomme ich regelmäßig Anfragen über das Kontaktformular. Vorher haben mich Kunden kaum online gefunden. Riesiger Unterschied!</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#FFA032,#FF6B00);">JE</div>
+          <div><div class="testi-name">Jörg Eichmann</div><div class="testi-role">Elektriker · Köln</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Was mich besonders überzeugt hat: Hendrik hat mir nach dem Launch alles erklärt und ich kann die Website jetzt selbst pflegen. Kein dauerhafter Vertrag nötig.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#00C896,#00BFA5);">MK</div>
+          <div><div class="testi-name">Maria Klein</div><div class="testi-role">Inhaberin · Yoga Studio Berlin</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Schnell, günstig und trotzdem qualitativ hochwertig. Ich dachte das sei unmöglich — WebZan hat mich eines Besseren belehrt. Absolute Empfehlung.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#3D5AFE,#7B2FFF);">PS</div>
+          <div><div class="testi-name">Peter Schneider</div><div class="testi-role">Steuerberater · Frankfurt</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Endlich sieht unsere Website so aus wie wir uns das immer vorgestellt haben. Die Zusammenarbeit war unkompliziert und das Ergebnis spricht für sich.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#FF6B6B,#FF1744);">CL</div>
+          <div><div class="testi-name">Christina Lang</div><div class="testi-role">Inhaberin · Café Sonnenschein</div></div>
+        </div>
+      </div>
+      <!-- Duplicate -->
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Ich hatte vorher Angst, dass eine Website zu teuer und zu kompliziert wird. WebZan hat beides widerlegt — faire Preise, klarer Prozess, tolles Ergebnis.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#B482FF,#7B2FFF);">AB</div>
+          <div><div class="testi-name">Anna Becker</div><div class="testi-role">Life Coach · Hamburg</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Seit der neuen Website bekomme ich regelmäßig Anfragen über das Kontaktformular. Vorher haben mich Kunden kaum online gefunden. Riesiger Unterschied!</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#FFA032,#FF6B00);">JE</div>
+          <div><div class="testi-name">Jörg Eichmann</div><div class="testi-role">Elektriker · Köln</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Was mich besonders überzeugt hat: Hendrik hat mir nach dem Launch alles erklärt und ich kann die Website jetzt selbst pflegen. Kein dauerhafter Vertrag nötig.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#00C896,#00BFA5);">MK</div>
+          <div><div class="testi-name">Maria Klein</div><div class="testi-role">Inhaberin · Yoga Studio Berlin</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Schnell, günstig und trotzdem qualitativ hochwertig. Ich dachte das sei unmöglich — WebZan hat mich eines Besseren belehrt. Absolute Empfehlung.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#3D5AFE,#7B2FFF);">PS</div>
+          <div><div class="testi-name">Peter Schneider</div><div class="testi-role">Steuerberater · Frankfurt</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">Endlich sieht unsere Website so aus wie wir uns das immer vorgestellt haben. Die Zusammenarbeit war unkompliziert und das Ergebnis spricht für sich.</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#FF6B6B,#FF1744);">CL</div>
+          <div><div class="testi-name">Christina Lang</div><div class="testi-role">Inhaberin · Café Sonnenschein</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="kontakt" class="cta-section">
+  <div class="cta-box anim-scale">
+    <div class="cta-orb"></div>
+    <h2>Bereit für Ihre<br>neue Website?</h2>
+    <p>Kostenloses Erstgespräch — ich höre zu, beantworte alle Fragen<br>und erstelle ein unverbindliches Angebot.</p>
+    <a href="#" class="btn-glow">Jetzt Erstgespräch vereinbaren →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <svg width="30" height="30" viewBox="0 0 68 68" fill="none">
+      <defs><linearGradient id="fgl" x1="0" y1="0" x2="68" y2="68"><stop offset="0%" stop-color="#3D5AFE"/><stop offset="100%" stop-color="#0A1628"/></linearGradient></defs>
+      <circle cx="34" cy="34" r="26" fill="url(#fgl)"/>
+      <line x1="19" y1="22" x2="19" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      <line x1="29" y1="22" x2="29" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      <line x1="19" y1="34" x2="29" y2="34" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      <line x1="35" y1="22" x2="49" y2="22" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      <line x1="49" y1="22" x2="35" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      <line x1="35" y1="46" x2="49" y2="46" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span style="font-size:.8rem;color:var(--muted);">© 2026 WebZan · Hendrik Zanzig</span>
+  </div>
+  <div class="footer-links">
+    <a href="#">Impressum</a>
+    <a href="#">Datenschutz</a>
+    <a href="#">Blog</a>
+  </div>
+</footer>
+
+<script>
+/* ─── CANVAS PARTICLES ─── */
+(function(){
+  const canvas=document.getElementById('canvas');
+  const ctx=canvas.getContext('2d');
+  let W,H,particles=[];
+  const COUNT=window.innerWidth<768?50:100;
+
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',()=>{resize();});
+
+  class Particle{
+    constructor(){this.reset();}
+    reset(){
+      this.x=Math.random()*W;this.y=Math.random()*H;
+      this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.3;
+      this.r=Math.random()*1.5+.5;this.alpha=Math.random()*.5+.1;
+    }
+    update(){
+      this.x+=this.vx;this.y+=this.vy;
+      if(this.x<0||this.x>W||this.y<0||this.y>H)this.reset();
+    }
+    draw(){
+      ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(61,90,254,${this.alpha})`;ctx.fill();
+    }
+  }
+
+  for(let i=0;i<COUNT;i++)particles.push(new Particle());
+
+  function connect(){
+    const DIST=120;
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const dx=particles[i].x-particles[j].x;
+        const dy=particles[i].y-particles[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<DIST){
+          ctx.beginPath();
+          ctx.strokeStyle=`rgba(61,90,254,${(1-d/DIST)*.12})`;
+          ctx.lineWidth=.5;
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{p.update();p.draw();});
+    connect();
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+/* ─── CURSOR ─── */
+(function(){
+  const cursor=document.getElementById('cursor');
+  const ring=document.getElementById('cursor-ring');
+  if(!cursor||!ring)return;
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+  function animRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);}
+  animRing();
+})();
+
+/* ─── SCROLL PROGRESS ─── */
+window.addEventListener('scroll',()=>{
+  const prog=document.getElementById('progress');
+  const pct=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  prog.style.width=pct+'%';
+});
+
+/* ─── NAV ON SCROLL ─── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
+});
+
+/* ─── HERO TEXT REVEAL ─── */
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.querySelectorAll('.word-inner').forEach((el,i)=>{
+      setTimeout(()=>el.classList.add('visible'),500+i*150);
+    });
+  },100);
+});
+
+/* ─── INTERSECTION OBSERVER ─── */
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      // counter
+      e.target.querySelectorAll('.counter').forEach(c=>startCount(c));
+    }
+  });
+},{threshold:.15});
+document.querySelectorAll('.anim,.anim-left,.anim-right,.anim-scale,.clip-reveal').forEach(el=>io.observe(el));
+
+/* ─── COUNTER ─── */
+function startCount(el){
+  if(el.dataset.counted)return;
+  el.dataset.counted='1';
+  const target=+el.dataset.target;
+  const dur=1800;const step=dur/60;
+  let cur=0;
+  const timer=setInterval(()=>{
+    cur+=target/step;
+    if(cur>=target){cur=target;clearInterval(timer);}
+    el.textContent=Math.floor(cur);
+  },16);
+}
+// Also observe stats in hero
+setTimeout(()=>{
+  document.querySelectorAll('.counter').forEach(c=>startCount(c));
+},1600);
+
+/* ─── MOBILE MENU ─── */
+function toggleMobile(){
+  const menu=document.getElementById('mobileMenu');
+  const burger=document.getElementById('hamburger');
+  menu.classList.toggle('open');
+  burger.classList.toggle('open');
+}
+function closeMobile(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+/* ─── PORTFOLIO FILTER ─── */
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f=btn.dataset.filter;
+    document.querySelectorAll('.port-item').forEach(item=>{
+      const match=f==='all'||item.dataset.cat===f;
+      item.classList.toggle('hidden',!match);
+    });
+  });
+});
+
+/* ─── CARD 3D TILT ─── */
+document.querySelectorAll('.s-card,.p-card,.br-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`translateY(-6px) perspective(600px) rotateY(${x*8}deg) rotateX(${-y*8}deg)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='';
+  });
+});
+</script>
+</body>
+</html>

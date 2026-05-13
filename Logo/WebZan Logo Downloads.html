@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<title>WebZan — Logo Downloads</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/png" sizes="32x32" href="exports/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="exports/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="exports/favicon-180.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg: #161310;
+    --fg: #f0c060;
+    --bone: #f4f2ee;
+    --line: rgba(240, 192, 96, 0.18);
+    --muted: rgba(244, 242, 238, 0.55);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--bone);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 56px 120px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 64px;
+  }
+  .header h1 {
+    font-size: 56px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    margin: 0 0 12px;
+    line-height: 1;
+  }
+  .header .sub {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .header .meta {
+    text-align: right;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  /* Hero — main logo */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 48px;
+    margin-bottom: 96px;
+    align-items: stretch;
+  }
+  .hero-mark {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    position: relative;
+  }
+  .hero-mark svg {
+    width: 70%;
+    height: 70%;
+  }
+  .hero-mark::before {
+    content: "01";
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+  }
+  .hero-mark::after {
+    content: "WAVEFORM";
+    position: absolute;
+    bottom: 16px;
+    right: 20px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+  }
+  .hero-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8px 0;
+  }
+  .hero-info h2 {
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin: 0 0 16px;
+  }
+  .hero-info p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgba(244, 242, 238, 0.78);
+    margin: 0 0 20px;
+    text-wrap: pretty;
+  }
+  .specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 24px;
+  }
+  .spec-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .spec-row .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .spec-row .value {
+    font-size: 13px;
+    color: var(--bone);
+  }
+  .spec-row .value code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--fg);
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 80px;
+  }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+  }
+  .section-head h3 {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .section-head .count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Asset grids */
+  .asset-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .asset {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.15s, transform 0.15s;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+  }
+  .asset:hover {
+    border-color: var(--fg);
+    transform: translateY(-2px);
+  }
+  .asset .thumb {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+    position: relative;
+  }
+  .asset .thumb img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    image-rendering: -webkit-optimize-contrast;
+  }
+  .asset.tile-bone .thumb { background: var(--bone); }
+  .asset.tile-ink  .thumb { background: #0a0a0a; }
+  .asset.tile-checker .thumb {
+    background-color: #1a1714;
+    background-image:
+      linear-gradient(45deg, #221d18 25%, transparent 25%),
+      linear-gradient(-45deg, #221d18 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #221d18 75%),
+      linear-gradient(-45deg, transparent 75%, #221d18 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  }
+  .asset .meta {
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .asset .meta .name {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+  }
+  .asset .meta .dims {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .asset .download {
+    padding: 0 16px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg);
+  }
+  .asset .download .arrow {
+    transition: transform 0.15s;
+  }
+  .asset:hover .download .arrow {
+    transform: translate(2px, -2px);
+  }
+
+  /* Favicon strip — small, dense */
+  .favicon-strip {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 36px 32px;
+    display: flex;
+    gap: 32px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .fav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.15s;
+  }
+  .fav:hover { opacity: 0.7; }
+  .fav .swatch {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .fav .swatch img {
+    image-rendering: -webkit-optimize-contrast;
+  }
+  .fav .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+  }
+  .fav .lbl strong {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 96px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Code snippet */
+  .code {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 18px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    color: rgba(244, 242, 238, 0.85);
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .code .tag { color: var(--fg); }
+  .code .attr { color: rgba(244, 242, 238, 0.6); }
+  .code .str { color: rgba(244, 242, 238, 0.95); }
+
+  .hint {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+  .hint a { color: var(--fg); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <h1>WebZan — Marke</h1>
+      <div class="sub">Waveform Mark · Logo Asset Pack</div>
+    </div>
+    <div class="meta">
+      Variant 04 · Final<br />
+      Amber on Ink<br />
+      v1.0 — 2026
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-mark">
+      <!-- Inline SVG so it always renders crisp at any zoom -->
+      <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" aria-label="WebZan Logo">
+        <g fill="none" stroke="#f0c060" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 36 198 Q 58 150 80 198 T 124 198" opacity="0.32" />
+          <path d="M 36 184 Q 62 116 88 184 T 140 184" opacity="0.62" />
+          <path d="M 36 168 Q 66 70  96 168 T 156 168" />
+          <path d="M 178 80 L 284 80 L 184 240 L 290 240" />
+        </g>
+      </svg>
+    </div>
+    <div class="hero-info">
+      <div>
+        <h2>Waveform.</h2>
+        <p>
+          W als drei aufsteigende Wellen — eine Hommage an Frequenz und Signal.
+          Z als kraftvolle, architektonische Geste, die die Welle erdet.
+          Monochrom, geometrisch präzise, ohne Tech-Klischees.
+        </p>
+      </div>
+      <div>
+        <div class="specs">
+          <div class="spec-row">
+            <div class="label">Mark</div>
+            <div class="value">Waveform <code>04</code></div>
+          </div>
+          <div class="spec-row">
+            <div class="label">Strichstärke</div>
+            <div class="value"><code>26 / 320</code></div>
+          </div>
+          <div class="spec-row">
+            <div class="label">Primärfarbe</div>
+            <div class="value"><code>#F0C060</code></div>
+          </div>
+          <div class="spec-row">
+            <div class="label">Hintergrund</div>
+            <div class="value"><code>#161310</code></div>
+          </div>
+        </div>
+        <p class="hint">
+          Klick auf jede Kachel unten lädt die Datei direkt herunter.
+          PNG mit transparentem Hintergrund ist für die meisten Anwendungen die richtige Wahl.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logo PNGs -->
+  <div class="section">
+    <div class="section-head">
+      <h3>Logo · Hauptdateien</h3>
+      <div class="count">7 Dateien · PNG</div>
+    </div>
+    <div class="asset-grid">
+
+      <a class="asset tile-checker" href="exports/webzan-logo-transparent-1024.png" download>
+        <div class="thumb"><img src="exports/webzan-logo-transparent-1024.png" alt="" /></div>
+        <div class="meta">
+          <div class="name">Amber · Transparent</div>
+          <div class="dims">1024px</div>
+        </div>
+        <div class="download"><span>PNG</span><span class="arrow">↗</span></div>
+      </a>
+
+      <a class="asset tile-checker" href="exports/webzan-logo-transparent-512.png" download>
+        <div class="thumb"><img src="exports/webzan-logo-transparent-512.png" alt="" /></div>
+        <div class="meta">
+          <div class="name">Amber · Transparent</div>
+          <div class="dims">512px</div>
+        </div>
+        <div class="download"><span>PNG</span><span class="arrow">↗</span></div>
+      </a>
+
+      <a class="asset" href="exports/webzan-logo-amber-dark-1024.png" download>
+        <div class="thumb" style="background:#161310"><img src="exports/webzan-logo-amber-dark-1024.png" alt="" /></div>
+        <div class="meta">
+          <div class="name">Amber on Ink</div>
+          <div class="dims">1024px</div>
+        </div>
+        <div class="download"><span>PNG</span><span class="arrow">↗</span></div>
+      </a>
+
+      <a class="asset" href="exports/webzan-logo-amber-dark-512.png" download>
+        <div class="thumb" style="background:#161310"><img src="exports/webzan-logo-amber-dark-512.png" alt="" /></div>
+        <div class="meta">
+          <div class="name">Amber on Ink</div>
+          <div class="dims">512px</div>
+        </div>
+        <div class="download"><span>PNG</span><span class="arrow">↗</span></div>
+      </a>
+
+      <a class="asset tile-bone" href="exports/webzan-logo-amber-light-1024.png" download>
+        <div class="thumb"><img src="exports/webzan-logo-amber-light-1024.png" alt="" /></div>
+        <div class="meta">
+          <div class="name">Amber on Bone</div>
+          <div class="dims">1024px</div>
+        </div>
+        <div class="download"><span>PNG</span><span class="arrow">↗</span></div>
+      </a>
+
+      <a class="asset tile-ink" href="exports/webzan-logo-ink-1024.png" download>
+        <div class="thumb"><img src="exports/webzan-logo-ink-1024.png" alt="" /></div>
+        <div class="meta">
+          <div class="name">Bone on Ink</div>
+          <div class="dims">1024px</div>
+        </div>
+        <div class="download"><span>PNG</span><span class="arrow">↗</span></div>
+      </a>
+
+      <a class="asset tile-bone" href="exports/webzan-logo-bone-1024.png" download>
+        <div class="thumb"><img src="exports/webzan-logo-bone-1024.png" alt="" /></div>
+        <div class="meta">
+          <div class="name">Ink on Bone</div>
+          <div class="dims">1024px</div>
+        </div>
+        <div class="download"><span>PNG</span><span class="arrow">↗</span></div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- Favicons -->
+  <div class="section">
+    <div class="section-head">
+      <h3>Favicons</h3>
+      <div class="count">8 Größen · PNG</div>
+    </div>
+
+    <div class="favicon-strip">
+      <a class="fav" href="exports/favicon-512.png" download>
+        <div class="swatch" style="width:128px;height:128px"><img src="exports/favicon-512.png" width="100" height="100" alt="" /></div>
+        <div class="lbl"><strong>512</strong> · Apple HD</div>
+      </a>
+      <a class="fav" href="exports/favicon-256.png" download>
+        <div class="swatch" style="width:96px;height:96px"><img src="exports/favicon-256.png" width="76" height="76" alt="" /></div>
+        <div class="lbl"><strong>256</strong></div>
+      </a>
+      <a class="fav" href="exports/favicon-180.png" download>
+        <div class="swatch" style="width:72px;height:72px"><img src="exports/favicon-180.png" width="56" height="56" alt="" /></div>
+        <div class="lbl"><strong>180</strong> · Apple Touch</div>
+      </a>
+      <a class="fav" href="exports/favicon-128.png" download>
+        <div class="swatch" style="width:64px;height:64px"><img src="exports/favicon-128.png" width="48" height="48" alt="" /></div>
+        <div class="lbl"><strong>128</strong></div>
+      </a>
+      <a class="fav" href="exports/favicon-64.png" download>
+        <div class="swatch" style="width:48px;height:48px"><img src="exports/favicon-64.png" width="36" height="36" alt="" /></div>
+        <div class="lbl"><strong>64</strong></div>
+      </a>
+      <a class="fav" href="exports/favicon-48.png" download>
+        <div class="swatch" style="width:40px;height:40px"><img src="exports/favicon-48.png" width="30" height="30" alt="" /></div>
+        <div class="lbl"><strong>48</strong></div>
+      </a>
+      <a class="fav" href="exports/favicon-32.png" download>
+        <div class="swatch" style="width:32px;height:32px"><img src="exports/favicon-32.png" width="24" height="24" alt="" /></div>
+        <div class="lbl"><strong>32</strong> · Standard</div>
+      </a>
+      <a class="fav" href="exports/favicon-16.png" download>
+        <div class="swatch" style="width:24px;height:24px"><img src="exports/favicon-16.png" width="16" height="16" alt="" /></div>
+        <div class="lbl"><strong>16</strong> · Tab</div>
+      </a>
+    </div>
+
+    <div style="margin-top: 32px;">
+      <p class="hint">Snippet zum Einbinden in deinen <code style="font-family:'JetBrains Mono',monospace;color:var(--fg)">&lt;head&gt;</code>:</p>
+<pre class="code"><span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="str">"icon"</span> <span class="attr">type</span>=<span class="str">"image/png"</span> <span class="attr">sizes</span>=<span class="str">"32x32"</span> <span class="attr">href</span>=<span class="str">"/favicon-32.png"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="str">"icon"</span> <span class="attr">type</span>=<span class="str">"image/png"</span> <span class="attr">sizes</span>=<span class="str">"16x16"</span> <span class="attr">href</span>=<span class="str">"/favicon-16.png"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="str">"apple-touch-icon"</span> <span class="attr">sizes</span>=<span class="str">"180x180"</span> <span class="attr">href</span>=<span class="str">"/favicon-180.png"</span><span class="tag">&gt;</span></pre>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div>WebZan · Marke v1.0</div>
+    <div>15 Dateien · Alle PNG · 2026</div>
+  </div>
+
+</div>
+</body>
+</html>

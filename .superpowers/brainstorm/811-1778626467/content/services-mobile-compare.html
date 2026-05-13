@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B vs C — Mobile-Vergleich</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0e0e10;
+    color: #f0f0f0;
+    padding: 32px 24px 48px;
+    line-height: 1.6;
+  }
+  h1 { font-size: 22px; font-weight: 800; color: #E8B84B; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .sub { font-size: 13px; color: #666; margin-bottom: 32px; }
+
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 700px) {
+    .split { grid-template-columns: 1fr; }
+  }
+
+  .col-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #2a2a30;
+  }
+  .col-label.b { color: #5b8df6; }
+  .col-label.c { color: #E8B84B; }
+
+  /* PHONE FRAME */
+  .phone {
+    width: 160px;
+    height: 300px;
+    background: #111;
+    border-radius: 24px;
+    border: 2px solid #333;
+    overflow: hidden;
+    margin: 0 auto 12px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .phone-bar {
+    height: 20px;
+    background: #1a1a1e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .phone-bar-dot { width: 28px; height: 4px; background: #333; border-radius: 2px; }
+  .phone-screen {
+    flex: 1;
+    overflow: hidden;
+    background: #1A1510;
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    gap: 4px;
+    font-size: 7px;
+    color: #888;
+    position: relative;
+  }
+
+  /* Scenario B: Separate page */
+  .b-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    color: #E8B84B;
+    font-size: 6.5px;
+    margin-bottom: 4px;
+  }
+  .b-service-hero {
+    background: linear-gradient(135deg, #1e1a10, #251e12);
+    border-radius: 6px;
+    padding: 10px 8px;
+    margin-bottom: 4px;
+  }
+  .b-tag { font-size: 5.5px; color: #E8B84B; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px; }
+  .b-title { font-size: 10px; font-weight: 800; color: #f0f0f0; line-height: 1.2; margin-bottom: 3px; }
+  .b-desc { font-size: 5.5px; color: #999; line-height: 1.5; }
+  .b-example-label { font-size: 5.5px; color: #E8B84B; margin: 5px 0 3px; letter-spacing: 0.08em; }
+  .b-example-card {
+    background: #221b10;
+    border-radius: 5px;
+    height: 36px;
+    width: 100%;
+    margin-bottom: 3px;
+    border: 1px solid rgba(232,184,75,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-size: 5px;
+  }
+  .b-example-card-2 {
+    background: #1d1b14;
+    border-radius: 5px;
+    height: 36px;
+    width: 100%;
+    border: 1px solid rgba(232,184,75,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-size: 5px;
+  }
+
+  /* Scenario C: Accordion in page */
+  .c-section-label { font-size: 5.5px; color: #E8B84B; letter-spacing: 0.08em; margin-bottom: 3px; }
+  .c-headline { font-size: 8px; font-weight: 800; color: #f0f0f0; margin-bottom: 6px; }
+  .c-card {
+    background: #1e1a10;
+    border-radius: 4px;
+    padding: 5px 6px;
+    margin-bottom: 3px;
+    border: 1px solid #2a2520;
+    cursor: pointer;
+  }
+  .c-card-open {
+    background: #251e10;
+    border: 1px solid rgba(232,184,75,0.3);
+  }
+  .c-card-row { display: flex; justify-content: space-between; align-items: center; }
+  .c-card-num { font-size: 5px; color: #555; }
+  .c-card-title { font-size: 6.5px; font-weight: 700; color: #e0e0e0; }
+  .c-card-title-open { color: #E8B84B; }
+  .c-card-arrow { font-size: 6px; color: #555; }
+  .c-card-arrow-open { color: #E8B84B; transform: rotate(180deg); display: inline-block; }
+  .c-expanded {
+    margin-top: 4px;
+    border-top: 1px solid rgba(232,184,75,0.15);
+    padding-top: 4px;
+  }
+  .c-expanded-text { font-size: 5px; color: #888; line-height: 1.5; margin-bottom: 3px; }
+  .c-expanded-example {
+    background: #1a1510;
+    border-radius: 3px;
+    height: 18px;
+    width: 100%;
+    border: 1px solid rgba(232,184,75,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-size: 4.5px;
+  }
+  .c-card-collapsed .c-card-title { color: #888; }
+  .c-out-of-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    background: linear-gradient(to top, #1A1510, transparent);
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    font-size: 5px;
+    color: #E8B84B;
+  }
+
+  /* VERDICT */
+  .verdict {
+    background: #13131a;
+    border: 1px solid #252535;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .verdict h2 { font-size: 13px; font-weight: 700; color: #f0f0f0; margin-bottom: 14px; }
+  .verdict-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 1fr;
+    gap: 8px;
+    font-size: 12px;
+    margin-bottom: 8px;
+    align-items: start;
+  }
+  .verdict-cat { color: #666; font-size: 11px; }
+  .verdict-b { color: #5b8df6; }
+  .verdict-c { color: #E8B84B; }
+  .check { color: #4caf78; }
+  .cross { color: #ff6b6b; }
+  .neutral { color: #888; }
+  .sep { height: 1px; background: #1e1e28; margin: 10px 0; grid-column: 1 / -1; }
+
+  /* RECOMMENDATION */
+  .rec {
+    background: linear-gradient(135deg, rgba(91,141,246,0.08), rgba(91,141,246,0.03));
+    border: 1px solid rgba(91,141,246,0.25);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .rec-title { font-size: 13px; font-weight: 700; color: #5b8df6; margin-bottom: 6px; }
+  .rec p { font-size: 12.5px; color: #aaa; line-height: 1.7; }
+  .rec strong { color: #f0f0f0; }
+
+  /* Option cards */
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  @media (max-width: 600px) { .options { grid-template-columns: 1fr; } }
+  .option {
+    background: #18181c;
+    border: 2px solid #2a2a30;
+    border-radius: 12px;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .option:hover { border-color: #4a4a5a; }
+  .option.selected-b { border-color: #5b8df6; background: rgba(91,141,246,0.06); }
+  .option.selected-c { border-color: #E8B84B; background: rgba(232,184,75,0.06); }
+  .option-letter {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 13px;
+    margin-bottom: 10px;
+  }
+  .opt-b .option-letter { background: rgba(91,141,246,0.15); color: #5b8df6; }
+  .opt-c .option-letter { background: rgba(232,184,75,0.12); color: #E8B84B; }
+  .option h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .option p { font-size: 12px; color: #888; }
+</style>
+</head>
+<body>
+
+<h1>Option B vs. C — Mobile-Realität</h1>
+<p class="sub">Wie sieht das auf dem Handy aus, wenn jemand auf einen Service klickt?</p>
+
+<div class="split">
+
+  <!-- OPTION B: Separate Page -->
+  <div>
+    <div class="col-label b">B — Eigene Seite (separates HTML)</div>
+    <div class="phone">
+      <div class="phone-bar"><div class="phone-bar-dot"></div></div>
+      <div class="phone-screen">
+        <div class="b-back-btn">← Zurück</div>
+        <div class="b-service-hero">
+          <div class="b-tag">02 — Motion Websites</div>
+          <div class="b-title">Design in Bewegung</div>
+          <div class="b-desc">GSAP-animierte Erlebnisse für Brands, die auffallen wollen.</div>
+        </div>
+        <div class="b-example-label">BEISPIEL-PROJEKTE</div>
+        <div class="b-example-card">Restaurant Mockup</div>
+        <div class="b-example-card-2">Handwerk Mockup</div>
+      </div>
+    </div>
+    <div style="font-size:11.5px; color:#888; text-align:center; line-height:1.6;">
+      <span style="color:#4caf78">✓</span> Volle Seite, eigenes Layout<br>
+      <span style="color:#4caf78">✓</span> Eigene URL, eigener Fokus<br>
+      <span style="color:#4caf78">✓</span> Unbegrenzt Platz für Beispiele<br>
+      <span style="color:#ff6b6b">✗</span> Seitennavigation (Reload oder SPA)
+    </div>
+  </div>
+
+  <!-- OPTION C: Accordion -->
+  <div>
+    <div class="col-label c">C — Accordion (in-page)</div>
+    <div class="phone">
+      <div class="phone-bar"><div class="phone-bar-dot"></div></div>
+      <div class="phone-screen" style="padding:6px 5px;">
+        <div class="c-section-label">— SERVICES</div>
+        <div class="c-headline">Was ich baue</div>
+
+        <div class="c-card c-card-collapsed">
+          <div class="c-card-row">
+            <div>
+              <div class="c-card-num">01</div>
+              <div class="c-card-title" style="color:#888">WordPress</div>
+            </div>
+            <div class="c-card-arrow">›</div>
+          </div>
+        </div>
+
+        <div class="c-card c-card-open">
+          <div class="c-card-row">
+            <div>
+              <div class="c-card-num">02</div>
+              <div class="c-card-title c-card-title-open">Motion Websites</div>
+            </div>
+            <div class="c-card-arrow c-card-arrow-open">›</div>
+          </div>
+          <div class="c-expanded">
+            <div class="c-expanded-text">GSAP-animierte Erlebnisse für Brands, die auffallen wollen. Premium-Design in Bewegung...</div>
+            <div class="c-expanded-example">Beispiel lädt weiter unten ↓</div>
+          </div>
+        </div>
+
+        <div class="c-card c-card-collapsed">
+          <div class="c-card-row">
+            <div>
+              <div class="c-card-num">03</div>
+              <div class="c-card-title" style="color:#888">Landing Pages</div>
+            </div>
+            <div class="c-card-arrow">›</div>
+          </div>
+        </div>
+
+        <div class="c-card c-card-collapsed" style="opacity:0.5;">
+          <div class="c-card-row">
+            <div>
+              <div class="c-card-num">04</div>
+              <div class="c-card-title" style="color:#888">UI/UX</div>
+            </div>
+            <div class="c-card-arrow">›</div>
+          </div>
+        </div>
+        <div class="c-out-of-view">Beispiele weiter unten ↓</div>
+      </div>
+    </div>
+    <div style="font-size:11.5px; color:#888; text-align:center; line-height:1.6;">
+      <span style="color:#4caf78">✓</span> Kein Seitenwechsel<br>
+      <span style="color:#ff6b6b">✗</span> Beispiele außerhalb des Viewport<br>
+      <span style="color:#ff6b6b">✗</span> Cards drängen sich gegenseitig raus<br>
+      <span style="color:#ff6b6b">✗</span> Wenig Raum für rich content
+    </div>
+  </div>
+
+</div>
+
+<!-- COMPARISON TABLE -->
+<div class="verdict">
+  <h2>Direktvergleich</h2>
+  <div class="verdict-row">
+    <div class="verdict-cat"></div>
+    <div class="verdict-b" style="font-weight:700; font-size:12px;">B — Eigene Seiten</div>
+    <div class="verdict-c" style="font-weight:700; font-size:12px;">C — Accordion</div>
+  </div>
+  <div class="verdict-row">
+    <div class="verdict-cat">Mobile UX</div>
+    <div class="verdict-b"><span class="check">✓</span> Dedizierte Seite, voller Fokus</div>
+    <div class="verdict-c"><span class="cross">✗</span> Content verdrängt sich</div>
+  </div>
+  <div class="verdict-row">
+    <div class="verdict-cat">Beispiele zeigen</div>
+    <div class="verdict-b"><span class="check">✓</span> Eigener Scroll-Bereich, Device-Mockups möglich</div>
+    <div class="verdict-c"><span class="cross">✗</span> Kaum Platz, Nutzer scrollt weg</div>
+  </div>
+  <div class="verdict-row">
+    <div class="verdict-cat">Animation</div>
+    <div class="verdict-b"><span class="check">✓</span> Seiten-Transition möglich (GSAP)</div>
+    <div class="verdict-c"><span class="neutral">~</span> Expand-Animation, aber begrenzt</div>
+  </div>
+  <div class="verdict-row">
+    <div class="verdict-cat">SEO</div>
+    <div class="verdict-b"><span class="check">✓</span> Eigene URL pro Service</div>
+    <div class="verdict-c"><span class="cross">✗</span> Alles auf einer URL</div>
+  </div>
+  <div class="verdict-row">
+    <div class="verdict-cat">Gefühl</div>
+    <div class="verdict-b"><span class="check">✓</span> Professionell, vollständig</div>
+    <div class="verdict-c"><span class="neutral">~</span> Blog-artig, begrenzt</div>
+  </div>
+</div>
+
+<!-- RECOMMENDATION -->
+<div class="rec">
+  <div class="rec-title">Empfehlung: Option B — mit GSAP-Seitentransition</div>
+  <p>
+    Auf dem Handy ist <strong>Option C das schwächere Erlebnis</strong> — expandierender Content verdrängt die anderen Cards, die Beispiele sind außerhalb des Viewport, und der Nutzer verliert den Kontext. <br><br>
+    Mit <strong>Option B + GSAP-Transition</strong> fühlt es sich wie eine SPA an: Klick → eleganter Übergang → eigene Service-Seite. Jede Seite hat genug Platz für Prozess, Testimonials und die Device-Mockups aus Punkt 8. <strong>Das wirkt professioneller und ist besser konvertierend.</strong>
+  </p>
+</div>
+
+<!-- CHOICE -->
+<div class="options">
+  <div class="option opt-b" data-choice="b" onclick="toggleSelect(this)">
+    <div class="option-letter">B</div>
+    <h3>Separate Seiten</h3>
+    <p>Eigene HTML-Datei pro Service, GSAP-Übergang, volle Kontrolle — empfohlen</p>
+  </div>
+  <div class="option opt-c" data-choice="c" onclick="toggleSelect(this)">
+    <div class="option-letter">C</div>
+    <h3>Accordion in-page</h3>
+    <p>Kein Seitenwechsel, aber begrenzter Raum — einfacher zu bauen</p>
+  </div>
+</div>
+
+<script>
+function toggleSelect(el) {
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected-b','selected-c'));
+  if (el.dataset.choice === 'b') el.classList.add('selected-b');
+  else el.classList.add('selected-c');
+}
+</script>
+</body>
+</html>

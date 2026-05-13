@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bewegungs-Vergleich ① vs ③</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0e0e10;
+    color: #f0f0f0;
+    padding: 28px 20px 56px;
+    line-height: 1.6;
+  }
+  h1 { font-size: 21px; font-weight: 800; color: #E8B84B; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .sub { font-size: 12.5px; color: #666; margin-bottom: 32px; }
+
+  /* === OPTION WRAPPER === */
+  .opt-block {
+    border: 2px solid #2a2a30;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .opt-block:hover { border-color: #3a3a48; }
+  .opt-block.selected { border-color: #E8B84B; }
+
+  .opt-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    background: #16161a;
+    border-bottom: 1px solid #222;
+  }
+  .ltr {
+    width: 26px; height: 26px;
+    background: rgba(232,184,75,0.12); color: #E8B84B;
+    border-radius: 6px; font-size: 12px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .opt-header h3 { font-size: 14px; font-weight: 700; }
+  .opt-header p  { font-size: 11.5px; color: #888; }
+
+  /* === STAGE (where animation plays) === */
+  .stage {
+    background: #1A1510;
+    padding: 28px 20px;
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    align-items: flex-end;
+    min-height: 240px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle amber glow */
+  .stage::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 300px; height: 200px;
+    background: radial-gradient(ellipse, rgba(232,184,75,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* === DEVICE CARDS (equally sized for option A) === */
+  .device-box {
+    width: 130px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(232,184,75,0.15);
+    border-radius: 10px;
+    padding: 12px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .box-tag {
+    font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #E8B84B; font-weight: 700;
+  }
+  .box-name { font-size: 10.5px; font-weight: 700; color: #e0e0e0; }
+  .box-type { font-size: 8.5px; color: #666; }
+
+  /* device frames */
+  .d-laptop { width: 104px; }
+  .d-laptop-screen {
+    width: 100%; height: 62px;
+    background: #111; border-radius: 4px 4px 0 0;
+    border: 1.5px solid #333; border-bottom: none;
+    overflow: hidden; position: relative;
+  }
+  .d-laptop-base { height: 4px; background: #222; border: 1px solid #333; border-top: none; border-radius: 0 0 2px 2px; }
+  .d-laptop-foot { width: 55%; height: 3px; background: #1a1a1a; border-radius: 0 0 2px 2px; margin: 0 auto; }
+
+  .d-phone {
+    width: 44px; height: 78px;
+    background: #111; border-radius: 9px;
+    border: 1.5px solid #333; overflow: hidden; position: relative;
+  }
+  .d-tablet {
+    width: 70px; height: 94px;
+    background: #111; border-radius: 7px;
+    border: 1.5px solid #333; overflow: hidden; position: relative;
+  }
+
+  /* fake site content */
+  .site { position: absolute; inset: 3px; border-radius: 3px; overflow: hidden; display: flex; flex-direction: column; }
+  .site-hero { flex-shrink: 0; height: 38%; display: flex; align-items: flex-end; padding: 3px; }
+  .site-body { padding: 3px; display: flex; flex-direction: column; gap: 2px; }
+  .s-line { height: 2px; border-radius: 1px; }
+  .s-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 2px; }
+  .s-card { height: 9px; border-radius: 1.5px; }
+
+  /* per-industry colors */
+  .dental .site { background: #f2eeea; }
+  .dental .site-hero { background: #2c4a6e; }
+  .dental .s-line { background: rgba(44,74,110,0.3); }
+  .dental .s-card { background: rgba(44,74,110,0.12); }
+
+  .resto .site { background: #1c140a; }
+  .resto .site-hero { background: rgba(232,184,75,0.18); border-bottom: 1px solid rgba(232,184,75,0.2); }
+  .resto .s-line { background: rgba(232,184,75,0.22); }
+  .resto .s-card { background: rgba(232,184,75,0.08); }
+
+  .craft .site { background: #101820; }
+  .craft .site-hero { background: #1e3a5a; }
+  .craft .s-line { background: rgba(30,90,150,0.35); }
+  .craft .s-card { background: rgba(30,90,150,0.15); }
+
+  /* === OPTION 1 ANIMATION: 3D perspective → aufrecht → zoom → inner scroll === */
+  /* Each box animates in sequence: rotateX(30) → 0, then scale 1→1.15, then inner scroll */
+  @keyframes opt1-dental {
+    0%   { transform: perspective(400px) rotateX(32deg) rotateY(-8deg) scale(0.88); }
+    30%  { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(1); }
+    55%  { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(1.12); }
+    80%  { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(1.12); }
+    95%  { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(1); }
+    100% { transform: perspective(400px) rotateX(32deg) rotateY(-8deg) scale(0.88); }
+  }
+  @keyframes opt1-resto {
+    0%   { transform: perspective(400px) rotateX(32deg) rotateY(-8deg) scale(0.88); }
+    30%  { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(0.88); }
+    55%  { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(1); }
+    80%  { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(1.12); }
+    95%  { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(1.12); }
+    100% { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(1); }
+  }
+  @keyframes opt1-craft {
+    0%   { transform: perspective(400px) rotateX(32deg) rotateY(-8deg) scale(0.88); }
+    55%  { transform: perspective(400px) rotateX(32deg) rotateY(-8deg) scale(0.88); }
+    80%  { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(1); }
+    92%  { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(1.12); }
+    100% { transform: perspective(400px) rotateX(0deg)  rotateY(0deg)  scale(1.12); }
+  }
+
+  /* inner scroll sim */
+  @keyframes scroll-site-1 {
+    0%,40%  { transform: translateY(0); }
+    70%,85% { transform: translateY(-28px); }
+    100%    { transform: translateY(0); }
+  }
+  @keyframes scroll-site-2 {
+    0%,60%  { transform: translateY(0); }
+    85%,95% { transform: translateY(-28px); }
+    100%    { transform: translateY(0); }
+  }
+  @keyframes scroll-site-3 {
+    0%,80%  { transform: translateY(0); }
+    95%,100%{ transform: translateY(-22px); }
+  }
+
+  .anim1-dental .device-box { animation: opt1-dental 5s ease-in-out infinite; }
+  .anim1-resto  .device-box { animation: opt1-resto  5s ease-in-out infinite; }
+  .anim1-craft  .device-box { animation: opt1-craft  5s ease-in-out infinite; }
+
+  .anim1-dental .site { animation: scroll-site-1 5s ease-in-out infinite; }
+  .anim1-resto  .site { animation: scroll-site-2 5s ease-in-out infinite; }
+  .anim1-craft  .site { animation: scroll-site-3 5s ease-in-out infinite; }
+
+  /* === OPTION 3 ANIMATION: sticky center device, bg + labels parallax === */
+  .stage-3 {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    min-height: 260px;
+  }
+
+  .parallax-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    align-items: flex-end;
+    position: relative;
+    width: 100%;
+  }
+
+  /* Labels drift behind */
+  .drift-label {
+    position: absolute;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    opacity: 0.5;
+    white-space: nowrap;
+  }
+
+  @keyframes drift-left {
+    0%,100% { transform: translateX(0) translateY(0); opacity: 0.5; }
+    50%      { transform: translateX(-12px) translateY(-4px); opacity: 0.25; }
+  }
+  @keyframes drift-right {
+    0%,100% { transform: translateX(0) translateY(0); opacity: 0.5; }
+    50%      { transform: translateX(12px) translateY(4px); opacity: 0.25; }
+  }
+  @keyframes sticky-breathe {
+    0%,100% { transform: scale(1) rotateY(0deg); }
+    40%     { transform: scale(1.06) rotateY(-3deg); }
+    70%     { transform: scale(1.1) rotateY(2deg); }
+  }
+  @keyframes inner-scroll-sticky {
+    0%,20%  { transform: translateY(0); }
+    55%,75% { transform: translateY(-32px); }
+    95%,100%{ transform: translateY(0); }
+  }
+  @keyframes fade-industry {
+    0%,20%   { opacity: 1; }
+    30%,70%  { opacity: 0; }
+    80%,100% { opacity: 1; }
+  }
+
+  .sticky-center .device-box {
+    animation: sticky-breathe 6s ease-in-out infinite;
+    border-color: rgba(232,184,75,0.35);
+    background: rgba(232,184,75,0.05);
+  }
+  .sticky-center .site { animation: inner-scroll-sticky 6s ease-in-out infinite; }
+
+  .side-info {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    margin-top: 12px;
+  }
+  .industry-badge {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .i-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .side-title { font-size: 14px; font-weight: 800; color: #f0f0f0; }
+  .side-sub { font-size: 11px; color: #888; }
+
+  @keyframes cycle-industry {
+    0%,28%  { content: 'Zahnarztpraxis'; }
+    33%,61% { content: 'Restaurant'; }
+    66%,94% { content: 'Handwerk'; }
+  }
+  .cycling-title {
+    font-size: 13px; font-weight: 800; color: #f0f0f0;
+  }
+  .industry-dots {
+    display: flex; gap: 6px; justify-content: center; margin-top: 6px;
+  }
+  .i-pip {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #333;
+    transition: background 0.3s;
+  }
+  .i-pip.active { background: #E8B84B; }
+
+  /* Note */
+  .note {
+    margin-top: 20px;
+    font-size: 11px;
+    color: #555;
+    background: #13131a;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 12px 16px;
+    line-height: 1.7;
+  }
+  .note strong { color: #E8B84B; }
+</style>
+</head>
+<body>
+
+<h1>① vs ③ — live animiert</h1>
+<p class="sub">Beide mit gleich großen Karten. Beobachte die Bewegung ~5 Sekunden, dann entscheiden.</p>
+
+<!-- ====== OPTION 1 ====== -->
+<div class="opt-block" data-choice="1" onclick="toggleSelect(this)">
+  <div class="opt-header">
+    <div class="ltr">①</div>
+    <div>
+      <h3>3D-Perspektive → aufrichtet → zoomt → scrollt</h3>
+      <p>Alle 3 gleichzeitig sichtbar, versetzt animiert — jede Card gleich groß</p>
+    </div>
+  </div>
+  <div class="stage">
+    <!-- Zahnarzt: Laptop -->
+    <div class="anim1-dental dental">
+      <div class="device-box">
+        <div class="box-tag">01 — Laptop</div>
+        <div class="d-laptop">
+          <div class="d-laptop-screen">
+            <div class="site">
+              <div class="site-hero"></div>
+              <div class="site-body">
+                <div class="s-line" style="width:100%"></div>
+                <div class="s-line" style="width:75%"></div>
+                <div class="s-grid">
+                  <div class="s-card"></div><div class="s-card"></div>
+                  <div class="s-card"></div><div class="s-card"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-laptop-base"></div>
+          <div class="d-laptop-foot"></div>
+        </div>
+        <div class="box-name">Zahnarztpraxis</div>
+      </div>
+    </div>
+
+    <!-- Restaurant: Phone -->
+    <div class="anim1-resto resto">
+      <div class="device-box">
+        <div class="box-tag">02 — Handy</div>
+        <div class="d-phone">
+          <div class="site">
+            <div class="site-hero"></div>
+            <div class="site-body">
+              <div class="s-line" style="width:100%"></div>
+              <div class="s-line" style="width:60%"></div>
+              <div class="s-grid">
+                <div class="s-card"></div><div class="s-card"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="box-name">Restaurant</div>
+      </div>
+    </div>
+
+    <!-- Handwerk: Tablet -->
+    <div class="anim1-craft craft">
+      <div class="device-box">
+        <div class="box-tag">03 — Tablet</div>
+        <div class="d-tablet">
+          <div class="site">
+            <div class="site-hero"></div>
+            <div class="site-body">
+              <div class="s-line" style="width:100%"></div>
+              <div class="s-line" style="width:80%"></div>
+              <div class="s-grid">
+                <div class="s-card"></div><div class="s-card"></div>
+                <div class="s-card"></div><div class="s-card"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="box-name">Handwerk</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== OPTION 3 ====== -->
+<div class="opt-block" data-choice="3" onclick="toggleSelect(this)">
+  <div class="opt-header">
+    <div class="ltr">③</div>
+    <div>
+      <h3>Sticky Center — Gerät bleibt, Branche wechselt</h3>
+      <p>Ein Gerät im Fokus, Hintergrundtext scrollt vorbei, Content tauscht sich aus</p>
+    </div>
+  </div>
+  <div class="stage stage-3">
+    <div class="parallax-row">
+      <div class="drift-label" style="left:5%; top:20%; color:#2c4a6e; animation: drift-left 6s ease-in-out infinite;">Zahnarztpraxis</div>
+      <div class="drift-label" style="right:5%; top:30%; color:#E8B84B; animation: drift-right 6s ease-in-out 2s infinite; opacity:0.3;">Restaurant</div>
+      <div class="drift-label" style="left:10%; bottom:15%; color:#1e3a5a; animation: drift-left 6s ease-in-out 4s infinite; opacity:0.25;">Handwerk</div>
+
+      <!-- sticky center device: cycles through industries -->
+      <div class="sticky-center dental" id="stickyDevice">
+        <div class="device-box">
+          <div class="box-tag" id="deviceTag">01 — Laptop</div>
+          <div class="d-laptop">
+            <div class="d-laptop-screen">
+              <div class="site" id="stickyScreen">
+                <div class="site-hero" id="stickyHero"></div>
+                <div class="site-body">
+                  <div class="s-line" style="width:100%"></div>
+                  <div class="s-line" style="width:70%"></div>
+                  <div class="s-grid">
+                    <div class="s-card"></div><div class="s-card"></div>
+                    <div class="s-card"></div><div class="s-card"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-laptop-base"></div>
+            <div class="d-laptop-foot"></div>
+          </div>
+          <div class="box-name" id="stickyName">Zahnarztpraxis</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-info">
+      <div class="cycling-title" id="cycleTitle">Zahnarztpraxis</div>
+      <div class="side-sub">Scrollt weiter → nächste Branche</div>
+      <div class="industry-dots">
+        <div class="i-pip active" id="pip0"></div>
+        <div class="i-pip" id="pip1"></div>
+        <div class="i-pip" id="pip2"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="note">
+  <strong>Wichtig:</strong> In der echten Umsetzung steuert das Scrollen die Animation — im Browser scrollst du durch den Abschnitt und die Geräte bewegen sich dabei. Hier ist es ein Loop-Preview. Beide Varianten sind mit GSAP ScrollTrigger vollständig umsetzbar.
+</div>
+
+<script>
+/* Industry cycling for option 3 */
+var industries = [
+  { cls: 'dental', name: 'Zahnarztpraxis', tag: '01 — Laptop' },
+  { cls: 'resto',  name: 'Restaurant',     tag: '02 — Handy' },
+  { cls: 'craft',  name: 'Handwerk',       tag: '03 — Tablet' }
+];
+var cur = 0;
+var dev = document.getElementById('stickyDevice');
+var nameEl = document.getElementById('stickyName');
+var tagEl = document.getElementById('deviceTag');
+var titleEl = document.getElementById('cycleTitle');
+var pips = [document.getElementById('pip0'), document.getElementById('pip1'), document.getElementById('pip2')];
+
+setInterval(function() {
+  cur = (cur + 1) % 3;
+  var ind = industries[cur];
+  dev.className = 'sticky-center ' + ind.cls;
+  nameEl.textContent = ind.name;
+  tagEl.textContent = ind.tag;
+  titleEl.textContent = ind.name;
+  pips.forEach(function(p, i) {
+    p.classList.toggle('active', i === cur);
+  });
+}, 2000);
+
+/* selection */
+function toggleSelect(el) {
+  document.querySelectorAll('.opt-block').forEach(function(o) { o.classList.remove('selected'); });
+  el.classList.add('selected');
+  if (window.recordChoice) window.recordChoice(el.dataset.choice, el.querySelector('h3').textContent);
+}
+</script>
+</body>
+</html>

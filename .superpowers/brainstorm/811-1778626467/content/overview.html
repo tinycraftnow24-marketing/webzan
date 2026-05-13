@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebZan.de — Projekt-Übersicht</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0e0e10;
+    color: #f0f0f0;
+    padding: 40px 32px;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+    color: #E8B84B;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 36px;
+    letter-spacing: 0.04em;
+  }
+
+  /* STATUS LEGEND */
+  .legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #aaa;
+  }
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-green { background: #4caf78; }
+  .dot-amber { background: #E8B84B; }
+  .dot-blue { background: #5b8df6; }
+  .dot-purple { background: #9b5cff; }
+
+  /* FEATURE GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .card {
+    background: #18181c;
+    border: 1px solid #2a2a30;
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: #3a3a46; }
+  .card-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #555;
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #f0f0f0;
+  }
+  .card-desc {
+    font-size: 12.5px;
+    color: #888;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .badge-green { background: rgba(76,175,120,0.15); color: #4caf78; border: 1px solid rgba(76,175,120,0.3); }
+  .badge-amber { background: rgba(232,184,75,0.12); color: #E8B84B; border: 1px solid rgba(232,184,75,0.25); }
+  .badge-blue { background: rgba(91,141,246,0.12); color: #5b8df6; border: 1px solid rgba(91,141,246,0.25); }
+  .badge-purple { background: rgba(155,92,255,0.12); color: #9b5cff; border: 1px solid rgba(155,92,255,0.25); }
+  .badge-red { background: rgba(255,80,80,0.1); color: #ff6b6b; border: 1px solid rgba(255,80,80,0.2); }
+
+  .tag-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .mini-tag {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    background: #252529;
+    color: #777;
+    border: 1px solid #333;
+  }
+
+  /* ARCHITECTURE BLOCK */
+  .arch {
+    background: #13131a;
+    border: 1px solid #252535;
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+  }
+  .arch h2 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #E8B84B;
+    margin-bottom: 18px;
+  }
+  .arch-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .arch-label {
+    font-size: 12px;
+    color: #666;
+    width: 100px;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+  .arch-value {
+    font-size: 13px;
+    color: #ccc;
+    flex: 1;
+  }
+  .arch-value code {
+    background: #1e1e28;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    color: #8b9eff;
+    font-family: 'Fira Code', monospace;
+  }
+
+  /* KEY DECISION */
+  .decision-box {
+    background: linear-gradient(135deg, rgba(232,184,75,0.06) 0%, rgba(155,92,255,0.04) 100%);
+    border: 1px solid rgba(232,184,75,0.2);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+  .decision-box h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #E8B84B;
+    margin-bottom: 8px;
+    letter-spacing: 0.04em;
+  }
+  .decision-box p {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 16px;
+  }
+
+  /* TIMELINE */
+  .timeline {
+    display: flex;
+    gap: 0;
+    margin-bottom: 40px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .phase {
+    flex: 1;
+    min-width: 140px;
+    padding: 16px;
+    background: #18181c;
+    border: 1px solid #2a2a30;
+    position: relative;
+  }
+  .phase:first-child { border-radius: 10px 0 0 10px; }
+  .phase:last-child { border-radius: 0 10px 10px 0; }
+  .phase:not(:last-child) { border-right: none; }
+  .phase-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: #E8B84B;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .phase-items {
+    font-size: 12px;
+    color: #888;
+    line-height: 1.8;
+  }
+  .phase-items li { list-style: none; padding-left: 0; }
+  .phase-items li::before { content: '→ '; color: #444; }
+
+  .footer-note {
+    font-size: 12px;
+    color: #555;
+    text-align: center;
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+
+<h1>WebZan.de — Projekt-Übersicht</h1>
+<p class="subtitle">Netlify Static Site · GSAP + Lenis geladen · Alle 8 Anforderungen analysiert</p>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="dot dot-green"></div> Bereits implementiert</div>
+  <div class="legend-item"><div class="dot dot-amber"></div> Kleiner Aufwand (~fix)</div>
+  <div class="legend-item"><div class="dot dot-blue"></div> Mittlerer Aufwand (neu)</div>
+  <div class="legend-item"><div class="dot dot-purple"></div> Großer Aufwand (komplex)</div>
+</div>
+
+<!-- FEATURE CARDS -->
+<div class="grid">
+
+  <div class="card">
+    <div class="card-num">PUNKT 1</div>
+    <div class="card-title">Mehrsprachigkeit DE / EN</div>
+    <div class="card-desc">
+      <code>localStorage.getItem('lang') || 'de'</code> — Default Deutsch ist bereits korrekt gesetzt. Das komplette i18n-System mit allen Inhalten läuft schon.
+    </div>
+    <span class="badge badge-green">✓ Bereits fertig</span>
+    <div class="tag-row"><span class="mini-tag">0 Aufwand</span><span class="mini-tag">nur verifizieren</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-num">PUNKT 2</div>
+    <div class="card-title">Dark / Light Mode Toggle</div>
+    <div class="card-desc">
+      CSS-Vars für beide Themes vorhanden. Einzige Korrektur: Light-Logo zeigt aktuell <code>transparent-1024</code> statt <code>amber-light-1024</code>.
+    </div>
+    <span class="badge badge-amber">~ Fast fertig</span>
+    <div class="tag-row"><span class="mini-tag">1 Zeile fix</span><span class="mini-tag">Logo-Swap</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-num">PUNKT 3</div>
+    <div class="card-title">Hintergrund-Punkte (autonom)</div>
+    <div class="card-desc">
+      Aktuell nur Gradient-Blob im Hero. Kein Dot-System vorhanden. Canvas oder CSS-Animation mit <code>requestAnimationFrame</code> — autonome Bewegung (kein Maus-Track).
+    </div>
+    <span class="badge badge-blue">Neu implementieren</span>
+    <div class="tag-row"><span class="mini-tag">Canvas</span><span class="mini-tag">GSAP möglich</span><span class="mini-tag">~2h</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-num">PUNKT 4</div>
+    <div class="card-title">Erweitertes Kontaktformular</div>
+    <div class="card-desc">
+      Aktuell: Name, E-Mail, Nachricht. Neu: Felder für Website vorhanden?, URL (konditionell), Projektumfang-Select, Branche-Select, Budget-Range optional.
+    </div>
+    <span class="badge badge-blue">Formular-Erweiterung</span>
+    <div class="tag-row"><span class="mini-tag">Netlify Forms</span><span class="mini-tag">i18n beachten</span><span class="mini-tag">~3h</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-num">PUNKT 5</div>
+    <div class="card-title">Klickbare Services + Detailseiten</div>
+    <div class="card-desc">
+      Die 4 Service-Cards (WordPress, Motion, Landing Page, UI/UX) sollen eigene Detail-Views bekommen mit Beschreibung, Prozess, Beispielen. Umsetzung: Modal-Overlay oder separate HTML-Seiten auf Netlify.
+    </div>
+    <span class="badge badge-purple">Komplex — Design nötig</span>
+    <div class="tag-row"><span class="mini-tag">4 Detail-Seiten</span><span class="mini-tag">Animiert</span><span class="mini-tag">~8h</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-num">PUNKT 6 + 7</div>
+    <div class="card-title">DSGVO-Audit + Cookie-Consent</div>
+    <div class="card-desc">
+      <strong style="color:#ff6b6b">Kritisch gefunden:</strong> Google Fonts werden von CDN geladen (IP-Adresse an Google) → DSGVO-Problem. Lösung: Self-host via Netlify. Außerdem: Consent-Banner für Netlify-Forms-Datenspeicherung.
+    </div>
+    <span class="badge badge-red">DSGVO-Handlungsbedarf</span>
+    <div class="tag-row"><span class="mini-tag">Fonts self-host</span><span class="mini-tag">Cookie-Banner</span><span class="mini-tag">Datenschutz-Update</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-num">PUNKT 8</div>
+    <div class="card-title">Device-Animation Showcase</div>
+    <div class="card-desc">
+      3 fiktive Projekte (Zahnarzt, Restaurant, Handwerk) als animierte Gerät-Mockups. Handy + Laptop + Tablet: drehen, ranzoomen, Seite scrollt. Zeigt Motion-Design Kompetenz.
+    </div>
+    <span class="badge badge-purple">Komplex — Highlight-Feature</span>
+    <div class="tag-row"><span class="mini-tag">GSAP ScrollTrigger</span><span class="mini-tag">SVG Devices</span><span class="mini-tag">3 Demos</span><span class="mini-tag">~12h</span></div>
+  </div>
+
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="arch">
+  <h2>Aktuelle Architektur</h2>
+  <div class="arch-row">
+    <span class="arch-label">Hosting</span>
+    <span class="arch-value">Netlify — Static HTML, kein Framework, kein Build-Step</span>
+  </div>
+  <div class="arch-row">
+    <span class="arch-label">Haupt-Datei</span>
+    <span class="arch-value"><code>NetlifyPage/mockup-orbit.html</code> — 2.071 Zeilen, alles in einer Datei</span>
+  </div>
+  <div class="arch-row">
+    <span class="arch-label">Libraries</span>
+    <span class="arch-value"><code>GSAP 3.12</code> · <code>ScrollTrigger</code> · <code>Lenis 1.0</code> (alle via CDN)</span>
+  </div>
+  <div class="arch-row">
+    <span class="arch-label">i18n</span>
+    <span class="arch-value">JS-Objekt <code>content</code> mit <code>de</code> / <code>en</code> Keys → <code>render(lang)</code></span>
+  </div>
+  <div class="arch-row">
+    <span class="arch-label">Theme</span>
+    <span class="arch-value"><code>data-theme="dark|light"</code> auf <code>&lt;html&gt;</code> · CSS Custom Properties</span>
+  </div>
+  <div class="arch-row">
+    <span class="arch-label">Fonts</span>
+    <span class="arch-value" style="color:#ff8a8a">Inter von <code>fonts.googleapis.com</code> → DSGVO-Problem (muss auf Netlify gehostet werden)</span>
+  </div>
+  <div class="arch-row">
+    <span class="arch-label">Forms</span>
+    <span class="arch-value">Netlify Forms (<code>data-netlify="true"</code>) mit Honeypot-Schutz</span>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div class="arch" style="margin-bottom:28px">
+  <h2>Empfohlene Umsetzungs-Reihenfolge</h2>
+</div>
+<div class="timeline">
+  <div class="phase">
+    <div class="phase-label">Phase 1 — Sofort</div>
+    <ul class="phase-items">
+      <li>DSGVO: Fonts self-host</li>
+      <li>Light Logo fix</li>
+      <li>DE/EN verifizieren</li>
+      <li>Cookie-Banner</li>
+    </ul>
+  </div>
+  <div class="phase">
+    <div class="phase-label">Phase 2 — Kern</div>
+    <ul class="phase-items">
+      <li>Dot-Animation Hero</li>
+      <li>Kontaktformular+</li>
+      <li>Datenschutz Update</li>
+    </ul>
+  </div>
+  <div class="phase">
+    <div class="phase-label">Phase 3 — Content</div>
+    <ul class="phase-items">
+      <li>Service-Detailseiten</li>
+      <li>Klickbare Cards</li>
+      <li>DE+EN-Inhalte</li>
+    </ul>
+  </div>
+  <div class="phase">
+    <div class="phase-label">Phase 4 — WOW</div>
+    <ul class="phase-items">
+      <li>Device-Showcase</li>
+      <li>3 Branchen-Demos</li>
+      <li>GSAP Animations</li>
+    </ul>
+  </div>
+</div>
+
+<p class="footer-note">→ Alles umsetzbar als reines HTML/CSS/JS auf Netlify — kein Plugin, kein Framework nötig</p>
+
+</body>
+</html>

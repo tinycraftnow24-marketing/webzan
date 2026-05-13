@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horizontal Pin Scroll — Preview</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0e0e10;
+    color: #f0f0f0;
+    padding: 28px 20px 48px;
+  }
+  h1 { font-size: 21px; font-weight: 800; color: #E8B84B; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .sub { font-size: 12.5px; color: #666; margin-bottom: 28px; line-height: 1.6; }
+
+  /* === PREVIEW STAGE === */
+  .stage {
+    background: #1A1510;
+    border: 2px solid rgba(232,184,75,0.2);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  /* Section label */
+  .section-chrome {
+    padding: 14px 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .section-label-mock {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #E8B84B;
+    font-weight: 700;
+  }
+  .section-headline-mock {
+    font-size: 18px;
+    font-weight: 900;
+    color: #f0f0f0;
+    letter-spacing: -0.02em;
+    margin-top: 4px;
+    margin-bottom: 0;
+  }
+  .progress-dots {
+    display: flex;
+    gap: 6px;
+    padding-bottom: 6px;
+  }
+  .pdot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #333;
+    transition: background 0.3s;
+  }
+  .pdot.active { background: #E8B84B; }
+
+  /* Scroll hint */
+  .scroll-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    color: #555;
+    padding: 8px 20px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .scroll-arrow {
+    width: 18px; height: 12px;
+    border: 1px solid #555;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #555;
+    flex-shrink: 0;
+    animation: bounce-down 1.5s ease-in-out infinite;
+  }
+  @keyframes bounce-down {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+  }
+
+  /* === HORIZONTAL TRACK === */
+  .track-wrapper {
+    overflow: hidden;
+    position: relative;
+    height: 340px;
+  }
+  .track {
+    display: flex;
+    height: 100%;
+    transition: transform 0s;
+    will-change: transform;
+  }
+
+  /* Each panel */
+  .panel {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+  }
+
+  /* Panel label bottom left */
+  .panel-num {
+    position: absolute;
+    bottom: 18px;
+    left: 22px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #555;
+    font-weight: 700;
+  }
+  .panel-industry {
+    font-size: 13px;
+    font-weight: 800;
+    color: #f0f0f0;
+    letter-spacing: -0.01em;
+  }
+  .panel-device-type {
+    font-size: 10px;
+    color: #666;
+    margin-top: -2px;
+  }
+
+  /* Glow per panel */
+  .panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .panel-craft::before {
+    background: radial-gradient(ellipse at 50% 60%, rgba(30,90,150,0.12) 0%, transparent 65%);
+  }
+  .panel-dental::before {
+    background: radial-gradient(ellipse at 50% 60%, rgba(44,74,110,0.1) 0%, transparent 65%);
+  }
+  .panel-resto::before {
+    background: radial-gradient(ellipse at 50% 60%, rgba(232,184,75,0.07) 0%, transparent 65%);
+  }
+
+  /* === DEVICE FRAMES === */
+
+  /* TABLET (Handwerk) */
+  .tablet-frame {
+    width: 180px;
+    height: 230px;
+    background: #0d0d0f;
+    border-radius: 14px;
+    border: 2px solid #2a2a2a;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px #1a1a1a;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: perspective(800px) rotateX(4deg);
+  }
+  .tablet-screen {
+    position: absolute;
+    inset: 6px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #101820;
+  }
+
+  /* LAPTOP (Zahnarzt) */
+  .laptop-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .laptop-frame {
+    width: 280px;
+    height: 168px;
+    background: #151515;
+    border-radius: 8px 8px 0 0;
+    border: 2px solid #2a2a2a;
+    border-bottom: none;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+    overflow: hidden;
+    position: relative;
+    /* Subtle 3D tilt like thenoomo */
+    transform: perspective(900px) rotateX(2deg);
+  }
+  .laptop-screen-inner {
+    position: absolute;
+    inset: 4px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #f2eeea;
+  }
+  .laptop-chin {
+    width: 100%;
+    height: 8px;
+    background: #1a1a1a;
+    border-radius: 0 0 2px 2px;
+    border: 2px solid #222;
+    border-top: none;
+  }
+  .laptop-base-bar {
+    width: 85%;
+    height: 5px;
+    background: #141414;
+    border-radius: 0 0 4px 4px;
+    border: 1px solid #1e1e1e;
+    border-top: none;
+  }
+
+  /* PHONE (Restaurant) */
+  .phone-frame {
+    width: 100px;
+    height: 200px;
+    background: #0d0d0f;
+    border-radius: 20px;
+    border: 2px solid #2a2a2a;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px #1a1a1a;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: perspective(800px) rotateX(3deg);
+  }
+  .phone-notch {
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px; height: 5px;
+    background: #1a1a1a;
+    border-radius: 3px;
+    z-index: 2;
+  }
+  .phone-screen {
+    position: absolute;
+    inset: 5px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #1c140a;
+  }
+
+  /* === FAKE WEBSITE CONTENT === */
+  /* Craft (dark blue) */
+  .craft-site {
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg, #0e1825 0%, #162035 100%);
+    display: flex; flex-direction: column;
+  }
+  .craft-hero { height: 42%; background: #1e3a5a; flex-shrink: 0; position: relative; overflow: hidden; }
+  .craft-hero::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(30,90,200,0.4), transparent);
+  }
+  .craft-body { padding: 6px; display: flex; flex-direction: column; gap: 3px; }
+  .cf-line { height: 2.5px; border-radius: 1.5px; background: rgba(30,90,150,0.35); }
+  .cf-line.short { width: 55%; }
+  .cf-line.med { width: 78%; }
+  .cf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 3px; }
+  .cf-card { height: 22px; border-radius: 3px; background: rgba(30,90,150,0.12); border: 1px solid rgba(30,90,150,0.2); }
+
+  /* Dental (light) */
+  .dental-site {
+    position: absolute; inset: 0;
+    background: #f5f2ee;
+    display: flex; flex-direction: column;
+  }
+  .dental-nav { height: 10%; background: #fff; border-bottom: 1px solid #e8e4e0; flex-shrink: 0; display: flex; align-items: center; padding: 0 6px; gap: 4px; }
+  .dn-logo { width: 20px; height: 4px; background: #2c4a6e; border-radius: 2px; }
+  .dn-links { display: flex; gap: 4px; margin-left: auto; }
+  .dn-link { width: 12px; height: 3px; background: #ccc; border-radius: 1px; }
+  .dental-hero { height: 38%; background: linear-gradient(135deg, #2c4a6e 0%, #3a5f8a 100%); flex-shrink: 0; display: flex; align-items: flex-end; padding: 6px; position: relative; overflow: hidden; }
+  .dental-hero::before { content: ''; position: absolute; top: -20%; right: -10%; width: 60%; height: 100%; background: rgba(255,255,255,0.05); border-radius: 50%; }
+  .dh-text { display: flex; flex-direction: column; gap: 2px; }
+  .dh-line { height: 3px; border-radius: 1.5px; background: rgba(255,255,255,0.7); }
+  .dh-line.s { width: 30px; }
+  .dh-line.l { width: 55px; }
+  .dental-body { padding: 6px; display: flex; flex-direction: column; gap: 3px; }
+  .dl-line { height: 2.5px; border-radius: 1.5px; background: rgba(44,74,110,0.2); }
+  .dl-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3px; margin-top: 4px; }
+  .dl-card { height: 18px; border-radius: 3px; background: rgba(44,74,110,0.07); border: 1px solid rgba(44,74,110,0.12); }
+  .dl-btn { width: 40px; height: 7px; background: #2c4a6e; border-radius: 3px; margin-top: 4px; }
+
+  /* Restaurant (amber dark) */
+  .resto-site {
+    position: absolute; inset: 0;
+    background: #1a1208;
+    display: flex; flex-direction: column;
+  }
+  .resto-hero { height: 45%; background: linear-gradient(160deg, #0e0b04, #1e1608); flex-shrink: 0; position: relative; overflow: hidden; border-bottom: 1px solid rgba(232,184,75,0.15); display: flex; align-items: flex-end; padding: 6px; }
+  .resto-hero::before { content: ''; position: absolute; top: 0; right: 0; width: 60%; height: 100%; background: radial-gradient(ellipse, rgba(232,184,75,0.08) 0%, transparent 70%); }
+  .rh-text { display: flex; flex-direction: column; gap: 2px; }
+  .rh-line { height: 3px; border-radius: 1.5px; background: rgba(232,184,75,0.6); }
+  .rh-line.s { width: 25px; }
+  .rh-line.l { width: 50px; }
+  .resto-body { padding: 6px; display: flex; flex-direction: column; gap: 3px; }
+  .rl-line { height: 2.5px; border-radius: 1.5px; background: rgba(232,184,75,0.18); }
+  .rl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin-top: 4px; }
+  .rl-card { height: 20px; border-radius: 3px; background: rgba(232,184,75,0.06); border: 1px solid rgba(232,184,75,0.12); }
+
+  /* === INNER SCROLL ANIMATION === */
+  @keyframes inner-scroll {
+    0%, 20%   { transform: translateY(0); }
+    50%, 75%  { transform: translateY(-30%); }
+    95%, 100% { transform: translateY(0); }
+  }
+  .scroll-anim { animation: inner-scroll 4s ease-in-out infinite; }
+
+  /* === DEVICE ENTRANCE ANIMATIONS === */
+  @keyframes device-enter-craft {
+    0%   { transform: perspective(800px) rotateX(4deg) rotateY(-10deg) scale(0.82) translateY(20px); opacity: 0; }
+    100% { transform: perspective(800px) rotateX(4deg) rotateY(0deg)  scale(1)    translateY(0); opacity: 1; }
+  }
+  @keyframes device-enter-dental {
+    0%   { transform: perspective(900px) rotateX(2deg) rotateY(-10deg) scale(0.82) translateY(20px); opacity: 0; }
+    100% { transform: perspective(900px) rotateX(2deg) rotateY(0deg)  scale(1)    translateY(0); opacity: 1; }
+  }
+  @keyframes device-enter-resto {
+    0%   { transform: perspective(800px) rotateX(3deg) rotateY(-10deg) scale(0.82) translateY(20px); opacity: 0; }
+    100% { transform: perspective(800px) rotateX(3deg) rotateY(0deg)  scale(1)    translateY(0); opacity: 1; }
+  }
+
+  /* === CONTROLS === */
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 0 4px;
+  }
+  .ctrl-btn {
+    padding: 7px 18px;
+    border-radius: 6px;
+    border: 1px solid #2a2a30;
+    background: #18181c;
+    color: #aaa;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .ctrl-btn:hover { border-color: #E8B84B; color: #E8B84B; }
+  .ctrl-btn:disabled { opacity: 0.3; cursor: default; border-color: #222; color: #555; }
+  .ctrl-info {
+    font-size: 10.5px;
+    color: #555;
+    min-width: 80px;
+    text-align: center;
+  }
+
+  /* Info block */
+  .info {
+    background: #13131a;
+    border: 1px solid #252535;
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 12px;
+    color: #888;
+    line-height: 1.7;
+    margin-top: 4px;
+  }
+  .info strong { color: #E8B84B; }
+  .info code {
+    background: #1e1e28;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 11px;
+    color: #8b9eff;
+  }
+</style>
+</head>
+<body>
+
+<h1>Device Showcase — Horizontal Pin Scroll</h1>
+<p class="sub">Nutze die Pfeile um die Scroll-Abfolge zu simulieren.<br>In der echten Seite steuert dein Mausrad / Finger diese Bewegung.</p>
+
+<div class="stage">
+  <!-- Section header -->
+  <div class="section-chrome">
+    <div>
+      <div class="section-label-mock">— Selected Work</div>
+      <div class="section-headline-mock">Projects that define.</div>
+    </div>
+    <div class="progress-dots">
+      <div class="pdot active" id="dot0"></div>
+      <div class="pdot" id="dot1"></div>
+      <div class="pdot" id="dot2"></div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-arrow">↓</div>
+    <span>Scrollen → sieht aus wie nach rechts scrollen</span>
+  </div>
+
+  <!-- Track -->
+  <div class="track-wrapper">
+    <div class="track" id="track">
+
+      <!-- PANEL 1: Tablet — Handwerk -->
+      <div class="panel panel-craft">
+        <div class="tablet-frame" id="dev0">
+          <div class="tablet-screen">
+            <div class="craft-site">
+              <div class="craft-hero"></div>
+              <div class="craft-body scroll-anim">
+                <div class="cf-line med"></div>
+                <div class="cf-line short"></div>
+                <div class="cf-grid">
+                  <div class="cf-card"></div>
+                  <div class="cf-card"></div>
+                  <div class="cf-card"></div>
+                  <div class="cf-card"></div>
+                </div>
+                <div class="cf-line med" style="margin-top:4px;"></div>
+                <div class="cf-line short"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <div class="panel-industry">Handwerk</div>
+          <div class="panel-device-type">Tablet</div>
+        </div>
+        <div class="panel-num">01 — Einstieg</div>
+      </div>
+
+      <!-- PANEL 2: Laptop — Zahnarztpraxis -->
+      <div class="panel panel-dental">
+        <div class="laptop-wrap" id="dev1">
+          <div class="laptop-frame">
+            <div class="laptop-screen-inner">
+              <div class="dental-site">
+                <div class="dental-nav">
+                  <div class="dn-logo"></div>
+                  <div class="dn-links">
+                    <div class="dn-link"></div>
+                    <div class="dn-link"></div>
+                    <div class="dn-link"></div>
+                  </div>
+                </div>
+                <div class="dental-hero">
+                  <div class="dh-text scroll-anim">
+                    <div class="dh-line s"></div>
+                    <div class="dh-line l"></div>
+                    <div class="dh-line" style="width:40px;"></div>
+                  </div>
+                </div>
+                <div class="dental-body">
+                  <div class="dl-line" style="width:100%"></div>
+                  <div class="dl-line" style="width:70%"></div>
+                  <div class="dl-grid">
+                    <div class="dl-card"></div>
+                    <div class="dl-card"></div>
+                    <div class="dl-card"></div>
+                  </div>
+                  <div class="dl-btn"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="laptop-chin"></div>
+          <div class="laptop-base-bar"></div>
+        </div>
+        <div style="text-align:center;margin-top:4px;">
+          <div class="panel-industry">Zahnarztpraxis</div>
+          <div class="panel-device-type">Laptop</div>
+        </div>
+        <div class="panel-num">02 — Nach rechts</div>
+      </div>
+
+      <!-- PANEL 3: Phone — Restaurant -->
+      <div class="panel panel-resto">
+        <div class="phone-frame" id="dev2">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="resto-site">
+              <div class="resto-hero">
+                <div class="rh-text scroll-anim">
+                  <div class="rh-line s"></div>
+                  <div class="rh-line l"></div>
+                  <div class="rh-line" style="width:35px;"></div>
+                </div>
+              </div>
+              <div class="resto-body">
+                <div class="rl-line" style="width:100%"></div>
+                <div class="rl-line" style="width:65%"></div>
+                <div class="rl-grid">
+                  <div class="rl-card"></div>
+                  <div class="rl-card"></div>
+                </div>
+                <div class="rl-line" style="width:80%;margin-top:4px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <div class="panel-industry">Restaurant</div>
+          <div class="panel-device-type">Handy</div>
+        </div>
+        <div class="panel-num">03 — Abschluss</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="ctrl-btn" id="btnPrev" onclick="go(-1)" disabled>← zurück</button>
+    <div class="ctrl-info" id="ctrlInfo">01 / 03</div>
+    <button class="ctrl-btn" id="btnNext" onclick="go(1)">weiter →</button>
+  </div>
+</div>
+
+<div class="info">
+  <strong>Technische Umsetzung:</strong> GSAP <code>ScrollTrigger</code> mit <code>pin: true</code> — die Section ist während des Übergangs fixiert. Das vertikale Scrollen treibt die horizontale Übersetzung an (<code>scrub: 1</code>). Jedes Gerät läuft mit einer eigenen Eingangs-Animation (rotateY von −10° → 0°). Auf Mobile stapeln sich die Panels vertikal. Kein Video, keine externen Assets — alles HTML/CSS/JS.
+</div>
+
+<script>
+var cur = 0;
+var track = document.getElementById('track');
+var dots = [document.getElementById('dot0'), document.getElementById('dot1'), document.getElementById('dot2')];
+var info = document.getElementById('ctrlInfo');
+var btnPrev = document.getElementById('btnPrev');
+var btnNext = document.getElementById('btnNext');
+
+function go(dir) {
+  var next = cur + dir;
+  if (next < 0 || next > 2) return;
+  cur = next;
+  track.style.transition = 'transform 0.65s cubic-bezier(0.4,0,0.2,1)';
+  track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+  dots.forEach(function(d, i) { d.classList.toggle('active', i === cur); });
+  info.textContent = '0' + (cur + 1) + ' / 03';
+  btnPrev.disabled = cur === 0;
+  btnNext.disabled = cur === 2;
+}
+</script>
+</body>
+</html>

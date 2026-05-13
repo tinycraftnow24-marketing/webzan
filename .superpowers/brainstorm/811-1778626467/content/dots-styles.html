@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dot Animation Styles</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0e0e10;
+    color: #f0f0f0;
+    padding: 32px 24px 48px;
+    line-height: 1.6;
+  }
+  h1 { font-size: 22px; font-weight: 800; color: #E8B84B; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .sub { font-size: 13px; color: #666; margin-bottom: 32px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+
+  .option {
+    border: 2px solid #2a2a30;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+    background: #18181c;
+  }
+  .option:hover { border-color: #4a4a5a; transform: translateY(-2px); }
+  .option.selected { border-color: #E8B84B; }
+
+  .preview {
+    height: 220px;
+    background: #1A1510;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-label {
+    padding: 14px 16px;
+  }
+  .option-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; height: 24px;
+    background: rgba(232,184,75,0.12);
+    color: #E8B84B;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .option-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .option-desc { font-size: 11.5px; color: #888; line-height: 1.5; }
+
+  /* ========================
+     STYLE A: Drifting Particles
+     Langsam driftende Punkte, verschiedene Größen, leicht transparent
+  ======================== */
+  .dots-a { position: absolute; inset: 0; }
+
+  /* ========================
+     STYLE B: Pulse Grid
+     Regelmäßiges Grid, Punkte pulsen leicht in Wellen
+  ======================== */
+  .dots-b { position: absolute; inset: 0; }
+
+  /* ========================
+     STYLE C: Orbit Clusters
+     Kleine Gruppen von Punkten, die sich in Kreisen bewegen
+  ======================== */
+  .dots-c { position: absolute; inset: 0; }
+
+  /* Hero text overlay */
+  .hero-overlay {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 8px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #E8B84B;
+    margin-bottom: 4px;
+    opacity: 0.8;
+  }
+  .hero-line {
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: #f5f0e8;
+  }
+  .hero-line.accent { color: #E8B84B; }
+</style>
+</head>
+<body>
+
+<h1>Hintergrund-Animation — welcher Stil?</h1>
+<p class="sub">Alle drei bewegen sich autonom, keine Maus-Interaktion. Klick zum Auswählen.</p>
+
+<div class="grid">
+
+  <!-- OPTION A: Drifting Particles -->
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="preview" id="previewA">
+      <canvas id="canvasA" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
+      <div class="hero-overlay">
+        <div class="hero-eyebrow">Webdesign aus Berlin</div>
+        <div class="hero-line">Websites,</div>
+        <div class="hero-line">die</div>
+        <div class="hero-line accent">bleiben.</div>
+      </div>
+    </div>
+    <div class="option-label">
+      <div class="option-letter">A</div>
+      <div class="option-title">Drifting Particles</div>
+      <div class="option-desc">Punkte unterschiedlicher Größe treiben langsam durch den Raum. Organisch, ruhig, premium.</div>
+    </div>
+  </div>
+
+  <!-- OPTION B: Wave Grid -->
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="preview" id="previewB">
+      <canvas id="canvasB" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
+      <div class="hero-overlay">
+        <div class="hero-eyebrow">Webdesign aus Berlin</div>
+        <div class="hero-line">Websites,</div>
+        <div class="hero-line">die</div>
+        <div class="hero-line accent">bleiben.</div>
+      </div>
+    </div>
+    <div class="option-label">
+      <div class="option-letter">B</div>
+      <div class="option-title">Wave Grid</div>
+      <div class="option-desc">Dot-Grid mit Wellen-Puls. Punkte leuchten in Wellen auf. Strukturiert, technisch, präzise.</div>
+    </div>
+  </div>
+
+  <!-- OPTION C: Floating Constellations -->
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="preview" id="previewC">
+      <canvas id="canvasC" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
+      <div class="hero-overlay">
+        <div class="hero-eyebrow">Webdesign aus Berlin</div>
+        <div class="hero-line">Websites,</div>
+        <div class="hero-line">die</div>
+        <div class="hero-line accent">bleiben.</div>
+      </div>
+    </div>
+    <div class="option-label">
+      <div class="option-letter">C</div>
+      <div class="option-title">Floating Constellations</div>
+      <div class="option-desc">Punkte bewegen sich und ziehen dünne Linien zueinander, wenn nah genug. Lebendig, vernetzt, modern.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============================
+   SHARED UTILITIES
+============================ */
+function initCanvas(canvas) {
+  var rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width || 280;
+  canvas.height = rect.height || 220;
+  return canvas.getContext('2d');
+}
+
+var AMBER = { r: 232, g: 184, b: 75 };
+var BG = '#1A1510';
+
+/* ============================
+   A: DRIFTING PARTICLES
+============================ */
+(function() {
+  var canvas = document.getElementById('canvasA');
+  var ctx = initCanvas(canvas);
+  var W = canvas.width, H = canvas.height;
+
+  var particles = [];
+  for (var i = 0; i < 38; i++) {
+    var size = Math.random() * 2.2 + 0.5;
+    particles.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: size,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      alpha: Math.random() * 0.4 + 0.08,
+      pulse: Math.random() * Math.PI * 2,
+      pulseSpeed: 0.008 + Math.random() * 0.012
+    });
+  }
+
+  function draw() {
+    ctx.fillStyle = BG;
+    ctx.fillRect(0, 0, W, H);
+
+    // Amber glow
+    var grd = ctx.createRadialGradient(W * 0.7, H * 0.2, 0, W * 0.7, H * 0.2, W * 0.5);
+    grd.addColorStop(0, 'rgba(232,184,75,0.04)');
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, W, H);
+
+    particles.forEach(function(p) {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.pulse += p.pulseSpeed;
+      var a = p.alpha + Math.sin(p.pulse) * 0.06;
+
+      if (p.x < -10) p.x = W + 5;
+      if (p.x > W + 10) p.x = -5;
+      if (p.y < -10) p.y = H + 5;
+      if (p.y > H + 10) p.y = -5;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + AMBER.r + ',' + AMBER.g + ',' + AMBER.b + ',' + a + ')';
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ============================
+   B: WAVE GRID
+============================ */
+(function() {
+  var canvas = document.getElementById('canvasB');
+  var ctx = initCanvas(canvas);
+  var W = canvas.width, H = canvas.height;
+  var t = 0;
+
+  var spacing = 22;
+  var cols = Math.ceil(W / spacing) + 1;
+  var rows = Math.ceil(H / spacing) + 1;
+
+  function draw() {
+    ctx.fillStyle = BG;
+    ctx.fillRect(0, 0, W, H);
+
+    t += 0.018;
+
+    for (var r = 0; r < rows; r++) {
+      for (var c = 0; c < cols; c++) {
+        var x = c * spacing;
+        var y = r * spacing;
+        var dist = Math.sqrt((x - W * 0.5) * (x - W * 0.5) + (y - H * 0.5) * (y - H * 0.5));
+        var wave = Math.sin(dist * 0.08 - t * 1.8) * 0.5 + 0.5;
+        var alpha = wave * 0.28 + 0.04;
+        var radius = wave * 1.4 + 0.5;
+
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + AMBER.r + ',' + AMBER.g + ',' + AMBER.b + ',' + alpha + ')';
+        ctx.fill();
+      }
+    }
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ============================
+   C: FLOATING CONSTELLATIONS
+============================ */
+(function() {
+  var canvas = document.getElementById('canvasC');
+  var ctx = initCanvas(canvas);
+  var W = canvas.width, H = canvas.height;
+
+  var nodes = [];
+  for (var i = 0; i < 28; i++) {
+    nodes.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      r: Math.random() * 1.5 + 0.8
+    });
+  }
+
+  var MAX_DIST = 65;
+
+  function draw() {
+    ctx.fillStyle = BG;
+    ctx.fillRect(0, 0, W, H);
+
+    // Glow
+    var grd = ctx.createRadialGradient(W * 0.3, H * 0.6, 0, W * 0.3, H * 0.6, W * 0.4);
+    grd.addColorStop(0, 'rgba(232,184,75,0.04)');
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, W, H);
+
+    nodes.forEach(function(n) {
+      n.x += n.vx;
+      n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+    });
+
+    // Lines
+    for (var i = 0; i < nodes.length; i++) {
+      for (var j = i + 1; j < nodes.length; j++) {
+        var dx = nodes[i].x - nodes[j].x;
+        var dy = nodes[i].y - nodes[j].y;
+        var d = Math.sqrt(dx * dx + dy * dy);
+        if (d < MAX_DIST) {
+          var alpha = (1 - d / MAX_DIST) * 0.2;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.strokeStyle = 'rgba(' + AMBER.r + ',' + AMBER.g + ',' + AMBER.b + ',' + alpha + ')';
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Dots
+    nodes.forEach(function(n) {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + AMBER.r + ',' + AMBER.g + ',' + AMBER.b + ',0.55)';
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ============================
+   SELECTION
+============================ */
+function toggleSelect(el) {
+  document.querySelectorAll('.option').forEach(function(o) {
+    o.classList.remove('selected');
+  });
+  el.classList.add('selected');
+  if (window.recordChoice) window.recordChoice(el.dataset.choice, el.querySelector('.option-title').textContent);
+}
+</script>
+
+</body>
+</html>
