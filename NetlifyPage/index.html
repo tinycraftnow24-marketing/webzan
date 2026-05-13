@@ -2786,6 +2786,84 @@
     });
 
     /* ==========================================
+       DEVICE SHOWCASE — HORIZONTAL PIN SCROLL
+    ========================================== */
+    (function() {
+      var isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        [0, 1, 2].forEach(function(i) {
+          gsap.from('#panel' + i, {
+            scrollTrigger: { trigger: '#panel' + i, start: 'top 80%' },
+            opacity: 0, y: 40, duration: 0.8, ease: 'power3.out'
+          });
+        });
+        return;
+      }
+
+      var track   = document.getElementById('showcaseTrack');
+      var section = document.getElementById('projects');
+      var dots    = [
+        document.getElementById('spDot0'),
+        document.getElementById('spDot1'),
+        document.getElementById('spDot2')
+      ];
+
+      gsap.set(['#devWrap0', '#devWrap1', '#devWrap2'], { rotateX: 28, rotateY: -12, scale: 0.82, opacity: 0 });
+
+      gsap.to(track, {
+        x: function() { return -(track.scrollWidth - window.innerWidth); },
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          pin: true,
+          scrub: 1,
+          snap: {
+            snapTo: 1 / 2,
+            duration: { min: 0.3, max: 0.5 },
+            ease: 'power2.inOut'
+          },
+          end: function() { return '+=' + track.scrollWidth; },
+          onUpdate: function(self) {
+            var prog = self.progress;
+            var active = prog < 0.33 ? 0 : prog < 0.66 ? 1 : 2;
+            dots.forEach(function(d, i) {
+              if (d) d.classList.toggle('active', i === active);
+            });
+
+            var p0 = Math.min(1, prog / 0.2);
+            gsap.set('#devWrap0', { rotateX: 28 * (1 - p0), rotateY: -12 * (1 - p0), scale: 0.82 + 0.24 * p0, opacity: p0 });
+            gsap.set('#craftScroll', { y: -Math.max(0, (p0 - 0.5) / 0.5) * 25 + '%' });
+
+            var p1 = Math.min(1, Math.max(0, (prog - 0.30) / 0.25));
+            gsap.set('#devWrap1', { rotateX: 28 * (1 - p1), rotateY: -12 * (1 - p1), scale: 0.82 + 0.24 * p1, opacity: p1 });
+            gsap.set('#dentalScroll', { y: -Math.max(0, (p1 - 0.5) / 0.5) * 25 + '%' });
+
+            var p2 = Math.min(1, Math.max(0, (prog - 0.62) / 0.23));
+            gsap.set('#devWrap2', { rotateX: 28 * (1 - p2), rotateY: -12 * (1 - p2), scale: 0.82 + 0.24 * p2, opacity: p2 });
+            gsap.set('#restoScroll', { y: -Math.max(0, (p2 - 0.5) / 0.5) * 25 + '%' });
+          }
+        }
+      });
+
+      gsap.to('#projectsLabel', {
+        scrollTrigger: { trigger: section, start: 'top 80%' },
+        opacity: 1, y: 0, duration: 0.6, ease: 'power3.out'
+      });
+      gsap.to('#projectsHeadline', {
+        scrollTrigger: { trigger: section, start: 'top 75%' },
+        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.1
+      });
+      gsap.to('#projectsNote', {
+        scrollTrigger: { trigger: section, start: 'top 75%' },
+        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.2
+      });
+
+      window.addEventListener('resize', function() {
+        ScrollTrigger.refresh();
+      }, { passive: true });
+    }());
+
+    /* ==========================================
        COOKIE CONSENT BANNER
     ========================================== */
     (function() {
