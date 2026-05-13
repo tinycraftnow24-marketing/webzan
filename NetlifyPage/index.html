@@ -1,0 +1,2071 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebZan — Websites, die bleiben.</title>
+  <link rel="icon" type="image/png" href="assets/logo/favicon-32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+  <style>
+    /* ============================================
+       CSS CUSTOM PROPERTIES
+    ============================================ */
+    :root {
+      --accent: #E8B84B;
+      --accent-dim: rgba(232, 184, 75, 0.12);
+      --accent-glow: rgba(232, 184, 75, 0.25);
+      --radius: 4px;
+      --radius-lg: 12px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #1A1510;
+      --bg2: #221B12;
+      --bg3: #2A2118;
+      --text: #F5F0E8;
+      --muted: #8A8070;
+      --border: rgba(232, 184, 75, 0.15);
+      --border-sub: rgba(245, 240, 232, 0.08);
+      --card-bg: #221B12;
+      --nav-solid: rgba(26, 21, 16, 0.88);
+      --overlay-bg: #1A1510;
+    }
+
+    [data-theme="light"] {
+      --bg: #FAFAF8;
+      --bg2: #F0EDE6;
+      --bg3: #E8E4DB;
+      --text: #1A1510;
+      --muted: #6A6050;
+      --border: rgba(232, 184, 75, 0.3);
+      --border-sub: rgba(26, 21, 16, 0.1);
+      --card-bg: #F0EDE6;
+      --nav-solid: rgba(250, 250, 248, 0.88);
+      --overlay-bg: #FAFAF8;
+    }
+
+    /* ============================================
+       RESET & BASE
+    ============================================ */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: auto;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: #1A1510;
+    }
+
+    /* ============================================
+       LAYOUT UTILITIES
+    ============================================ */
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 clamp(24px, 5vw, 80px);
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 32px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    /* ============================================
+       NAV
+    ============================================ */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 900;
+      padding: 20px 0;
+      transition: background 0.4s ease, border-color 0.4s ease, padding 0.3s ease;
+      border-bottom: 1px solid transparent;
+    }
+
+    .nav.scrolled {
+      background: var(--nav-solid);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 0;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .nav-logo-img {
+      height: 32px;
+      width: auto;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    @media (max-width: 767px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      transition: color var(--transition);
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 14px;
+      border-radius: 100px;
+      border: 1px solid var(--border-sub);
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+
+    .pill-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
+      padding: 8px;
+      background: transparent;
+      border: 1px solid var(--border-sub);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: border-color var(--transition);
+      position: relative;
+      z-index: 1100;
+    }
+
+    .hamburger:hover {
+      border-color: var(--accent);
+    }
+
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 1.5px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-origin: center;
+    }
+
+    .hamburger.open span:nth-child(1) {
+      transform: translateY(6.5px) rotate(45deg);
+    }
+
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    .hamburger.open span:nth-child(3) {
+      transform: translateY(-6.5px) rotate(-45deg);
+    }
+
+    /* ============================================
+       MENU OVERLAY
+    ============================================ */
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: var(--overlay-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      clip-path: circle(0% at calc(100% - 56px) 44px);
+      pointer-events: none;
+      transition: background 0.4s ease;
+    }
+
+    .menu-overlay.is-open {
+      pointer-events: all;
+    }
+
+    .menu-overlay-inner {
+      text-align: center;
+    }
+
+    .menu-overlay-nav {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 48px;
+    }
+
+    .menu-overlay-nav a {
+      display: block;
+      font-size: clamp(36px, 8vw, 72px);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      transition: color 0.2s ease;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .menu-overlay-nav a:hover {
+      color: var(--accent);
+    }
+
+    .menu-overlay-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    /* ============================================
+       HERO
+    ============================================ */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      align-items: flex-end;
+      padding-top: 120px;
+      padding-bottom: clamp(60px, 8vw, 100px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 60vw;
+      height: 60vw;
+      background: radial-gradient(circle, rgba(232, 184, 75, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      width: 100%;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero-headline {
+      overflow: hidden;
+      margin-bottom: 0;
+    }
+
+    .headline-line-wrap {
+      overflow: hidden;
+      display: block;
+    }
+
+    .headline-line {
+      display: block;
+      font-size: clamp(4rem, 10vw, 9rem);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      will-change: transform;
+      clip-path: inset(0 0 100% 0);
+    }
+
+    .headline-line.accent {
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      margin-top: clamp(32px, 4vw, 48px);
+      max-width: 480px;
+      font-size: clamp(15px, 1.8vw, 18px);
+      color: var(--muted);
+      line-height: 1.65;
+      opacity: 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      margin-top: 40px;
+      opacity: 0;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      background: var(--accent);
+      color: #1A1510;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all var(--transition);
+      will-change: transform;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(232, 184, 75, 0.35);
+    }
+
+    .btn-primary svg {
+      transition: transform var(--transition);
+    }
+
+    .btn-primary:hover svg {
+      transform: translateX(4px);
+    }
+
+    .scroll-indicator {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .scroll-line {
+      width: 48px;
+      height: 1px;
+      background: var(--muted);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scroll-line::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: var(--accent);
+      animation: slide-line 2s ease-in-out infinite;
+    }
+
+    @keyframes slide-line {
+      0% { left: -100%; }
+      50% { left: 0%; }
+      100% { left: 100%; }
+    }
+
+    @media (max-width: 767px) {
+      .scroll-indicator {
+        display: none;
+      }
+    }
+
+    /* ============================================
+       ABOUT
+    ============================================ */
+    .about {
+      padding: clamp(80px, 12vw, 140px) 0;
+      border-top: 1px solid var(--border-sub);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 6vw, 80px);
+      align-items: start;
+    }
+
+    @media (max-width: 767px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+
+    .about-headline {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--text);
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .about-text {
+      font-size: clamp(15px, 1.6vw, 17px);
+      color: var(--muted);
+      line-height: 1.75;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .about-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ============================================
+       SERVICES
+    ============================================ */
+    .services {
+      padding: clamp(80px, 12vw, 140px) 0;
+    }
+
+    .services-header {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: clamp(48px, 6vw, 72px);
+    }
+
+    .services-headline {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border-sub);
+      border: 1px solid var(--border-sub);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    @media (max-width: 767px) {
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .service-card {
+      background: var(--card-bg);
+      padding: clamp(32px, 4vw, 48px);
+      position: relative;
+      cursor: default;
+      opacity: 0;
+      transform: translateY(60px);
+      transition: background var(--transition);
+    }
+
+    .service-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      border-radius: 0;
+      transition: opacity var(--transition);
+      pointer-events: none;
+    }
+
+    .service-card:hover::after {
+      opacity: 1;
+    }
+
+    .service-card:hover {
+      box-shadow: 0 0 40px var(--accent-glow);
+    }
+
+    .service-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .service-title {
+      font-size: clamp(18px, 2vw, 22px);
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .service-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ============================================
+       PROJECTS
+    ============================================ */
+    .projects {
+      padding: clamp(80px, 12vw, 140px) 0;
+      border-top: 1px solid var(--border-sub);
+    }
+
+    .projects-header {
+      margin-bottom: clamp(48px, 6vw, 72px);
+    }
+
+    .projects-headline {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      margin-bottom: 12px;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .projects-note {
+      font-size: 13px;
+      color: var(--muted);
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .projects-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 580px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .project-card {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--card-bg);
+      border: 1px solid var(--border-sub);
+      opacity: 0;
+      transform: translateY(50px);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .project-card:hover {
+      border-color: var(--border);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .project-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Project thumbnail 1: Restaurant Orbit — deep amber/black radial */
+    .project-thumb-1 {
+      background:
+        radial-gradient(ellipse at 30% 60%, rgba(232, 184, 75, 0.35) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 20%, rgba(180, 100, 20, 0.25) 0%, transparent 50%),
+        linear-gradient(135deg, #1A1510 0%, #2A2010 50%, #1A1510 100%);
+    }
+
+    .project-thumb-1::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+      border: 1px solid rgba(232, 184, 75, 0.4);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 24px rgba(232, 184, 75, 0.06),
+        0 0 0 48px rgba(232, 184, 75, 0.03);
+    }
+
+    .project-thumb-1::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+      background: rgba(232, 184, 75, 0.6);
+      border-radius: 50%;
+      filter: blur(2px);
+    }
+
+    /* Project thumbnail 2: Studio Bold — editorial grid */
+    .project-thumb-2 {
+      background: linear-gradient(160deg, #221B12 0%, #2E2415 100%);
+    }
+
+    .project-thumb-2::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(232, 184, 75, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(232, 184, 75, 0.08) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    .project-thumb-2::after {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent) 40%, transparent 40%);
+    }
+
+    /* Project thumbnail 3: Product Launch — bold diagonal */
+    .project-thumb-3 {
+      background: linear-gradient(160deg, #1A1510 0%, #251D10 60%, #2A1F08 100%);
+      overflow: hidden;
+    }
+
+    .project-thumb-3::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      left: -10%;
+      width: 70%;
+      height: 200%;
+      background: linear-gradient(
+        180deg,
+        rgba(232, 184, 75, 0.15) 0%,
+        rgba(232, 184, 75, 0.08) 50%,
+        transparent 100%
+      );
+      transform: rotate(-20deg);
+    }
+
+    .project-thumb-3::after {
+      content: '';
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border: 2px solid rgba(232, 184, 75, 0.5);
+      border-radius: var(--radius);
+      transform: rotate(15deg);
+    }
+
+    [data-theme="light"] .project-thumb-1 {
+      background:
+        radial-gradient(ellipse at 30% 60%, rgba(232, 184, 75, 0.25) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 20%, rgba(180, 100, 20, 0.15) 0%, transparent 50%),
+        linear-gradient(135deg, #E8E4DB 0%, #DDD8CC 50%, #E8E4DB 100%);
+    }
+
+    [data-theme="light"] .project-thumb-2 {
+      background: linear-gradient(160deg, #E8E4DB 0%, #DDD8CC 100%);
+    }
+
+    [data-theme="light"] .project-thumb-3 {
+      background: linear-gradient(160deg, #EEEAE2 0%, #E4DDD0 60%, #DED8C8 100%);
+    }
+
+    .project-body {
+      padding: 24px;
+    }
+
+    .project-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(232, 184, 75, 0.2);
+      padding: 4px 10px;
+      border-radius: 100px;
+      margin-bottom: 12px;
+    }
+
+    .project-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .project-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* ============================================
+       PROCESS
+    ============================================ */
+    .process {
+      padding: clamp(80px, 12vw, 140px) 0;
+      border-top: 1px solid var(--border-sub);
+    }
+
+    .process-header {
+      margin-bottom: clamp(48px, 6vw, 72px);
+    }
+
+    .process-headline {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .process-list {
+      list-style: none;
+    }
+
+    .process-item {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: clamp(24px, 4vw, 48px);
+      padding: clamp(24px, 3.5vw, 36px) 0;
+      border-top: 1px solid var(--border-sub);
+      align-items: start;
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    .process-item:last-child {
+      border-bottom: 1px solid var(--border-sub);
+    }
+
+    @media (max-width: 580px) {
+      .process-item {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    .process-num {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      padding-top: 4px;
+    }
+
+    .process-content {}
+
+    .process-title {
+      font-size: clamp(18px, 2vw, 22px);
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--text);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .process-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 540px;
+    }
+
+    /* ============================================
+       CONTACT
+    ============================================ */
+    .contact {
+      padding: clamp(80px, 12vw, 140px) 0;
+      border-top: 1px solid var(--border-sub);
+    }
+
+    .contact-card {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .contact-headline {
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+      color: var(--text);
+      margin-bottom: 16px;
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    .contact-sub {
+      font-size: clamp(15px, 1.6vw, 17px);
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 48px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 580px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-field label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      padding: 14px 18px;
+      background: var(--bg2);
+      border: 1px solid var(--border-sub);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.5;
+      transition: border-color var(--transition), background var(--transition);
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .form-field textarea {
+      resize: vertical;
+      min-height: 140px;
+    }
+
+    .form-field input::placeholder,
+    .form-field textarea::placeholder {
+      color: var(--muted);
+    }
+
+    .form-field input:focus,
+    .form-field textarea:focus {
+      border-color: var(--accent);
+      background: var(--bg3);
+    }
+
+    .form-submit {
+      width: 100%;
+      padding: 18px 32px;
+      background: var(--accent);
+      color: #1A1510;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      font-family: 'Inter', sans-serif;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .form-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(232, 184, 75, 0.4);
+    }
+
+    /* ============================================
+       FOOTER
+    ============================================ */
+    .footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border-sub);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .footer-link {
+      font-size: 13px;
+      color: var(--muted);
+      transition: color var(--transition);
+    }
+
+    .footer-link:hover {
+      color: var(--accent);
+    }
+
+    /* ============================================
+       SCROLL PROGRESS BAR
+    ============================================ */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: var(--accent);
+      z-index: 9999;
+      transform-origin: left;
+      transition: none;
+    }
+
+    /* ============================================
+       MISC
+    ============================================ */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- ============================================
+       MENU OVERLAY
+  ============================================ -->
+  <div class="menu-overlay" id="menuOverlay" role="dialog" aria-label="Navigation" aria-hidden="true">
+    <div class="menu-overlay-inner">
+      <ul class="menu-overlay-nav" id="overlayNav">
+        <li><a href="#services" id="ol-services" class="ol-link"></a></li>
+        <li><a href="#projects" id="ol-work" class="ol-link"></a></li>
+        <li><a href="#process" id="ol-process" class="ol-link"></a></li>
+        <li><a href="#contact" id="ol-contact" class="ol-link"></a></li>
+      </ul>
+      <div class="menu-overlay-controls" id="overlayControls">
+        <button class="pill-btn" id="overlayLangBtn"></button>
+        <button class="pill-btn" id="overlayThemeBtn"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       NAV
+  ============================================ -->
+  <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#" class="nav-logo" aria-label="WebZan — Home">
+          <img
+            class="nav-logo-img"
+            src="assets/logo/webzan-logo-amber-dark-1024.png"
+            alt="WebZan"
+            width="128"
+            height="32"
+          >
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#services" data-nav="services"></a></li>
+          <li><a href="#projects" data-nav="work"></a></li>
+          <li><a href="#process" data-nav="process"></a></li>
+          <li><a href="#contact" data-nav="contact"></a></li>
+        </ul>
+
+        <div class="nav-controls">
+          <button class="pill-btn" id="langBtn" aria-label="Switch language">EN</button>
+          <button class="pill-btn" id="themeBtn" aria-label="Toggle theme">&#9788;</button>
+          <button
+            class="hamburger"
+            id="hamburger"
+            aria-label="Open menu"
+            aria-expanded="false"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================
+       HERO
+  ============================================ -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <p class="hero-eyebrow" id="heroEyebrow"></p>
+        <div class="hero-headline" aria-label="Hero headline">
+          <span class="headline-line-wrap">
+            <span class="headline-line" id="heroLine1"></span>
+          </span>
+          <span class="headline-line-wrap">
+            <span class="headline-line" id="heroLine2"></span>
+          </span>
+          <span class="headline-line-wrap">
+            <span class="headline-line accent" id="heroLine3"></span>
+          </span>
+        </div>
+        <p class="hero-sub" id="heroSub"></p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn-primary" id="heroCta">
+            <span id="heroCtaText"></span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <div class="scroll-indicator">
+            <div class="scroll-line"></div>
+            <span id="scrollLabel"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       ABOUT
+  ============================================ -->
+  <section class="about" id="about">
+    <div class="container">
+      <p class="section-label" id="aboutLabel"></p>
+      <div class="about-grid">
+        <h2 class="about-headline" id="aboutHeadline"></h2>
+        <p class="about-text" id="aboutText"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SERVICES
+  ============================================ -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="services-header">
+        <p class="section-label" id="servicesLabel"></p>
+        <h2 class="services-headline" id="servicesHeadline"></h2>
+      </div>
+      <div class="services-grid" id="servicesGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       PROJECTS
+  ============================================ -->
+  <section class="projects" id="projects">
+    <div class="container">
+      <div class="projects-header">
+        <p class="section-label" id="projectsLabel"></p>
+        <h2 class="projects-headline" id="projectsHeadline"></h2>
+        <p class="projects-note" id="projectsNote"></p>
+      </div>
+      <div class="projects-grid" id="projectsGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       PROCESS
+  ============================================ -->
+  <section class="process" id="process">
+    <div class="container">
+      <div class="process-header">
+        <p class="section-label" id="processLabel"></p>
+        <h2 class="process-headline" id="processHeadline"></h2>
+      </div>
+      <ul class="process-list" id="processList">
+        <!-- Rendered by JS -->
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================
+       CONTACT
+  ============================================ -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact-card">
+        <p class="section-label" id="contactLabel" style="text-align:left; max-width:680px; margin-left:auto; margin-right:auto;"></p>
+        <h2 class="contact-headline" id="contactHeadline"></h2>
+        <p class="contact-sub" id="contactSub"></p>
+        <form
+          class="contact-form"
+          id="contactForm"
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+        >
+          <input type="hidden" name="form-name" value="contact">
+          <p class="visually-hidden">
+            <label>Don't fill this out if you're human: <input name="bot-field"></label>
+          </p>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="contactName" id="contactNameLabel"></label>
+              <input type="text" id="contactName" name="name" required autocomplete="name">
+            </div>
+            <div class="form-field">
+              <label for="contactEmail" id="contactEmailLabel"></label>
+              <input type="email" id="contactEmail" name="email" required autocomplete="email">
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="contactMessage" id="contactMessageLabel"></label>
+            <textarea id="contactMessage" name="message" required></textarea>
+          </div>
+          <button type="submit" class="form-submit" id="contactSubmit"></button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       FOOTER
+  ============================================ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+        <p class="footer-copy" id="footerCopy"></p>
+        <a href="#" class="footer-link" id="footerImprint"></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================
+       JAVASCRIPT
+  ============================================ -->
+  <script>
+  (function () {
+    'use strict';
+
+    /* ==========================================
+       CONTENT
+    ========================================== */
+    const content = {
+      de: {
+        nav: { services: 'Services', work: 'Projekte', process: 'Prozess', contact: 'Kontakt' },
+        hero: {
+          eyebrow: 'Webdesign aus Berlin',
+          lines: ['Websites,', 'die', 'bleiben.'],
+          sub: 'Von WordPress bis Motion-Website — für KMUs, Startups und Kreative, die online wirklich zählen.'
+        },
+        cta: 'Projekt anfragen',
+        scroll: 'Scroll',
+        about: {
+          label: '— Über WebZan',
+          headline: 'Ich baue das Web, das zu deinem Business passt.',
+          text: 'Ich bin Hendrik, Freelance-Webdesigner aus Berlin. Egal ob einfache WordPress-Seite oder komplexe Motion-Website — ich entwickle digitale Auftritte, die nicht nur gut aussehen, sondern wirklich funktionieren.'
+        },
+        services: {
+          label: '— Services',
+          headline: 'Was ich für dich baue',
+          items: [
+            { num: '01', title: 'WordPress Websites', desc: 'Professionelle CMS-Lösungen, die du selbst pflegen kannst. Schnell, sicher, skalierbar.' },
+            { num: '02', title: 'Motion Websites', desc: 'GSAP-animierte Erlebnisse für Brands, die auffallen wollen. Premium-Design in Bewegung.' },
+            { num: '03', title: 'Landing Pages', desc: 'Conversion-optimierte Seiten für Kampagnen, Produkte und Services.' },
+            { num: '04', title: 'UI/UX & Branding', desc: 'Von der visuellen Identität bis zum fertigen Interface-Design.' }
+          ]
+        },
+        projects: {
+          label: '— Konzeptprojekte',
+          headline: 'Konzeptprojekte',
+          note: 'Eigenentwicklungen zur Demonstration verschiedener Design-Stile und Technologien.',
+          items: [
+            { tag: 'Motion Website', title: 'Restaurant Orbit', desc: 'Premium-Gastronomie-Website mit GSAP-Animationen und Dark-Mode.' },
+            { tag: 'WordPress', title: 'Studio Bold', desc: 'Editorial-Website für ein Berliner Kreativstudio. Sauber, schnell, skalierbar.' },
+            { tag: 'Landing Page', title: 'Product Launch', desc: 'Conversion-optimierte Launch-Seite mit Scroll-Animationen.' }
+          ]
+        },
+        process: {
+          label: '— Prozess',
+          headline: 'So arbeiten wir zusammen',
+          steps: [
+            { num: '01 —', title: 'Kennenlernen', desc: 'Wir sprechen über dein Business, deine Ziele und was eine neue Website wirklich leisten soll.' },
+            { num: '02 —', title: 'Konzept & Design', desc: 'Moodboards, Wireframes und ein visuelles Konzept — abgestimmt auf deine Marke.' },
+            { num: '03 —', title: 'Entwicklung', desc: 'Clean Code, moderne Technologien, mobile-first. Schnell und mit Fokus auf Qualität.' },
+            { num: '04 —', title: 'Launch & Support', desc: 'Go-Live, Einweisung und Support damit alles reibungslos läuft.' }
+          ]
+        },
+        contact: {
+          label: '— Kontakt',
+          headline: 'Lass uns reden.',
+          sub: 'Ein Projekt im Kopf? Schreib mir — ich melde mich innerhalb von 24 Stunden.',
+          name: 'Dein Name',
+          email: 'Deine E-Mail',
+          message: 'Erzähl mir von deinem Projekt...',
+          send: 'Anfrage senden'
+        },
+        footer: { copy: '© 2026 WebZan', imprint: 'Impressum' }
+      },
+      en: {
+        nav: { services: 'Services', work: 'Work', process: 'Process', contact: 'Contact' },
+        hero: {
+          eyebrow: 'Web Design from Berlin',
+          lines: ['Websites', 'that', 'last.'],
+          sub: 'From WordPress to motion websites — for SMEs, startups and creatives who want to matter online.'
+        },
+        cta: 'Start a project',
+        scroll: 'Scroll',
+        about: {
+          label: '— About WebZan',
+          headline: 'I build the web that fits your business.',
+          text: "I'm Hendrik, a freelance web designer from Berlin. Whether it's a simple WordPress site or a complex motion website — I create digital presences that don't just look good, but actually work."
+        },
+        services: {
+          label: '— Services',
+          headline: 'What I build for you',
+          items: [
+            { num: '01', title: 'WordPress Websites', desc: 'Professional CMS solutions you can manage yourself. Fast, secure, scalable.' },
+            { num: '02', title: 'Motion Websites', desc: 'GSAP-animated experiences for brands that want to stand out. Premium design in motion.' },
+            { num: '03', title: 'Landing Pages', desc: 'Conversion-optimized pages for campaigns, products and services.' },
+            { num: '04', title: 'UI/UX & Branding', desc: 'From visual identity to finished interface design.' }
+          ]
+        },
+        projects: {
+          label: '— Concept Projects',
+          headline: 'Concept Projects',
+          note: 'In-house developments to demonstrate various design styles and technologies.',
+          items: [
+            { tag: 'Motion Website', title: 'Restaurant Orbit', desc: 'Premium restaurant website with GSAP animations and dark mode.' },
+            { tag: 'WordPress', title: 'Studio Bold', desc: 'Editorial website for a Berlin creative studio. Clean, fast, scalable.' },
+            { tag: 'Landing Page', title: 'Product Launch', desc: 'Conversion-optimized launch page with scroll animations.' }
+          ]
+        },
+        process: {
+          label: '— Process',
+          headline: 'How we work together',
+          steps: [
+            { num: '01 —', title: 'Discovery', desc: "We talk about your business, goals and what a new website should really do for you." },
+            { num: '02 —', title: 'Concept & Design', desc: 'Moodboards, wireframes and a visual concept — tailored to your brand.' },
+            { num: '03 —', title: 'Development', desc: 'Clean code, modern technologies, mobile-first. Fast and focused on quality.' },
+            { num: '04 —', title: 'Launch & Support', desc: 'Go-live, handover and support so everything runs smoothly.' }
+          ]
+        },
+        contact: {
+          label: '— Contact',
+          headline: "Let's talk.",
+          sub: "Got a project in mind? Write to me — I'll get back to you within 24 hours.",
+          name: 'Your name',
+          email: 'Your email',
+          message: 'Tell me about your project...',
+          send: 'Send inquiry'
+        },
+        footer: { copy: '© 2026 WebZan', imprint: 'Imprint' }
+      }
+    };
+
+    /* ==========================================
+       ELEMENT REFS
+    ========================================== */
+    const html = document.documentElement;
+    const logoImgs = document.querySelectorAll('.nav-logo-img');
+    const themeBtn = document.getElementById('themeBtn');
+    const langBtn = document.getElementById('langBtn');
+    const overlayLangBtn = document.getElementById('overlayLangBtn');
+    const overlayThemeBtn = document.getElementById('overlayThemeBtn');
+    const hamburger = document.getElementById('hamburger');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const mainNav = document.getElementById('mainNav');
+    const progressBar = document.getElementById('progressBar');
+
+    /* ==========================================
+       THEME
+    ========================================== */
+    function setTheme(t) {
+      html.setAttribute('data-theme', t);
+      logoImgs.forEach(function (img) {
+        img.src = t === 'dark'
+          ? 'assets/logo/webzan-logo-amber-dark-1024.png'
+          : 'assets/logo/webzan-logo-transparent-1024.png';
+      });
+      themeBtn.textContent = t === 'dark' ? '☀' : '🌙';
+      overlayThemeBtn.textContent = t === 'dark' ? '☀' : '🌙';
+      localStorage.setItem('theme', t);
+    }
+
+    var savedTheme = localStorage.getItem('theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    setTheme(savedTheme);
+
+    themeBtn.addEventListener('click', function () {
+      setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
+    });
+
+    overlayThemeBtn.addEventListener('click', function () {
+      setTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
+    });
+
+    /* ==========================================
+       LANGUAGE & RENDER
+    ========================================== */
+    var lang = localStorage.getItem('lang') || 'de';
+
+    function renderServices(l) {
+      var grid = document.getElementById('servicesGrid');
+      var items = content[l].services.items;
+      grid.innerHTML = '';
+      items.forEach(function (item, i) {
+        var card = document.createElement('div');
+        card.className = 'service-card';
+        card.setAttribute('aria-label', item.title);
+        card.innerHTML =
+          '<span class="service-num">' + item.num + '</span>' +
+          '<h3 class="service-title">' + item.title + '</h3>' +
+          '<p class="service-desc">' + item.desc + '</p>';
+        grid.appendChild(card);
+      });
+    }
+
+    function renderProjects(l) {
+      var grid = document.getElementById('projectsGrid');
+      var items = content[l].projects.items;
+      grid.innerHTML = '';
+      items.forEach(function (item, i) {
+        var thumbIndex = i + 1;
+        var card = document.createElement('article');
+        card.className = 'project-card';
+        card.innerHTML =
+          '<div class="project-thumb project-thumb-' + thumbIndex + '" aria-hidden="true"></div>' +
+          '<div class="project-body">' +
+            '<span class="project-tag">' + item.tag + '</span>' +
+            '<h3 class="project-title">' + item.title + '</h3>' +
+            '<p class="project-desc">' + item.desc + '</p>' +
+          '</div>';
+        grid.appendChild(card);
+      });
+    }
+
+    function renderProcess(l) {
+      var list = document.getElementById('processList');
+      var steps = content[l].process.steps;
+      list.innerHTML = '';
+      steps.forEach(function (step) {
+        var li = document.createElement('li');
+        li.className = 'process-item';
+        li.innerHTML =
+          '<span class="process-num">' + step.num + '</span>' +
+          '<div class="process-content">' +
+            '<h3 class="process-title">' + step.title + '</h3>' +
+            '<p class="process-desc">' + step.desc + '</p>' +
+          '</div>';
+        list.appendChild(li);
+      });
+    }
+
+    function renderOverlayNav(l) {
+      var links = document.querySelectorAll('.ol-link');
+      var navKeys = ['services', 'work', 'process', 'contact'];
+      links.forEach(function (a, i) {
+        a.textContent = content[l].nav[navKeys[i]];
+      });
+      overlayLangBtn.textContent = l === 'de' ? 'EN' : 'DE';
+    }
+
+    function render(l) {
+      lang = l;
+      var c = content[l];
+
+      // html lang
+      html.lang = l;
+
+      // Nav links
+      document.querySelectorAll('[data-nav]').forEach(function (a) {
+        var key = a.getAttribute('data-nav');
+        a.textContent = c.nav[key];
+      });
+
+      // Hero
+      var eyebrow = document.getElementById('heroEyebrow');
+      if (eyebrow) eyebrow.textContent = c.hero.eyebrow;
+
+      var line1 = document.getElementById('heroLine1');
+      var line2 = document.getElementById('heroLine2');
+      var line3 = document.getElementById('heroLine3');
+      if (line1) line1.textContent = c.hero.lines[0];
+      if (line2) line2.textContent = c.hero.lines[1];
+      if (line3) line3.textContent = c.hero.lines[2];
+
+      var heroSub = document.getElementById('heroSub');
+      if (heroSub) heroSub.textContent = c.hero.sub;
+
+      var heroCtaText = document.getElementById('heroCtaText');
+      if (heroCtaText) heroCtaText.textContent = c.cta;
+
+      var scrollLabel = document.getElementById('scrollLabel');
+      if (scrollLabel) scrollLabel.textContent = c.scroll;
+
+      // About
+      var aboutLabel = document.getElementById('aboutLabel');
+      if (aboutLabel) aboutLabel.textContent = c.about.label;
+
+      var aboutHeadline = document.getElementById('aboutHeadline');
+      if (aboutHeadline) aboutHeadline.textContent = c.about.headline;
+
+      var aboutText = document.getElementById('aboutText');
+      if (aboutText) aboutText.textContent = c.about.text;
+
+      // Services
+      var servicesLabel = document.getElementById('servicesLabel');
+      if (servicesLabel) servicesLabel.textContent = c.services.label;
+
+      var servicesHeadline = document.getElementById('servicesHeadline');
+      if (servicesHeadline) servicesHeadline.textContent = c.services.headline;
+
+      renderServices(l);
+
+      // Projects
+      var projectsLabel = document.getElementById('projectsLabel');
+      if (projectsLabel) projectsLabel.textContent = c.projects.label;
+
+      var projectsHeadline = document.getElementById('projectsHeadline');
+      if (projectsHeadline) projectsHeadline.textContent = c.projects.headline;
+
+      var projectsNote = document.getElementById('projectsNote');
+      if (projectsNote) projectsNote.textContent = c.projects.note;
+
+      renderProjects(l);
+
+      // Process
+      var processLabel = document.getElementById('processLabel');
+      if (processLabel) processLabel.textContent = c.process.label;
+
+      var processHeadline = document.getElementById('processHeadline');
+      if (processHeadline) processHeadline.textContent = c.process.headline;
+
+      renderProcess(l);
+
+      // Contact
+      var contactLabel = document.getElementById('contactLabel');
+      if (contactLabel) contactLabel.textContent = c.contact.label;
+
+      var contactHeadline = document.getElementById('contactHeadline');
+      if (contactHeadline) contactHeadline.textContent = c.contact.headline;
+
+      var contactSub = document.getElementById('contactSub');
+      if (contactSub) contactSub.textContent = c.contact.sub;
+
+      var contactNameLabel = document.getElementById('contactNameLabel');
+      if (contactNameLabel) contactNameLabel.textContent = c.contact.name;
+
+      var contactName = document.getElementById('contactName');
+      if (contactName) contactName.placeholder = c.contact.name;
+
+      var contactEmailLabel = document.getElementById('contactEmailLabel');
+      if (contactEmailLabel) contactEmailLabel.textContent = c.contact.email;
+
+      var contactEmail = document.getElementById('contactEmail');
+      if (contactEmail) contactEmail.placeholder = c.contact.email;
+
+      var contactMessageLabel = document.getElementById('contactMessageLabel');
+      if (contactMessageLabel) contactMessageLabel.textContent = c.contact.message;
+
+      var contactMessage = document.getElementById('contactMessage');
+      if (contactMessage) contactMessage.placeholder = c.contact.message;
+
+      var contactSubmit = document.getElementById('contactSubmit');
+      if (contactSubmit) contactSubmit.textContent = c.contact.send;
+
+      // Footer
+      var footerCopy = document.getElementById('footerCopy');
+      if (footerCopy) footerCopy.textContent = c.footer.copy;
+
+      var footerImprint = document.getElementById('footerImprint');
+      if (footerImprint) footerImprint.textContent = c.footer.imprint;
+
+      // Lang button
+      langBtn.textContent = l === 'de' ? 'EN' : 'DE';
+      renderOverlayNav(l);
+
+      localStorage.setItem('lang', l);
+    }
+
+    langBtn.addEventListener('click', function () {
+      render(lang === 'de' ? 'en' : 'de');
+    });
+
+    overlayLangBtn.addEventListener('click', function () {
+      render(lang === 'de' ? 'en' : 'de');
+    });
+
+    // Initial render
+    render(lang);
+
+    /* ==========================================
+       LENIS SMOOTH SCROLL
+    ========================================== */
+    var lenis;
+    try {
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+        smooth: true
+      });
+
+      function rafLoop(time) {
+        lenis.raf(time);
+        requestAnimationFrame(rafLoop);
+      }
+      requestAnimationFrame(rafLoop);
+
+      // ScrollTrigger + Lenis integration
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function (time) {
+        lenis.raf(time * 1000);
+      });
+      gsap.ticker.lagSmoothing(0);
+    } catch (e) {
+      console.warn('Lenis init failed:', e);
+    }
+
+    /* ==========================================
+       GSAP SETUP
+    ========================================== */
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* ==========================================
+       NAV SCROLL BEHAVIOR
+    ========================================== */
+    ScrollTrigger.create({
+      start: 80,
+      onToggle: function (self) {
+        if (self.isActive) {
+          mainNav.classList.add('scrolled');
+        } else {
+          mainNav.classList.remove('scrolled');
+        }
+      }
+    });
+
+    /* ==========================================
+       PROGRESS BAR
+    ========================================== */
+    window.addEventListener('scroll', function () {
+      var scrollTop = window.scrollY || document.documentElement.scrollTop;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = pct.toFixed(2) + '%';
+    }, { passive: true });
+
+    /* ==========================================
+       HERO ENTRANCE ANIMATION
+    ========================================== */
+    window.addEventListener('load', function () {
+      var tl = gsap.timeline({ delay: 0.1 });
+
+      // Eyebrow fades up
+      tl.to('#heroEyebrow', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: 'power3.out'
+      });
+
+      // Headline lines clip-path reveal, staggered
+      tl.to(['#heroLine1', '#heroLine2', '#heroLine3'], {
+        clipPath: 'inset(0 0 0% 0)',
+        y: 0,
+        duration: 0.9,
+        ease: 'power4.out',
+        stagger: 0.12
+      }, '-=0.2');
+
+      // Subtitle
+      tl.to('#heroSub', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: 'power3.out'
+      }, '-=0.4');
+
+      // CTA
+      tl.to('.hero-actions', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        ease: 'power3.out'
+      }, '-=0.3');
+    });
+
+    /* ==========================================
+       SCROLL REVEAL: ABOUT
+    ========================================== */
+    gsap.to('#aboutLabel', {
+      scrollTrigger: { trigger: '#about', start: 'top 80%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: 'power3.out'
+    });
+
+    gsap.to('#aboutHeadline', {
+      scrollTrigger: { trigger: '#about', start: 'top 75%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.1
+    });
+
+    gsap.to('#aboutText', {
+      scrollTrigger: { trigger: '#about', start: 'top 75%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.2
+    });
+
+    /* ==========================================
+       SCROLL REVEAL: SERVICES
+    ========================================== */
+    gsap.to('#servicesLabel', {
+      scrollTrigger: { trigger: '#services', start: 'top 80%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: 'power3.out'
+    });
+
+    gsap.to('#servicesHeadline', {
+      scrollTrigger: { trigger: '#services', start: 'top 75%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.1
+    });
+
+    ScrollTrigger.create({
+      trigger: '#servicesGrid',
+      start: 'top 80%',
+      onEnter: function () {
+        gsap.to('#servicesGrid .service-card', {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power3.out',
+          stagger: 0.12
+        });
+      }
+    });
+
+    /* ==========================================
+       SCROLL REVEAL: PROJECTS
+    ========================================== */
+    gsap.to('#projectsLabel', {
+      scrollTrigger: { trigger: '#projects', start: 'top 80%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: 'power3.out'
+    });
+
+    gsap.to('#projectsHeadline', {
+      scrollTrigger: { trigger: '#projects', start: 'top 75%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.1
+    });
+
+    gsap.to('#projectsNote', {
+      scrollTrigger: { trigger: '#projects', start: 'top 75%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.2
+    });
+
+    ScrollTrigger.create({
+      trigger: '#projectsGrid',
+      start: 'top 80%',
+      onEnter: function () {
+        gsap.to('#projectsGrid .project-card', {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          stagger: 0.1
+        });
+      }
+    });
+
+    /* ==========================================
+       SCROLL REVEAL: PROCESS
+    ========================================== */
+    gsap.to('#processLabel', {
+      scrollTrigger: { trigger: '#process', start: 'top 80%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: 'power3.out'
+    });
+
+    gsap.to('#processHeadline', {
+      scrollTrigger: { trigger: '#process', start: 'top 75%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.1
+    });
+
+    ScrollTrigger.create({
+      trigger: '#processList',
+      start: 'top 80%',
+      onEnter: function () {
+        gsap.to('#processList .process-item', {
+          opacity: 1,
+          x: 0,
+          duration: 0.6,
+          ease: 'power3.out',
+          stagger: 0.08
+        });
+      }
+    });
+
+    /* ==========================================
+       SCROLL REVEAL: CONTACT
+    ========================================== */
+    gsap.to('#contactLabel', {
+      scrollTrigger: { trigger: '#contact', start: 'top 80%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: 'power3.out'
+    });
+
+    gsap.to('#contactHeadline', {
+      scrollTrigger: { trigger: '#contact', start: 'top 75%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.1
+    });
+
+    gsap.to('#contactSub', {
+      scrollTrigger: { trigger: '#contact', start: 'top 75%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.2
+    });
+
+    gsap.to('#contactForm', {
+      scrollTrigger: { trigger: '#contactForm', start: 'top 85%' },
+      opacity: 1,
+      y: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+      delay: 0.1
+    });
+
+    /* ==========================================
+       MENU OVERLAY
+    ========================================== */
+    var menuOpen = false;
+
+    function openMenu() {
+      menuOpen = true;
+      hamburger.classList.add('open');
+      hamburger.setAttribute('aria-expanded', 'true');
+      menuOverlay.classList.add('is-open');
+      menuOverlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+
+      // Circle clip-path expand
+      gsap.to(menuOverlay, {
+        clipPath: 'circle(150% at calc(100% - 56px) 44px)',
+        duration: 0.7,
+        ease: 'power4.inOut'
+      });
+
+      // Stagger links in
+      var links = menuOverlay.querySelectorAll('.ol-link');
+      gsap.to(links, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: 'power3.out',
+        stagger: 0.07,
+        delay: 0.25
+      });
+
+      // Controls
+      gsap.to('#overlayControls', {
+        opacity: 1,
+        y: 0,
+        duration: 0.4,
+        ease: 'power3.out',
+        delay: 0.55
+      });
+    }
+
+    function closeMenu() {
+      menuOpen = false;
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+
+      var links = menuOverlay.querySelectorAll('.ol-link');
+
+      // Fade links out first
+      gsap.to([links, '#overlayControls'], {
+        opacity: 0,
+        y: 20,
+        duration: 0.2,
+        ease: 'power2.in'
+      });
+
+      // Collapse circle
+      gsap.to(menuOverlay, {
+        clipPath: 'circle(0% at calc(100% - 56px) 44px)',
+        duration: 0.5,
+        ease: 'power4.inOut',
+        delay: 0.1,
+        onComplete: function () {
+          menuOverlay.classList.remove('is-open');
+          menuOverlay.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+
+          // Reset link positions for next open
+          gsap.set(links, { opacity: 0, y: 30 });
+          gsap.set('#overlayControls', { opacity: 0, y: 20 });
+        }
+      });
+    }
+
+    hamburger.addEventListener('click', function () {
+      if (menuOpen) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
+    });
+
+    // Close on overlay link click
+    menuOverlay.querySelectorAll('.ol-link').forEach(function (a) {
+      a.addEventListener('click', function () {
+        closeMenu();
+      });
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && menuOpen) {
+        closeMenu();
+      }
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          if (lenis) {
+            lenis.scrollTo(target, { offset: -80, duration: 1.4 });
+          } else {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      });
+    });
+
+    /* ==========================================
+       HERO CLIP-PATH INITIAL STATE
+    ========================================== */
+    // Set initial state for clip-path lines (before animation)
+    gsap.set(['#heroLine1', '#heroLine2', '#heroLine3'], {
+      clipPath: 'inset(0 0 100% 0)',
+      y: 0
+    });
+
+  }());
+  </script>
+
+</body>
+</html>
