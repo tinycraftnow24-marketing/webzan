@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de" data-theme="dark">
+<html lang="de" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -2106,8 +2106,7 @@
       localStorage.setItem('theme', t);
     }
 
-    var savedTheme = localStorage.getItem('theme') ||
-      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var savedTheme = localStorage.getItem('theme') || 'light';
     setTheme(savedTheme);
 
     themeBtn.addEventListener('click', function () {
@@ -2467,7 +2466,7 @@
           y:  Math.random() * canvas.height,
           vx: (Math.random() - 0.5) * 0.35,
           vy: (Math.random() - 0.5) * 0.35,
-          r:  Math.random() * 1.4 + 0.6
+          r:  Math.random() * 2.2 + 1.2
         });
       }
 
@@ -2476,8 +2475,8 @@
 
         var isDark = html.getAttribute('data-theme') !== 'light';
         var nodeRgb   = isDark ? '232,184,75' : '190,130,20';
-        var nodeAlpha = isDark ? 0.38 : 0.55;
-        var lineAlpha = isDark ? 0.16 : 0.28;
+        var nodeAlpha = isDark ? 0.55 : 0.65;
+        var lineAlpha = isDark ? 0.25 : 0.35;
 
         nodes.forEach(function(n) {
           n.x += n.vx;
