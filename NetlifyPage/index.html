@@ -1275,6 +1275,83 @@
       transition: opacity 0.2s;
     }
     .consent-ok:hover { opacity: 0.85; }
+
+    /* ============================================
+       DEVICE SHOWCASE — HORIZONTAL PIN SCROLL
+    ============================================ */
+    .showcase { position: relative; overflow: hidden; }
+    .showcase-header { padding: clamp(60px,8vw,100px) 0 48px; }
+    .showcase-track-outer { overflow: hidden; position: relative; }
+    .showcase-track { display: flex; will-change: transform; }
+    .showcase-panel {
+      min-width: 100vw;
+      height: 70vh;
+      min-height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-direction: column;
+      gap: 20px;
+      perspective: 700px;
+    }
+    .showcase-panel::before { content: ''; position: absolute; inset: 0; pointer-events: none; }
+    .panel-craft::before { background: radial-gradient(ellipse at 50% 50%, rgba(30,90,150,0.1) 0%, transparent 65%); }
+    .panel-dental::before { background: radial-gradient(ellipse at 50% 50%, rgba(44,74,110,0.08) 0%, transparent 65%); }
+    .panel-resto::before { background: radial-gradient(ellipse at 50% 50%, rgba(232,184,75,0.06) 0%, transparent 65%); }
+    .showcase-progress { display: flex; gap: 8px; margin-top: 12px; }
+    .sp-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border-sub); transition: background 0.3s, transform 0.3s; }
+    .sp-dot.active { background: var(--accent); transform: scale(1.3); }
+    .device-label { text-align: center; position: relative; z-index: 2; }
+    .device-industry { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text); }
+    .device-type { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+    .device-wrap { position: relative; z-index: 2; transform-style: preserve-3d; will-change: transform; }
+    .dev-tablet { width: 220px; height: 290px; background: #0d0d10; border-radius: 18px; border: 2px solid #2a2a30; box-shadow: 0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05); overflow: hidden; position: relative; }
+    .dev-tablet-screen { position: absolute; inset: 8px; border-radius: 10px; overflow: hidden; }
+    .dev-laptop-wrap { display: flex; flex-direction: column; align-items: center; }
+    .dev-laptop { width: 380px; height: 230px; background: #141414; border-radius: 10px 10px 0 0; border: 2px solid #2a2a2a; border-bottom: none; box-shadow: 0 -8px 40px rgba(0,0,0,0.4); position: relative; overflow: hidden; }
+    .dev-laptop-bezel { position: absolute; inset: 6px; border-radius: 5px; overflow: hidden; }
+    .dev-laptop-chin { width: 100%; height: 10px; background: #1a1a1a; border: 2px solid #222; border-top: none; border-radius: 0 0 3px 3px; }
+    .dev-laptop-foot { width: 80%; height: 6px; background: #131313; border-radius: 0 0 6px 6px; border: 1px solid #1e1e1e; border-top: none; }
+    .dev-phone { width: 130px; height: 260px; background: #0d0d10; border-radius: 26px; border: 2px solid #2a2a30; box-shadow: 0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05); position: relative; overflow: hidden; }
+    .dev-phone-notch { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 40px; height: 6px; background: #1a1a1a; border-radius: 3px; z-index: 3; }
+    .dev-phone-screen { position: absolute; inset: 6px; border-radius: 20px; overflow: hidden; }
+    .fsite-craft { position:absolute; inset:0; background:linear-gradient(160deg,#0e1825,#152235); display:flex; flex-direction:column; }
+    .fc-hero { height:40%; background:#1e3a5a; flex-shrink:0; position:relative; overflow:hidden; display:flex; align-items:flex-end; padding:8px; }
+    .fc-hero-text { display:flex; flex-direction:column; gap:3px; }
+    .fc-line { height:3px; border-radius:1.5px; background:rgba(255,255,255,0.6); }
+    .fc-body { padding:8px; display:flex; flex-direction:column; gap:4px; }
+    .fc-bline { height:2.5px; border-radius:1.5px; background:rgba(30,90,150,0.3); }
+    .fc-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-top:4px; }
+    .fc-card { height:28px; border-radius:4px; background:rgba(30,90,150,0.12); border:1px solid rgba(30,90,150,0.2); }
+    .fsite-dental { position:absolute; inset:0; background:#f5f2ee; display:flex; flex-direction:column; }
+    .fd-nav { height:8%; background:#fff; border-bottom:1px solid #e0ddd8; flex-shrink:0; display:flex; align-items:center; padding:0 8px; }
+    .fd-logo { width:30px; height:4px; background:#2c4a6e; border-radius:2px; }
+    .fd-links { display:flex; gap:6px; margin-left:auto; }
+    .fd-link { width:18px; height:3px; background:#ccc; border-radius:1.5px; }
+    .fd-hero { height:40%; background:linear-gradient(135deg,#2c4a6e,#3a5f8a); flex-shrink:0; position:relative; overflow:hidden; display:flex; align-items:flex-end; padding:10px; }
+    .fd-hero::before { content:''; position:absolute; top:-30%; right:-15%; width:70%; height:130%; background:rgba(255,255,255,0.06); border-radius:50%; }
+    .fd-h-text { display:flex; flex-direction:column; gap:3px; }
+    .fd-h-line { height:3px; border-radius:1.5px; background:rgba(255,255,255,0.75); }
+    .fd-body { padding:8px; display:flex; flex-direction:column; gap:4px; }
+    .fd-bline { height:2.5px; border-radius:1.5px; background:rgba(44,74,110,0.2); }
+    .fd-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; margin-top:4px; }
+    .fd-card { height:22px; border-radius:4px; background:rgba(44,74,110,0.07); border:1px solid rgba(44,74,110,0.14); }
+    .fd-btn { width:48px; height:9px; background:#2c4a6e; border-radius:4px; margin-top:6px; }
+    .fsite-resto { position:absolute; inset:0; background:#1a1208; display:flex; flex-direction:column; }
+    .fr-hero { height:45%; background:linear-gradient(160deg,#0e0b04,#1e1608); flex-shrink:0; position:relative; overflow:hidden; border-bottom:1px solid rgba(232,184,75,0.15); display:flex; align-items:flex-end; padding:8px; }
+    .fr-hero::before { content:''; position:absolute; top:0; right:0; width:55%; height:100%; background:radial-gradient(ellipse,rgba(232,184,75,0.1),transparent 70%); }
+    .fr-h-text { display:flex; flex-direction:column; gap:3px; }
+    .fr-h-line { height:3px; border-radius:1.5px; background:rgba(232,184,75,0.65); }
+    .fr-body { padding:8px; display:flex; flex-direction:column; gap:4px; }
+    .fr-bline { height:2.5px; border-radius:1.5px; background:rgba(232,184,75,0.18); }
+    .fr-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-top:4px; }
+    .fr-card { height:28px; border-radius:4px; background:rgba(232,184,75,0.06); border:1px solid rgba(232,184,75,0.12); }
+    @media (max-width: 767px) {
+      .showcase-track { flex-direction: column; transform: none !important; }
+      .showcase-panel { min-width: 100%; height: auto; padding: 48px 0; }
+      .dev-laptop { width: 280px; height: 168px; }
+    }
   </style>
 </head>
 <body>
@@ -1406,17 +1483,138 @@
   </section>
 
   <!-- ============================================
-       PROJECTS
+       DEVICE SHOWCASE
   ============================================ -->
-  <section class="projects" id="projects">
-    <div class="container">
-      <div class="projects-header">
-        <p class="section-label" id="projectsLabel"></p>
-        <h2 class="projects-headline" id="projectsHeadline"></h2>
-        <p class="projects-note" id="projectsNote"></p>
-      </div>
-      <div class="projects-grid" id="projectsGrid">
-        <!-- Rendered by JS -->
+  <section class="showcase" id="projects">
+    <div class="container showcase-header">
+      <p class="section-label" id="projectsLabel"></p>
+      <h2 class="projects-headline" id="projectsHeadline"></h2>
+      <p class="projects-note" id="projectsNote"></p>
+    </div>
+
+    <div class="showcase-track-outer" id="showcaseOuter">
+      <div class="showcase-track" id="showcaseTrack">
+
+        <!-- PANEL 1: Tablet — Handwerk -->
+        <div class="showcase-panel panel-craft" id="panel0">
+          <div class="device-wrap" id="devWrap0">
+            <div class="dev-tablet">
+              <div class="dev-tablet-screen">
+                <div class="fsite-craft" id="craftScroll">
+                  <div class="fc-hero">
+                    <div class="fc-hero-text">
+                      <div class="fc-line" style="width:40px"></div>
+                      <div class="fc-line" style="width:70px"></div>
+                      <div class="fc-line" style="width:55px"></div>
+                    </div>
+                  </div>
+                  <div class="fc-body">
+                    <div class="fc-bline" style="width:100%"></div>
+                    <div class="fc-bline" style="width:75%"></div>
+                    <div class="fc-grid">
+                      <div class="fc-card"></div><div class="fc-card"></div>
+                      <div class="fc-card"></div><div class="fc-card"></div>
+                    </div>
+                    <div class="fc-bline" style="width:90%;margin-top:6px"></div>
+                    <div class="fc-bline" style="width:60%"></div>
+                    <div class="fc-grid">
+                      <div class="fc-card"></div><div class="fc-card"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="device-label">
+            <div class="device-industry" id="panel0Industry"></div>
+            <div class="device-type" id="panel0Type"></div>
+          </div>
+        </div>
+
+        <!-- PANEL 2: Laptop — Zahnarztpraxis -->
+        <div class="showcase-panel panel-dental" id="panel1">
+          <div class="device-wrap" id="devWrap1">
+            <div class="dev-laptop-wrap">
+              <div class="dev-laptop">
+                <div class="dev-laptop-bezel">
+                  <div class="fsite-dental" id="dentalScroll">
+                    <div class="fd-nav">
+                      <div class="fd-logo"></div>
+                      <div class="fd-links">
+                        <div class="fd-link"></div><div class="fd-link"></div><div class="fd-link"></div>
+                      </div>
+                    </div>
+                    <div class="fd-hero">
+                      <div class="fd-h-text">
+                        <div class="fd-h-line" style="width:50px"></div>
+                        <div class="fd-h-line" style="width:90px"></div>
+                        <div class="fd-h-line" style="width:70px"></div>
+                      </div>
+                    </div>
+                    <div class="fd-body">
+                      <div class="fd-bline" style="width:100%"></div>
+                      <div class="fd-bline" style="width:70%"></div>
+                      <div class="fd-grid">
+                        <div class="fd-card"></div><div class="fd-card"></div><div class="fd-card"></div>
+                      </div>
+                      <div class="fd-btn"></div>
+                      <div class="fd-bline" style="width:100%;margin-top:8px"></div>
+                      <div class="fd-bline" style="width:55%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="dev-laptop-chin"></div>
+              <div class="dev-laptop-foot"></div>
+            </div>
+          </div>
+          <div class="device-label">
+            <div class="device-industry" id="panel1Industry"></div>
+            <div class="device-type" id="panel1Type"></div>
+          </div>
+        </div>
+
+        <!-- PANEL 3: Phone — Restaurant -->
+        <div class="showcase-panel panel-resto" id="panel2">
+          <div class="device-wrap" id="devWrap2">
+            <div class="dev-phone">
+              <div class="dev-phone-notch"></div>
+              <div class="dev-phone-screen">
+                <div class="fsite-resto" id="restoScroll">
+                  <div class="fr-hero">
+                    <div class="fr-h-text">
+                      <div class="fr-h-line" style="width:35px"></div>
+                      <div class="fr-h-line" style="width:60px"></div>
+                      <div class="fr-h-line" style="width:48px"></div>
+                    </div>
+                  </div>
+                  <div class="fr-body">
+                    <div class="fr-bline" style="width:100%"></div>
+                    <div class="fr-bline" style="width:68%"></div>
+                    <div class="fr-grid">
+                      <div class="fr-card"></div><div class="fr-card"></div>
+                    </div>
+                    <div class="fr-bline" style="width:85%;margin-top:6px"></div>
+                    <div class="fr-bline" style="width:55%"></div>
+                    <div class="fr-grid">
+                      <div class="fr-card"></div><div class="fr-card"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="device-label">
+            <div class="device-industry" id="panel2Industry"></div>
+            <div class="device-type" id="panel2Type"></div>
+          </div>
+          <div class="showcase-progress">
+            <div class="sp-dot active" id="spDot0"></div>
+            <div class="sp-dot" id="spDot1"></div>
+            <div class="sp-dot" id="spDot2"></div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -1620,6 +1818,11 @@
           label: '— Konzeptprojekte',
           headline: 'Konzeptprojekte',
           note: 'Eigenentwicklungen zur Demonstration verschiedener Design-Stile und Technologien.',
+          panels: [
+            { industry: 'Handwerk', type: 'Tablet' },
+            { industry: 'Zahnarztpraxis', type: 'Laptop' },
+            { industry: 'Restaurant', type: 'Handy' }
+          ],
           items: [
             { tag: 'Motion Website', title: 'Restaurant Orbit', desc: 'Premium-Gastronomie-Website mit GSAP-Animationen und Dark-Mode.' },
             { tag: 'WordPress', title: 'Studio Bold', desc: 'Editorial-Website für ein Berliner Kreativstudio. Sauber, schnell, skalierbar.' },
@@ -1719,6 +1922,11 @@
           label: '— Concept Projects',
           headline: 'Concept Projects',
           note: 'In-house developments to demonstrate various design styles and technologies.',
+          panels: [
+            { industry: 'Trades', type: 'Tablet' },
+            { industry: 'Dental Practice', type: 'Laptop' },
+            { industry: 'Restaurant', type: 'Phone' }
+          ],
           items: [
             { tag: 'Motion Website', title: 'Restaurant Orbit', desc: 'Premium restaurant website with GSAP animations and dark mode.' },
             { tag: 'WordPress', title: 'Studio Bold', desc: 'Editorial website for a Berlin creative studio. Clean, fast, scalable.' },
@@ -1967,6 +2175,16 @@
       if (projectsNote) projectsNote.textContent = c.projects.note;
 
       renderProjects(l);
+
+      // Showcase panel labels
+      if (c.projects.panels) {
+        c.projects.panels.forEach(function(p, i) {
+          var indEl = document.getElementById('panel' + i + 'Industry');
+          var typEl = document.getElementById('panel' + i + 'Type');
+          if (indEl) indEl.textContent = p.industry;
+          if (typEl) typEl.textContent = p.type;
+        });
+      }
 
       // Process
       var processLabel = document.getElementById('processLabel');
