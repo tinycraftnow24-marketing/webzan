@@ -5,14 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WebZan — Websites, die bleiben.</title>
   <link rel="icon" type="image/png" href="assets/logo/favicon-32.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <!-- Inter self-hosted — DSGVO-konform -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
   <style>
+    /* Self-hosted Inter — replaces Google Fonts CDN */
+    @font-face {
+      font-family: 'Inter';
+      src: url('assets/fonts/inter-400.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('assets/fonts/inter-600.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('assets/fonts/inter-700.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Inter';
+      src: url('assets/fonts/inter-900.woff2') format('woff2');
+      font-weight: 900;
+      font-style: normal;
+      font-display: swap;
+    }
+
     /* ============================================
        CSS CUSTOM PROPERTIES
     ============================================ */
