@@ -382,13 +382,19 @@
       background: radial-gradient(circle, rgba(232, 184, 75, 0.06) 0%, transparent 70%);
       pointer-events: none;
     }
-    .hero-canvas {
-      position: absolute;
+    #constellationCanvas {
+      position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
       z-index: 0;
+    }
+
+    /* Ensure all page sections stack above the fixed canvas */
+    .hero, .about, .services, .showcase, .process, .contact, .footer {
+      position: relative;
+      z-index: 1;
     }
 
     .hero-inner {
@@ -1251,13 +1257,7 @@
       justify-content: space-between;
       gap: 16px;
       flex-wrap: wrap;
-      transform: translateY(100%);
-      opacity: 0;
       transition: background 0.4s ease, border-color 0.4s ease;
-    }
-    .consent-banner.is-visible {
-      transform: translateY(0);
-      opacity: 1;
     }
     .consent-text {
       font-size: 12.5px;
@@ -1404,6 +1404,9 @@
 </head>
 <body>
 
+  <!-- Global constellation canvas — fixed background, both themes -->
+  <canvas id="constellationCanvas" aria-hidden="true"></canvas>
+
   <!-- Progress Bar -->
   <div class="progress-bar" id="progressBar"></div>
 
@@ -1470,7 +1473,6 @@
        HERO
   ============================================ -->
   <section class="hero" id="hero">
-    <canvas class="hero-canvas" id="constellationCanvas" aria-hidden="true"></canvas>
     <div class="container">
       <div class="hero-inner">
         <p class="hero-eyebrow" id="heroEyebrow"></p>
@@ -1845,6 +1847,14 @@
       </div>
     </div>
   </footer>
+
+  <!-- ============================================
+       COOKIE CONSENT BANNER (before script so JS can find it)
+  ============================================ -->
+  <div class="consent-banner" id="consentBanner" role="region" aria-label="Cookie-Hinweis">
+    <p class="consent-text" id="consentText"></p>
+    <button class="consent-ok" id="consentOk"></button>
+  </div>
 
   <!-- ============================================
        JAVASCRIPT
@@ -2434,19 +2444,19 @@
     gsap.registerPlugin(ScrollTrigger);
 
     /* ==========================================
-       FLOATING CONSTELLATIONS CANVAS
+       FLOATING CONSTELLATIONS CANVAS (full page, both themes)
     ========================================== */
     (function() {
       var canvas = document.getElementById('constellationCanvas');
       if (!canvas) return;
       var ctx = canvas.getContext('2d');
       var nodes = [];
-      var NODE_COUNT = 35;
-      var MAX_DIST = 80;
+      var NODE_COUNT = 40;
+      var MAX_DIST = 90;
 
       function resize() {
-        canvas.width  = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
       }
       resize();
       window.addEventListener('resize', resize, { passive: true });
@@ -2455,14 +2465,19 @@
         nodes.push({
           x:  Math.random() * canvas.width,
           y:  Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: (Math.random() - 0.5) * 0.4,
-          r:  Math.random() * 1.6 + 0.7
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: (Math.random() - 0.5) * 0.35,
+          r:  Math.random() * 1.4 + 0.6
         });
       }
 
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        var isDark = html.getAttribute('data-theme') !== 'light';
+        var nodeRgb   = isDark ? '232,184,75' : '160,110,10';
+        var nodeAlpha = isDark ? 0.38 : 0.22;
+        var lineAlpha = isDark ? 0.16 : 0.10;
 
         nodes.forEach(function(n) {
           n.x += n.vx;
@@ -2480,7 +2495,7 @@
               ctx.beginPath();
               ctx.moveTo(nodes[i].x, nodes[i].y);
               ctx.lineTo(nodes[j].x, nodes[j].y);
-              ctx.strokeStyle = 'rgba(232,184,75,' + ((1 - d / MAX_DIST) * 0.18) + ')';
+              ctx.strokeStyle = 'rgba(' + nodeRgb + ',' + ((1 - d / MAX_DIST) * lineAlpha) + ')';
               ctx.lineWidth = 0.6;
               ctx.stroke();
             }
@@ -2490,7 +2505,7 @@
         nodes.forEach(function(n) {
           ctx.beginPath();
           ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(232,184,75,0.5)';
+          ctx.fillStyle = 'rgba(' + nodeRgb + ',' + nodeAlpha + ')';
           ctx.fill();
         });
 
@@ -2949,13 +2964,13 @@
         updateBannerLang(l);
       };
 
+      gsap.set(banner, { y: '100%', opacity: 0 });
       gsap.to(banner, {
         y: 0,
         opacity: 1,
         duration: 0.5,
         ease: 'power3.out',
-        delay: 1.2,
-        onStart: function() { banner.classList.add('is-visible'); }
+        delay: 1.5
       });
 
       okBtn.addEventListener('click', function() {
@@ -2973,13 +2988,6 @@
   }());
   </script>
 
-  <!-- ============================================
-       COOKIE CONSENT BANNER
-  ============================================ -->
-  <div class="consent-banner" id="consentBanner" role="region" aria-label="Cookie-Hinweis">
-    <p class="consent-text" id="consentText"></p>
-    <button class="consent-ok" id="consentOk"></button>
-  </div>
 
 </body>
 </html>
