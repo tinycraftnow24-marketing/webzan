@@ -2450,7 +2450,8 @@
       if (!canvas) return;
       var ctx = canvas.getContext('2d');
       var nodes = [];
-      var NODE_COUNT = 56;
+      var vw = window.innerWidth;
+      var NODE_COUNT = vw < 480 ? 20 : vw < 768 ? 28 : 56;
       var MAX_DIST = 150;
       var startTime = Date.now();
 
@@ -2532,11 +2533,12 @@
           var cx = canvas.width / 2;
           var cy = canvas.height / 2;
           var diag = Math.sqrt(cx * cx + cy * cy);
+          var clearFraction = canvas.width < 768 ? 0.16 : 0.28; // smaller zone on mobile
           ctx.lineWidth = 1.2;
           nodes.forEach(function(n) {
             var ddx = n.x - cx, ddy = n.y - cy;
             var dist = Math.sqrt(ddx * ddx + ddy * ddy) / diag; // 0=center, ~1=corner
-            if (dist < 0.28) return; // invisible inner zone — no rings near text
+            if (dist < clearFraction) return;
             var alpha  = Math.min(0.38, 0.10 + dist * 0.32);
             var radius = n.lr * (0.55 + dist * 0.45);
             ctx.beginPath();
