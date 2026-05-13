@@ -2475,9 +2475,9 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         var isDark = html.getAttribute('data-theme') !== 'light';
-        var nodeRgb   = isDark ? '232,184,75' : '160,110,10';
-        var nodeAlpha = isDark ? 0.38 : 0.22;
-        var lineAlpha = isDark ? 0.16 : 0.10;
+        var nodeRgb   = isDark ? '232,184,75' : '190,130,20';
+        var nodeAlpha = isDark ? 0.38 : 0.55;
+        var lineAlpha = isDark ? 0.16 : 0.28;
 
         nodes.forEach(function(n) {
           n.x += n.vx;
