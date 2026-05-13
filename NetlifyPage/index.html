@@ -2527,13 +2527,21 @@
           });
         }
 
-        // Light mode: large spinning partial-arc rings
+        // Light mode: large spinning partial-arc rings — fade out toward center
         if (!isDark) {
+          var cx = canvas.width / 2;
+          var cy = canvas.height / 2;
+          var diag = Math.sqrt(cx * cx + cy * cy);
           ctx.lineWidth = 1.2;
           nodes.forEach(function(n) {
+            var ddx = n.x - cx, ddy = n.y - cy;
+            var dist = Math.sqrt(ddx * ddx + ddy * ddy) / diag; // 0=center, ~1=corner
+            if (dist < 0.28) return; // invisible inner zone — no rings near text
+            var alpha  = Math.min(0.38, 0.10 + dist * 0.32);
+            var radius = n.lr * (0.55 + dist * 0.45);
             ctx.beginPath();
-            ctx.arc(n.x, n.y, n.lr, n.rot, n.rot + Math.PI * 1.55);
-            ctx.strokeStyle = 'rgba(140,95,15,0.36)';
+            ctx.arc(n.x, n.y, radius, n.rot, n.rot + Math.PI * 1.55);
+            ctx.strokeStyle = 'rgba(140,95,15,' + alpha.toFixed(2) + ')';
             ctx.stroke();
           });
         }
