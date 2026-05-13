@@ -2069,6 +2069,7 @@
 
     function renderProjects(l) {
       var grid = document.getElementById('projectsGrid');
+      if (!grid) return;
       var items = content[l].projects.items;
       grid.innerHTML = '';
       items.forEach(function (item, i) {
