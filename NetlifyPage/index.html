@@ -608,13 +608,15 @@
     }
 
     .service-card {
+      display: block;
+      text-decoration: none;
       background: var(--card-bg);
       padding: clamp(32px, 4vw, 48px);
       position: relative;
-      cursor: default;
+      cursor: pointer;
       opacity: 0;
       transform: translateY(60px);
-      transition: background var(--transition);
+      transition: background var(--transition), border-color var(--transition), transform var(--transition);
     }
 
     .service-card::after {
@@ -635,7 +637,11 @@
 
     .service-card:hover {
       box-shadow: 0 0 40px var(--accent-glow);
+      border-color: var(--accent);
+      transform: translateY(-2px);
     }
+    .service-arrow { font-size: 14px; color: var(--accent); display: block; margin-top: 12px; opacity: 0; transition: opacity var(--transition), transform var(--transition); transform: translateX(-4px); }
+    .service-card:hover .service-arrow { opacity: 1; transform: translateX(0); }
 
     .service-num {
       font-size: 11px;
@@ -1832,18 +1838,23 @@
     ========================================== */
     var lang = localStorage.getItem('lang') || 'de';
 
+    var serviceLinks = ['services/wordpress.html', 'services/motion.html', 'services/landing-page.html', 'services/ui-ux.html'];
+
     function renderServices(l) {
       var grid = document.getElementById('servicesGrid');
       var items = content[l].services.items;
       grid.innerHTML = '';
-      items.forEach(function (item, i) {
-        var card = document.createElement('div');
+      items.forEach(function(item, i) {
+        var card = document.createElement('a');
         card.className = 'service-card';
+        card.setAttribute('href', serviceLinks[i]);
         card.setAttribute('aria-label', item.title);
+        card.style.cursor = 'pointer';
         card.innerHTML =
           '<span class="service-num">' + item.num + '</span>' +
           '<h3 class="service-title">' + item.title + '</h3>' +
-          '<p class="service-desc">' + item.desc + '</p>';
+          '<p class="service-desc">' + item.desc + '</p>' +
+          '<span class="service-arrow">&#8594;</span>';
         grid.appendChild(card);
       });
     }
