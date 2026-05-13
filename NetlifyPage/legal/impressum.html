@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impressum — WebZan</title>
+  <link rel="icon" type="image/png" href="../assets/logo/favicon-32.png">
+  <style>
+    @font-face { font-family:'Inter'; src:url('../assets/fonts/inter-400.woff2') format('woff2'); font-weight:400; font-display:swap; }
+    @font-face { font-family:'Inter'; src:url('../assets/fonts/inter-700.woff2') format('woff2'); font-weight:700; font-display:swap; }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root { --accent:#E8B84B; }
+    [data-theme="dark"] { --bg:#1A1510; --text:#F5F0E8; --muted:#8A8070; --border:rgba(232,184,75,0.15); }
+    [data-theme="light"] { --bg:#FAFAF8; --text:#1A1510; --muted:#6A6050; --border:rgba(232,184,75,0.3); }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); line-height:1.8; padding:80px clamp(24px,5vw,80px) 120px; max-width:720px; margin:0 auto; transition:background 0.3s,color 0.3s; }
+    h1 { font-size:clamp(2rem,6vw,3.5rem); font-weight:900; letter-spacing:-0.03em; margin-bottom:48px; color:var(--accent); }
+    h2 { font-size:1.1rem; font-weight:700; margin:36px 0 8px; }
+    p, address { font-size:0.95rem; color:var(--muted); font-style:normal; }
+    a { color:var(--accent); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    .back { display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:var(--muted); margin-bottom:48px; transition:color 0.2s; }
+    .back:hover { color:var(--accent); }
+    .theme-btn { position:fixed; top:24px; right:24px; padding:6px 14px; border-radius:100px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:12px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s; }
+    .theme-btn:hover { border-color:var(--accent); color:var(--accent); }
+  </style>
+</head>
+<body>
+  <button class="theme-btn" id="themeBtn">&#9788;</button>
+  <a href="../index.html" class="back">&#8592; WebZan.de</a>
+  <h1>Impressum</h1>
+
+  <h2>Angaben gem&auml;&szlig; &sect;5 TMG</h2>
+  <address>
+    Hendrik Zanzig<br>
+    [Stra&szlig;e und Hausnummer]<br>
+    [PLZ] Berlin<br>
+    Deutschland
+  </address>
+
+  <h2>Kontakt</h2>
+  <p>E-Mail: <a href="mailto:tri.henne@gmail.com">tri.henne@gmail.com</a></p>
+
+  <h2>Umsatzsteuer-ID</h2>
+  <p>USt-IdNr. gem&auml;&szlig; &sect;27a UStG: [USt-ID eintragen]</p>
+
+  <h2>Streitschlichtung</h2>
+  <p>Die Europ&auml;ische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>. Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+
+  <script>
+    var html = document.documentElement;
+    var btn = document.getElementById('themeBtn');
+    var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+    html.setAttribute('data-theme', t);
+    btn.textContent = t === 'dark' ? '☀' : '🌙';
+    btn.addEventListener('click', function() {
+      t = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', t);
+      btn.textContent = t === 'dark' ? '☀' : '🌙';
+      localStorage.setItem('theme', t);
+    });
+  </script>
+</body>
+</html>

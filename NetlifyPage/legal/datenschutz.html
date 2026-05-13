@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datenschutz — WebZan</title>
+  <link rel="icon" type="image/png" href="../assets/logo/favicon-32.png">
+  <style>
+    @font-face { font-family:'Inter'; src:url('../assets/fonts/inter-400.woff2') format('woff2'); font-weight:400; font-display:swap; }
+    @font-face { font-family:'Inter'; src:url('../assets/fonts/inter-700.woff2') format('woff2'); font-weight:700; font-display:swap; }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root { --accent:#E8B84B; }
+    [data-theme="dark"] { --bg:#1A1510; --text:#F5F0E8; --muted:#8A8070; --border:rgba(232,184,75,0.15); }
+    [data-theme="light"] { --bg:#FAFAF8; --text:#1A1510; --muted:#6A6050; --border:rgba(232,184,75,0.3); }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); line-height:1.8; padding:80px clamp(24px,5vw,80px) 120px; max-width:720px; margin:0 auto; transition:background 0.3s,color 0.3s; }
+    h1 { font-size:clamp(2rem,6vw,3.5rem); font-weight:900; letter-spacing:-0.03em; margin-bottom:48px; color:var(--accent); }
+    h2 { font-size:1.1rem; font-weight:700; margin:36px 0 8px; }
+    p { font-size:0.95rem; color:var(--muted); margin-bottom:12px; }
+    a { color:var(--accent); text-decoration:none; }
+    .back { display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:var(--muted); margin-bottom:48px; transition:color 0.2s; }
+    .back:hover { color:var(--accent); }
+    .theme-btn { position:fixed; top:24px; right:24px; padding:6px 14px; border-radius:100px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:12px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s; }
+  </style>
+</head>
+<body>
+  <button class="theme-btn" id="themeBtn">&#9788;</button>
+  <a href="../index.html" class="back">&#8592; WebZan.de</a>
+  <h1>Datenschutz&shy;erkl&auml;rung</h1>
+
+  <h2>1. Verantwortlicher</h2>
+  <p>Hendrik Zanzig, [Adresse], tri.henne@gmail.com</p>
+
+  <h2>2. Hosting</h2>
+  <p>Diese Website wird bei Netlify Inc., 512 2nd Street, San Francisco, CA 94107, USA gehostet. Netlify verarbeitet beim Seitenaufruf technisch notwendige Verbindungsdaten (IP-Adresse, Zeitstempel, aufgerufene URL). Grundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am Betrieb der Website). Weitere Informationen: <a href="https://www.netlify.com/privacy/" target="_blank" rel="noopener">netlify.com/privacy</a>.</p>
+
+  <h2>3. Kontaktformular</h2>
+  <p>Wenn Sie das Kontaktformular nutzen, werden Ihre Angaben (Name, E-Mail-Adresse, Nachricht und optionale Projektangaben) &uuml;ber Netlify Forms &uuml;bertragen und dort gespeichert. Netlify fungiert dabei als Auftragsverarbeiter. Ihre Daten werden ausschlie&szlig;lich zur Bearbeitung Ihrer Anfrage verwendet und danach gel&ouml;scht, sobald sie nicht mehr ben&ouml;tigt werden. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO.</p>
+
+  <h2>4. Schriften</h2>
+  <p>Diese Website verwendet die Schriftart &bdquo;Inter&ldquo;, die lokal auf dem Server gespeichert ist. Es werden keine Schriftdaten an Dritte (z.&nbsp;B. Google) &uuml;bertragen.</p>
+
+  <h2>5. Externe Skripte (GSAP, Lenis)</h2>
+  <p>F&uuml;r Animationen werden JavaScript-Bibliotheken (GSAP von cdnjs.cloudflare.com, Lenis von cdn.jsdelivr.net) von externen CDN-Servern geladen. Dabei k&ouml;nnen technische Daten (IP-Adresse) an die CDN-Anbieter &uuml;bertragen werden. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.</p>
+
+  <h2>6. Lokaler Speicher (localStorage)</h2>
+  <p>Diese Website speichert Ihre Theme- und Sprachpr&auml;ferenz im localStorage Ihres Browsers. Dies dient ausschlie&szlig;lich technischen Zwecken und erfordert keine Einwilligung (&sect;&nbsp;25 Abs.&nbsp;2 Nr.&nbsp;2 TTDSG). Es werden keine personenbezogenen Daten gespeichert.</p>
+
+  <h2>7. Ihre Rechte</h2>
+  <p>Sie haben das Recht auf Auskunft, Berichtigung, L&ouml;schung, Einschr&auml;nkung der Verarbeitung, Daten&uuml;bertragbarkeit sowie Widerspruch. Beschwerden richten Sie an die zust&auml;ndige Datenschutzaufsichtsbeh&ouml;rde.</p>
+
+  <script>
+    var html = document.documentElement;
+    var btn = document.getElementById('themeBtn');
+    var t = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+    html.setAttribute('data-theme', t);
+    btn.textContent = t === 'dark' ? '☀' : '🌙';
+    btn.addEventListener('click', function() {
+      t = html.dataset.theme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', t);
+      btn.textContent = t === 'dark' ? '☀' : '🌙';
+      localStorage.setItem('theme', t);
+    });
+  </script>
+</body>
+</html>
