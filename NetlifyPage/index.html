@@ -1637,7 +1637,51 @@
           name: 'Dein Name',
           email: 'Deine E-Mail',
           message: 'Erzähl mir von deinem Projekt...',
-          send: 'Anfrage senden'
+          send: 'Anfrage senden',
+        block1: 'Dein Projekt',
+        block2: 'Noch etwas',
+        hasWebsite: 'Existiert bereits eine Website?',
+        radioYes: 'Ja',
+        radioNo: 'Nein',
+        existingUrl: 'URL der bestehenden Website',
+        scope: 'Projektumfang',
+        scopeDefault: '— Bitte wählen —',
+        scopeNew: 'Neue Website',
+        scopeRedesign: 'Redesign / Relaunch',
+        scopeLanding: 'Landing Page',
+        scopeUiux: 'UI/UX Beratung',
+        scopeUnclear: 'Noch unklar',
+        industry: 'Branche',
+        industryDefault: '— Bitte wählen —',
+        ind1: 'Restaurant / Gastronomie',
+        ind2: 'Zahnarzt / Medizin',
+        ind3: 'Handwerk / Bau',
+        ind4: 'Einzelhandel',
+        ind5: 'Dienstleistung',
+        ind6: 'Startup / Tech',
+        ind7: 'Andere',
+        timeline: 'Wunsch-Zeitrahmen',
+        timelineDefault: '— Bitte wählen —',
+        tl1: 'So bald wie möglich',
+        tl2: '1 – 3 Monate',
+        tl3: '3 – 6 Monate',
+        tl4: 'Noch flexibel',
+        goal: 'Hauptziel der Website',
+        goalDefault: '— Bitte wählen —',
+        goal1: 'Anfragen / Leads generieren',
+        goal2: 'Online-Termine buchen',
+        goal3: 'Produkte verkaufen (Shop)',
+        goal4: 'Marke / Portfolio aufbauen',
+        goal5: 'Bestehende Seite aktualisieren',
+        goal6: 'Noch unklar',
+        inspo: 'Inspirations-URLs',
+        inspoPlaceholder: 'z. B. apple.com, studio.com — Seiten die dir gefallen',
+        sourceLabel: 'Wie bist du auf mich gestoßen?',
+        sourceDefault: '— Bitte wählen —',
+        src1: 'Google',
+        src2: 'Empfehlung',
+        src3: 'Instagram / LinkedIn',
+        src4: 'Anderes'
         },
         footer: { copy: '© 2026 WebZan', imprint: 'Impressum' }
       },
@@ -1692,7 +1736,51 @@
           name: 'Your name',
           email: 'Your email',
           message: 'Tell me about your project...',
-          send: 'Send inquiry'
+          send: 'Send inquiry',
+        block1: 'Your Project',
+        block2: 'One more thing',
+        hasWebsite: 'Do you have an existing website?',
+        radioYes: 'Yes',
+        radioNo: 'No',
+        existingUrl: 'URL of existing website',
+        scope: 'Project scope',
+        scopeDefault: '— Please select —',
+        scopeNew: 'New website',
+        scopeRedesign: 'Redesign / Relaunch',
+        scopeLanding: 'Landing page',
+        scopeUiux: 'UI/UX consulting',
+        scopeUnclear: 'Not sure yet',
+        industry: 'Industry',
+        industryDefault: '— Please select —',
+        ind1: 'Restaurant / Food',
+        ind2: 'Dental / Medical',
+        ind3: 'Trades / Construction',
+        ind4: 'Retail',
+        ind5: 'Services',
+        ind6: 'Startup / Tech',
+        ind7: 'Other',
+        timeline: 'Desired timeline',
+        timelineDefault: '— Please select —',
+        tl1: 'As soon as possible',
+        tl2: '1 – 3 months',
+        tl3: '3 – 6 months',
+        tl4: 'Flexible',
+        goal: 'Primary website goal',
+        goalDefault: '— Please select —',
+        goal1: 'Generate leads / inquiries',
+        goal2: 'Book appointments online',
+        goal3: 'Sell products (shop)',
+        goal4: 'Build brand / portfolio',
+        goal5: 'Update existing site',
+        goal6: 'Not sure yet',
+        inspo: 'Inspiration URLs',
+        inspoPlaceholder: 'e. g. apple.com, studio.com — sites you like',
+        sourceLabel: 'How did you find me?',
+        sourceDefault: '— Please select —',
+        src1: 'Google',
+        src2: 'Referral',
+        src3: 'Instagram / LinkedIn',
+        src4: 'Other'
         },
         footer: { copy: '© 2026 WebZan', imprint: 'Imprint' }
       }
@@ -1909,6 +1997,56 @@
       var contactSubmit = document.getElementById('contactSubmit');
       if (contactSubmit) contactSubmit.textContent = c.contact.send;
 
+      // Extended form fields
+      var f = c.contact;
+      function setText(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; }
+      function setPlaceholder(id, val) { var el = document.getElementById(id); if (el) el.placeholder = val; }
+
+      setText('formBlock1Label', f.block1);
+      setText('formBlock2Label', f.block2);
+      setText('formHasWebsiteLabel', f.hasWebsite);
+      setText('radioYesText', f.radioYes);
+      setText('radioNoText', f.radioNo);
+      setPlaceholder('formExistingUrl', f.existingUrl);
+      setText('formScopeLabel', f.scope);
+      setText('formScopeDefault', f.scopeDefault);
+      setText('formScopeNew', f.scopeNew);
+      setText('formScopeRedesign', f.scopeRedesign);
+      setText('formScopeLanding', f.scopeLanding);
+      setText('formScopeUiux', f.scopeUiux);
+      setText('formScopeUnclear', f.scopeUnclear);
+      setText('formIndustryLabel', f.industry);
+      setText('formIndustryDefault', f.industryDefault);
+      setText('formInd1', f.ind1);
+      setText('formInd2', f.ind2);
+      setText('formInd3', f.ind3);
+      setText('formInd4', f.ind4);
+      setText('formInd5', f.ind5);
+      setText('formInd6', f.ind6);
+      setText('formInd7', f.ind7);
+      setText('formTimelineLabel', f.timeline);
+      setText('formTimelineDefault', f.timelineDefault);
+      setText('formTL1', f.tl1);
+      setText('formTL2', f.tl2);
+      setText('formTL3', f.tl3);
+      setText('formTL4', f.tl4);
+      setText('formGoalLabel', f.goal);
+      setText('formGoalDefault', f.goalDefault);
+      setText('formGoal1', f.goal1);
+      setText('formGoal2', f.goal2);
+      setText('formGoal3', f.goal3);
+      setText('formGoal4', f.goal4);
+      setText('formGoal5', f.goal5);
+      setText('formGoal6', f.goal6);
+      setText('formInspoLabel', f.inspo);
+      setPlaceholder('formInspo', f.inspoPlaceholder);
+      setText('formSourceLabel', f.sourceLabel);
+      setText('formSourceDefault', f.sourceDefault);
+      setText('formSrc1', f.src1);
+      setText('formSrc2', f.src2);
+      setText('formSrc3', f.src3);
+      setText('formSrc4', f.src4);
+
       // Footer
       var footerCopy = document.getElementById('footerCopy');
       if (footerCopy) footerCopy.textContent = c.footer.copy;
@@ -1933,6 +2071,28 @@
 
     // Initial render
     render(lang);
+
+    /* ==========================================
+       CONTACT FORM — CONDITIONAL URL FIELD
+    ========================================== */
+    (function() {
+      var urlWrap = document.getElementById('formUrlWrap');
+      var radios = document.querySelectorAll('input[name="has_website"]');
+      var labels = document.querySelectorAll('.form-radio-label');
+
+      radios.forEach(function(radio) {
+        radio.addEventListener('change', function() {
+          labels.forEach(function(l) { l.classList.remove('checked'); });
+          this.parentElement.classList.add('checked');
+          if (this.value === 'yes') {
+            urlWrap.classList.add('visible');
+          } else {
+            urlWrap.classList.remove('visible');
+            document.getElementById('formExistingUrl').value = '';
+          }
+        });
+      });
+    }());
 
     /* ==========================================
        LENIS SMOOTH SCROLL
