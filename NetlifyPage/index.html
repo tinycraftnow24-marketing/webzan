@@ -2450,7 +2450,7 @@
       if (!canvas) return;
       var ctx = canvas.getContext('2d');
       var nodes = [];
-      var NODE_COUNT = 42;
+      var NODE_COUNT = 56;
       var MAX_DIST = 150;
       var startTime = Date.now();
 
@@ -2463,12 +2463,15 @@
 
       for (var i = 0; i < NODE_COUNT; i++) {
         nodes.push({
-          x:     Math.random() * canvas.width,
-          y:     Math.random() * canvas.height,
-          vx:    (Math.random() - 0.5) * 0.35,
-          vy:    (Math.random() - 0.5) * 0.35,
-          r:     Math.random() * 1.0 + 0.4,
-          phase: Math.random() * Math.PI * 2
+          x:        Math.random() * canvas.width,
+          y:        Math.random() * canvas.height,
+          vx:       (Math.random() - 0.5) * 0.35,
+          vy:       (Math.random() - 0.5) * 0.35,
+          r:        Math.random() * 1.0 + 0.4,
+          lr:       Math.random() * 9 + 5,
+          rot:      Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() * 0.012 + 0.004) * (Math.random() < 0.5 ? 1 : -1),
+          phase:    Math.random() * Math.PI * 2
         });
       }
 
@@ -2476,36 +2479,34 @@
         var t = (Date.now() - startTime) * 0.001;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        var isDark     = html.getAttribute('data-theme') !== 'light';
-        var nodeRgb    = isDark ? '232,184,75' : '120,80,10';
-        var nodeAlpha  = isDark ? 0.45 : 0;
-        var lineAlpha  = isDark ? 0.22 : 0.26;
-        var lineWidth  = isDark ? 1.4 : 1.7;
+        var isDark    = html.getAttribute('data-theme') !== 'light';
+        var nodeRgb   = isDark ? '232,184,75' : '140,95,15';
+        var lineAlpha = isDark ? 0.22 : 0.22;
+        var lineWidth = isDark ? 1.4 : 1.6;
 
         nodes.forEach(function(n) {
           n.x += n.vx;
           n.y += n.vy;
           if (n.x < 0 || n.x > canvas.width)  n.vx *= -1;
           if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+          n.rot += n.rotSpeed;
         });
 
+        // Curved connecting lines
         for (var i = 0; i < nodes.length; i++) {
           for (var j = i + 1; j < nodes.length; j++) {
             var dx = nodes[i].x - nodes[j].x;
             var dy = nodes[i].y - nodes[j].y;
             var d  = Math.sqrt(dx * dx + dy * dy);
             if (d < MAX_DIST) {
-              var ratio = 1 - d / MAX_DIST;
-              // perpendicular unit vector for the control point
-              var px = -dy / d;
-              var py =  dx / d;
-              // gentle animated curve — unique phase per pair
-              var waveAmp = d * 0.14;
-              var phase   = nodes[i].phase + nodes[j].phase;
-              var offset  = Math.sin(t * 0.6 + phase) * waveAmp * ratio;
+              var ratio  = 1 - d / MAX_DIST;
+              var px     = -dy / d;
+              var py     =  dx / d;
+              var amp    = d * 0.14;
+              var phase  = nodes[i].phase + nodes[j].phase;
+              var offset = Math.sin(t * 0.6 + phase) * amp * ratio;
               var mx = (nodes[i].x + nodes[j].x) / 2 + px * offset;
               var my = (nodes[i].y + nodes[j].y) / 2 + py * offset;
-
               ctx.beginPath();
               ctx.moveTo(nodes[i].x, nodes[i].y);
               ctx.quadraticCurveTo(mx, my, nodes[j].x, nodes[j].y);
@@ -2516,12 +2517,24 @@
           }
         }
 
-        if (nodeAlpha > 0) {
+        // Dark mode: small filled dots
+        if (isDark) {
           nodes.forEach(function(n) {
             ctx.beginPath();
             ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(' + nodeRgb + ',' + nodeAlpha + ')';
+            ctx.fillStyle = 'rgba(232,184,75,0.45)';
             ctx.fill();
+          });
+        }
+
+        // Light mode: large spinning partial-arc rings
+        if (!isDark) {
+          ctx.lineWidth = 1.2;
+          nodes.forEach(function(n) {
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, n.lr, n.rot, n.rot + Math.PI * 1.55);
+            ctx.strokeStyle = 'rgba(140,95,15,0.36)';
+            ctx.stroke();
           });
         }
 
