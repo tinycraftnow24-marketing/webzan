@@ -2450,8 +2450,9 @@
       if (!canvas) return;
       var ctx = canvas.getContext('2d');
       var nodes = [];
-      var NODE_COUNT = 40;
-      var MAX_DIST = 90;
+      var NODE_COUNT = 42;
+      var MAX_DIST = 150;
+      var startTime = Date.now();
 
       function resize() {
         canvas.width  = window.innerWidth;
@@ -2462,22 +2463,24 @@
 
       for (var i = 0; i < NODE_COUNT; i++) {
         nodes.push({
-          x:  Math.random() * canvas.width,
-          y:  Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.35,
-          vy: (Math.random() - 0.5) * 0.35,
-          r:  Math.random() * 1.0 + 0.4
+          x:     Math.random() * canvas.width,
+          y:     Math.random() * canvas.height,
+          vx:    (Math.random() - 0.5) * 0.35,
+          vy:    (Math.random() - 0.5) * 0.35,
+          r:     Math.random() * 1.0 + 0.4,
+          phase: Math.random() * Math.PI * 2
         });
       }
 
       function draw() {
+        var t = (Date.now() - startTime) * 0.001;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        var isDark = html.getAttribute('data-theme') !== 'light';
-        var nodeRgb   = isDark ? '232,184,75' : '120,80,10';
-        var nodeAlpha = isDark ? 0.45 : 0;
-        var lineAlpha = isDark ? 0.30 : 0.38;
-        var lineWidth = isDark ? 1.0 : 1.3;
+        var isDark     = html.getAttribute('data-theme') !== 'light';
+        var nodeRgb    = isDark ? '232,184,75' : '120,80,10';
+        var nodeAlpha  = isDark ? 0.45 : 0;
+        var lineAlpha  = isDark ? 0.22 : 0.26;
+        var lineWidth  = isDark ? 1.4 : 1.7;
 
         nodes.forEach(function(n) {
           n.x += n.vx;
@@ -2492,11 +2495,22 @@
             var dy = nodes[i].y - nodes[j].y;
             var d  = Math.sqrt(dx * dx + dy * dy);
             if (d < MAX_DIST) {
+              var ratio = 1 - d / MAX_DIST;
+              // perpendicular unit vector for the control point
+              var px = -dy / d;
+              var py =  dx / d;
+              // gentle animated curve — unique phase per pair
+              var waveAmp = d * 0.14;
+              var phase   = nodes[i].phase + nodes[j].phase;
+              var offset  = Math.sin(t * 0.6 + phase) * waveAmp * ratio;
+              var mx = (nodes[i].x + nodes[j].x) / 2 + px * offset;
+              var my = (nodes[i].y + nodes[j].y) / 2 + py * offset;
+
               ctx.beginPath();
               ctx.moveTo(nodes[i].x, nodes[i].y);
-              ctx.lineTo(nodes[j].x, nodes[j].y);
-              ctx.strokeStyle = 'rgba(' + nodeRgb + ',' + ((1 - d / MAX_DIST) * lineAlpha) + ')';
-              ctx.lineWidth = lineWidth;
+              ctx.quadraticCurveTo(mx, my, nodes[j].x, nodes[j].y);
+              ctx.strokeStyle = 'rgba(' + nodeRgb + ',' + (ratio * lineAlpha) + ')';
+              ctx.lineWidth   = lineWidth;
               ctx.stroke();
             }
           }
