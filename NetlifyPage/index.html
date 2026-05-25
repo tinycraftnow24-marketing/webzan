@@ -383,20 +383,8 @@
       background: radial-gradient(circle, rgba(232, 184, 75, 0.06) 0%, transparent 70%);
       pointer-events: none;
     }
-    #stage {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-    #stage canvas {
-      width: 100% !important;
-      height: 100% !important;
-      display: block;
-    }
-
-    /* Ensure all page sections stack above the fixed canvas */
-    .hero, .about, .services, .showcase, .process, .contact, .footer {
+    /* Ensure all page sections stack correctly */
+    .about, .services, .showcase, .process, .contact, .footer {
       position: relative;
       z-index: 1;
     }
@@ -404,6 +392,32 @@
     .hero-inner {
       width: 100%;
       position: relative;
+      display: flex;
+      align-items: flex-end;
+      gap: clamp(32px, 5vw, 80px);
+    }
+
+    .hero-text {
+      flex: 1 1 55%;
+      min-width: 0;
+    }
+
+    .hero-wz {
+      flex: 0 0 42%;
+      height: clamp(280px, 45vw, 520px);
+      pointer-events: none;
+      align-self: center;
+    }
+
+    .hero-wz canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    @media (max-width: 767px) {
+      .hero-inner { flex-direction: column; align-items: flex-start; }
+      .hero-wz    { display: none; }
     }
 
     .hero-eyebrow {
@@ -1408,8 +1422,6 @@
 </head>
 <body>
 
-  <!-- Three.js wZ mark — fixed background -->
-  <div id="stage" aria-hidden="true"></div>
 
   <!-- Progress Bar -->
   <div class="progress-bar" id="progressBar"></div>
@@ -1479,31 +1491,34 @@
   <section class="hero" id="hero">
     <div class="container">
       <div class="hero-inner">
-        <p class="hero-eyebrow" id="heroEyebrow"></p>
-        <div class="hero-headline" aria-label="Hero headline">
-          <span class="headline-line-wrap">
-            <span class="headline-line" id="heroLine1"></span>
-          </span>
-          <span class="headline-line-wrap">
-            <span class="headline-line" id="heroLine2"></span>
-          </span>
-          <span class="headline-line-wrap">
-            <span class="headline-line accent" id="heroLine3"></span>
-          </span>
-        </div>
-        <p class="hero-sub" id="heroSub"></p>
-        <div class="hero-actions">
-          <a href="#contact" class="btn-primary" id="heroCta">
-            <span id="heroCtaText"></span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-          <div class="scroll-indicator">
-            <div class="scroll-line"></div>
-            <span id="scrollLabel"></span>
+        <div class="hero-text">
+          <p class="hero-eyebrow" id="heroEyebrow"></p>
+          <div class="hero-headline" aria-label="Hero headline">
+            <span class="headline-line-wrap">
+              <span class="headline-line" id="heroLine1"></span>
+            </span>
+            <span class="headline-line-wrap">
+              <span class="headline-line" id="heroLine2"></span>
+            </span>
+            <span class="headline-line-wrap">
+              <span class="headline-line accent" id="heroLine3"></span>
+            </span>
+          </div>
+          <p class="hero-sub" id="heroSub"></p>
+          <div class="hero-actions">
+            <a href="#contact" class="btn-primary" id="heroCta">
+              <span id="heroCtaText"></span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <div class="scroll-indicator">
+              <div class="scroll-line"></div>
+              <span id="scrollLabel"></span>
+            </div>
           </div>
         </div>
+        <div class="hero-wz" id="stage" aria-hidden="true"></div>
       </div>
     </div>
   </section>
@@ -2633,26 +2648,22 @@
       }
       buildMark();
 
-      /* ---- RESIZE ---- */
+      /* ---- RESIZE — fit the hero-wz container ---- */
       function wzResize() {
-        var w = innerWidth, h = innerHeight;
+        var w = stageEl.offsetWidth  || 400;
+        var h = stageEl.offsetHeight || 400;
         renderer.setSize(w, h, false);
         camera.aspect = w / h;
-        var z;
-        if (w / h < 1)        { camera.fov = 50; z = 10;  camera.position.set(0,   0,   z); }
-        else if (w / h < 1.4) { camera.fov = 42; z = 9;   camera.position.set(0.2, 0,   z); }
-        else                  { camera.fov = 36; z = 8.4;  camera.position.set(0.3, 0.1, z); }
+        var z = 8.4;
+        camera.fov = camera.aspect < 0.9 ? 46 : 38;
+        camera.position.set(0, 0, z);
         camera.userData.baseZ = z;
         camera.updateProjectionMatrix();
       }
-      addEventListener('resize', wzResize); wzResize();
+      addEventListener('resize', wzResize);
+      /* wait one frame so CSS has laid out the container */
+      requestAnimationFrame(wzResize);
 
-      /* ---- MOUSE PARALLAX ---- */
-      var mxT = 0, myT = 0, mx = 0, my = 0;
-      addEventListener('pointermove', function(e) {
-        mxT = (e.clientX / innerWidth  - 0.5);
-        myT = (e.clientY / innerHeight - 0.5);
-      });
 
       /* ---- TICK ---- */
       var clock = new THREE.Clock();
@@ -2664,23 +2675,16 @@
         var time = clock.elapsedTime;
         var spd  = TWEAKS.speed;
 
-        /* smooth mouse — slower follow for a calmer feel */
-        mx += (mxT - mx) * 0.04;
-        my += (myT - my) * 0.04;
-
-        /* slow, sine-based rotation — never snaps */
+        /* pure sine rotation — no mouse influence */
         var rot = TWEAKS.rotation;
-        group.rotation.y = Math.sin(time * spd * 0.45) * (0.55 * rot) + mx * 0.45;
-        group.rotation.x = Math.sin(time * spd * 0.30 + 1.0) * (0.22 * rot) - my * 0.25;
+        group.rotation.y = Math.sin(time * spd * 0.45) * (0.55 * rot);
+        group.rotation.x = Math.sin(time * spd * 0.30 + 1.0) * (0.22 * rot);
         group.rotation.z = Math.sin(time * spd * 0.22 + 2.0) * 0.04;
 
-        /* drawing cycle — longer = more breathing room */
-        var cycleDur = 9.0;
+        /* seamless draw loop — draws forward, restarts immediately at end */
+        var cycleDur = 7.0;
         var phase    = ((time * spd) % cycleDur) / cycleDur;
-        var visStart = 0, visEnd = 1;
-        if (phase < 0.45)      { visEnd   = phase / 0.45; }
-        else if (phase < 0.65) { visEnd   = 1; }
-        else                   { visStart = (phase - 0.65) / 0.35; }
+        var visStart = 0, visEnd = phase;
 
         function applyDrawRange(mesh, s, e) {
           if (!mesh || !mesh.visible) return;
