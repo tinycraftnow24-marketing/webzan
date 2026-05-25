@@ -2981,64 +2981,82 @@
     });
 
     /* ==========================================
-       DEVICE SHOWCASE — HORIZONTAL PIN SCROLL
+       DEVICE SHOWCASE — PIN SCROLL
     ========================================== */
     (function() {
+      var section = document.getElementById('projects');
+      if (!section) return;
+
       var isMobile = window.innerWidth < 768;
       if (isMobile) {
-        [0, 1, 2].forEach(function(i) {
-          gsap.from('#panel' + i, {
-            scrollTrigger: { trigger: '#panel' + i, start: 'top 80%' },
-            opacity: 0, y: 40, duration: 0.8, ease: 'power3.out'
+        ['#devItem0','#devItem1','#devItem2'].forEach(function(sel) {
+          gsap.from(sel, {
+            scrollTrigger: { trigger: sel, start: 'top 85%' },
+            opacity: 0, y: 30, duration: 0.7, ease: 'power3.out'
           });
         });
         return;
       }
 
-      var track   = document.getElementById('showcaseTrack');
-      var section = document.getElementById('projects');
-      var dots    = [
-        document.getElementById('spDot0'),
-        document.getElementById('spDot1'),
-        document.getElementById('spDot2')
-      ];
+      var SCALE_FOCUS = 2.2;
+      var OPACITY_DIM = 0.22;
 
-      gsap.set(['#devWrap0', '#devWrap1', '#devWrap2'], { rotateX: 28, rotateY: -12, scale: 0.82, opacity: 0 });
+      function getCenterOffset(el) {
+        var row    = document.getElementById('devicesRow').getBoundingClientRect();
+        var rect   = el.getBoundingClientRect();
+        var rowMid = row.left + row.width / 2;
+        var elMid  = rect.left + rect.width / 2;
+        return rowMid - elMid;
+      }
 
-      gsap.to(track, {
-        x: function() { return -(track.scrollWidth - window.innerWidth); },
-        ease: 'none',
+      var tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           pin: true,
           scrub: 1,
-          snap: {
-            snapTo: 1 / 2,
-            duration: { min: 0.3, max: 0.5 },
-            ease: 'power2.inOut'
-          },
-          end: function() { return '+=' + track.scrollWidth; },
-          onUpdate: function(self) {
-            var prog = self.progress;
-            var active = prog < 0.33 ? 0 : prog < 0.66 ? 1 : 2;
-            dots.forEach(function(d, i) {
-              if (d) d.classList.toggle('active', i === active);
-            });
-
-            var p0 = Math.min(1, prog / 0.2);
-            gsap.set('#devWrap0', { rotateX: 28 * (1 - p0), rotateY: -12 * (1 - p0), scale: 0.82 + 0.24 * p0, opacity: p0 });
-            gsap.set('#craftScroll', { y: -Math.max(0, (p0 - 0.5) / 0.5) * 25 + '%' });
-
-            var p1 = Math.min(1, Math.max(0, (prog - 0.30) / 0.25));
-            gsap.set('#devWrap1', { rotateX: 28 * (1 - p1), rotateY: -12 * (1 - p1), scale: 0.82 + 0.24 * p1, opacity: p1 });
-            gsap.set('#dentalScroll', { y: -Math.max(0, (p1 - 0.5) / 0.5) * 25 + '%' });
-
-            var p2 = Math.min(1, Math.max(0, (prog - 0.62) / 0.23));
-            gsap.set('#devWrap2', { rotateX: 28 * (1 - p2), rotateY: -12 * (1 - p2), scale: 0.82 + 0.24 * p2, opacity: p2 });
-            gsap.set('#restoScroll', { y: -Math.max(0, (p2 - 0.5) / 0.5) * 25 + '%' });
-          }
+          end: '+=300vh',
+          onRefresh: function() { tl.invalidate(); }
         }
       });
+
+      /* Phase 0–20 %: Eingang */
+      tl.from(['#devItem0','#devItem1','#devItem2'], {
+        opacity: 0, y: 40, stagger: 0.08, duration: 0.2
+      });
+
+      /* Phase 20–40 %: Gerät 0 (Tablet — Handwerk) */
+      tl.to('#devItem0', {
+            scale: SCALE_FOCUS,
+            x: function() { return getCenterOffset(document.getElementById('devItem0')); },
+            duration: 0.18, ease: 'power2.inOut'
+          }, 0.2)
+        .to(['#devItem1','#devItem2'], { opacity: OPACITY_DIM, duration: 0.12 }, 0.2)
+        .to('#devImg0', { y: '-40%', ease: 'none', duration: 0.18 }, 0.22)
+        .to('#devItem0', { scale: 1, x: 0, duration: 0.14, ease: 'power2.inOut' }, 0.38)
+        .to(['#devItem1','#devItem2'], { opacity: 1, duration: 0.1 }, 0.38);
+
+      /* Phase 40–60 %: Gerät 1 (Laptop — Zahnarzt) */
+      tl.to('#devItem1', { scale: SCALE_FOCUS, duration: 0.18, ease: 'power2.inOut' }, 0.4)
+        .to(['#devItem0','#devItem2'], { opacity: OPACITY_DIM, duration: 0.12 }, 0.4)
+        .to('#devImg1', { y: '-40%', ease: 'none', duration: 0.18 }, 0.42)
+        .to('#devItem1', { scale: 1, duration: 0.14, ease: 'power2.inOut' }, 0.58)
+        .to(['#devItem0','#devItem2'], { opacity: 1, duration: 0.1 }, 0.58);
+
+      /* Phase 60–80 %: Gerät 2 (Phone — Restaurant) */
+      tl.to('#devItem2', {
+            scale: SCALE_FOCUS,
+            x: function() { return getCenterOffset(document.getElementById('devItem2')); },
+            duration: 0.18, ease: 'power2.inOut'
+          }, 0.6)
+        .to(['#devItem0','#devItem1'], { opacity: OPACITY_DIM, duration: 0.12 }, 0.6)
+        .to('#devImg2', { y: '-40%', ease: 'none', duration: 0.18 }, 0.62)
+        .to('#devItem2', { scale: 1, x: 0, duration: 0.14, ease: 'power2.inOut' }, 0.78)
+        .to(['#devItem0','#devItem1'], { opacity: 1, duration: 0.1 }, 0.78);
+
+      /* Phase 80–100 %: Ausgang */
+      tl.to(['#devItem0','#devItem1','#devItem2'], {
+        opacity: 0, duration: 0.15
+      }, 0.85);
 
       gsap.to('#projectsLabel', {
         scrollTrigger: { trigger: section, start: 'top 80%' },
