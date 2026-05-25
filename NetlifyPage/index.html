@@ -1304,118 +1304,83 @@
     .consent-ok:hover { opacity: 0.85; }
 
     /* ============================================
-       DEVICE SHOWCASE — HORIZONTAL PIN SCROLL
+       DEVICE SHOWCASE — PIN SCROLL
     ============================================ */
-    .showcase { position: relative; overflow: hidden; }
+    .showcase { position: relative; }
     .showcase-header { padding: clamp(60px,8vw,100px) 0 48px; }
-    .showcase-track-outer { overflow: hidden; position: relative; }
-    .showcase-track { display: flex; will-change: transform; }
-    .showcase-panel {
-      min-width: 100vw;
-      height: 70vh;
-      min-height: 480px;
+
+    .devices-row {
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: clamp(24px, 4vw, 60px);
+      padding: 48px 0 80px;
       position: relative;
-      flex-direction: column;
-      gap: 20px;
-      perspective: 700px;
     }
-    .showcase-panel::before { content: ''; position: absolute; inset: 0; pointer-events: none; }
-    .panel-craft::before { background: radial-gradient(ellipse at 50% 50%, rgba(30,90,150,0.1) 0%, transparent 65%); }
-    .panel-dental::before { background: radial-gradient(ellipse at 50% 50%, rgba(44,74,110,0.08) 0%, transparent 65%); }
-    .panel-resto::before { background: radial-gradient(ellipse at 50% 50%, rgba(232,184,75,0.06) 0%, transparent 65%); }
-    .showcase-progress { display: flex; gap: 8px; margin-top: 12px; }
-    .sp-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border-sub); transition: background 0.3s, transform 0.3s; }
-    .sp-dot.active { background: var(--accent); transform: scale(1.3); }
-    .device-label { text-align: center; position: relative; z-index: 2; }
-    .device-industry { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text); }
-    .device-type { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
-    .device-wrap { position: relative; z-index: 2; transform-style: preserve-3d; will-change: transform; }
-    .dev-tablet { width: 220px; height: 290px; background: #0d0d10; border-radius: 18px; border: 2px solid #2a2a30; box-shadow: 0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05); overflow: hidden; position: relative; }
-    .dev-tablet-screen { position: absolute; inset: 8px; border-radius: 10px; overflow: hidden; }
+
+    .dev-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      transform-origin: center center;
+      will-change: transform, opacity;
+    }
+
+    .dev-shell--tablet {
+      width: 180px; height: 240px;
+      background: #0d0d10;
+      border-radius: 14px;
+      border: 2px solid #2a2a30;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+      overflow: hidden;
+      position: relative;
+    }
     .dev-laptop-wrap { display: flex; flex-direction: column; align-items: center; }
-    .dev-laptop { width: 380px; height: 230px; background: #141414; border-radius: 10px 10px 0 0; border: 2px solid #2a2a2a; border-bottom: none; box-shadow: 0 -8px 40px rgba(0,0,0,0.4); position: relative; overflow: hidden; }
-    .dev-laptop-bezel { position: absolute; inset: 6px; border-radius: 5px; overflow: hidden; }
+    .dev-laptop-body {
+      width: 300px; height: 188px;
+      background: #141414;
+      border-radius: 8px 8px 0 0;
+      border: 2px solid #2a2a2a;
+      border-bottom: none;
+      overflow: hidden;
+      position: relative;
+    }
     .dev-laptop-chin { width: 100%; height: 10px; background: #1a1a1a; border: 2px solid #222; border-top: none; border-radius: 0 0 3px 3px; }
-    .dev-laptop-foot { width: 80%; height: 6px; background: #131313; border-radius: 0 0 6px 6px; border: 1px solid #1e1e1e; border-top: none; }
-    .dev-phone { width: 130px; height: 260px; background: #0d0d10; border-radius: 26px; border: 2px solid #2a2a30; box-shadow: 0 32px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05); position: relative; overflow: hidden; }
-    .dev-phone-notch { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 40px; height: 6px; background: #1a1a1a; border-radius: 3px; z-index: 3; }
-    .dev-phone-screen { position: absolute; inset: 6px; border-radius: 20px; overflow: hidden; }
-    /* — Craft (Tablet, dark industrial) — */
-    .fsite-craft { position:absolute; inset:0; background:#0e1825; display:flex; flex-direction:column; overflow:hidden; }
-    .fc-nav { height:14px; background:#0d1722; border-bottom:1px solid rgba(255,255,255,0.07); flex-shrink:0; display:flex; align-items:center; padding:0 7px; gap:5px; }
-    .fc-nav-logo { width:6px; height:6px; border-radius:1px; background:#E8B84B; flex-shrink:0; }
-    .fc-nav-links { display:flex; gap:4px; margin-left:auto; }
-    .fc-nav-link { width:13px; height:2px; border-radius:1px; background:rgba(255,255,255,0.22); }
-    .fc-hero { flex:0 0 38%; background:linear-gradient(148deg,#1a2d4a 0%,#0d1520 100%); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end; padding:7px; gap:3px; }
-    .fc-hero::before { content:''; position:absolute; top:0; right:0; width:55%; height:100%; background:radial-gradient(ellipse at 75% 40%,rgba(30,90,150,0.28),transparent 65%); }
-    .fc-hero::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,#E8B84B 0%,transparent 60%); }
-    .fc-hero-badge { width:28px; height:2.5px; border-radius:1px; background:rgba(232,184,75,0.7); }
-    .fc-hero-h1 { width:76%; height:5px; border-radius:2px; background:rgba(255,255,255,0.88); }
-    .fc-hero-h2 { width:54%; height:5px; border-radius:2px; background:rgba(255,255,255,0.88); }
-    .fc-hero-sub { width:85%; height:2px; border-radius:1px; background:rgba(255,255,255,0.3); }
-    .fc-hero-btn { width:34px; height:8px; border-radius:3px; background:#E8B84B; margin-top:3px; }
-    .fc-body { flex:1; padding:7px; display:flex; flex-direction:column; gap:4px; overflow:hidden; }
-    .fc-section-label { width:24px; height:2px; border-radius:1px; background:rgba(232,184,75,0.5); }
-    .fc-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; }
-    .fc-card { background:rgba(30,90,150,0.1); border:1px solid rgba(30,90,150,0.18); border-radius:4px; padding:4px; display:flex; flex-direction:column; gap:2px; }
-    .fc-card-img { width:100%; height:14px; border-radius:2px; background:linear-gradient(135deg,rgba(30,90,150,0.35),rgba(14,24,37,0.5)); }
-    .fc-card-t { width:68%; height:2.5px; border-radius:1px; background:rgba(255,255,255,0.5); }
-    .fc-card-sub { width:48%; height:2px; border-radius:1px; background:rgba(255,255,255,0.18); }
-    .fc-footer-bar { margin-top:auto; height:9px; border-radius:3px; background:#E8B84B; opacity:0.75; }
+    .dev-laptop-foot { width: 75%; height: 6px; background: #131313; border-radius: 0 0 6px 6px; border: 1px solid #1e1e1e; border-top: none; }
+    .dev-shell--phone {
+      width: 110px; height: 222px;
+      background: #0d0d10;
+      border-radius: 22px;
+      border: 2px solid #2a2a30;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.55);
+      overflow: hidden;
+      position: relative;
+    }
+    .dev-phone-notch {
+      position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      width: 32px; height: 5px; background: #111; border-radius: 3px; z-index: 3;
+    }
 
-    /* — Dental (Laptop, clean professional) — */
-    .fsite-dental { position:absolute; inset:0; background:#f8f9fb; display:flex; flex-direction:column; overflow:hidden; }
-    .fd-nav { height:16px; background:#ffffff; border-bottom:1px solid #dce6f0; flex-shrink:0; display:flex; align-items:center; padding:0 8px; gap:5px; }
-    .fd-logo { width:22px; height:3.5px; background:#1e3d6e; border-radius:2px; }
-    .fd-links { display:flex; gap:5px; margin-left:auto; }
-    .fd-link { width:15px; height:2.5px; background:#b0bfce; border-radius:1.5px; }
-    .fd-nav-btn { width:20px; height:7px; border-radius:3px; background:#1e3d6e; flex-shrink:0; }
-    .fd-hero { flex:0 0 40%; display:flex; flex-shrink:0; }
-    .fd-hero-left { flex:0 0 58%; background:linear-gradient(135deg,#1e3d6e 0%,#2e5caa 100%); display:flex; flex-direction:column; justify-content:center; padding:8px; gap:3px; }
-    .fd-hero-right { flex:1; background:#ddeaf8; display:flex; align-items:center; justify-content:center; }
-    .fd-hero-img { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#2a5499,#4a84c8); border:3px solid rgba(255,255,255,0.55); }
-    .fd-h-eyebrow { width:22px; height:2px; border-radius:1px; background:rgba(232,184,75,0.85); }
-    .fd-h-big { height:5px; border-radius:2px; background:rgba(255,255,255,0.92); width:88%; }
-    .fd-h-big2 { height:5px; border-radius:2px; background:rgba(255,255,255,0.92); width:66%; }
-    .fd-h-sub { height:2px; border-radius:1px; background:rgba(255,255,255,0.38); width:90%; }
-    .fd-h-sub2 { height:2px; border-radius:1px; background:rgba(255,255,255,0.38); width:68%; }
-    .fd-h-cta { width:30px; height:7px; border-radius:3px; background:rgba(255,255,255,0.9); margin-top:3px; }
-    .fd-body { flex:1; padding:6px 8px; display:flex; flex-direction:column; gap:5px; overflow:hidden; }
-    .fd-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; }
-    .fd-service { background:#ffffff; border:1px solid #e0eaf4; border-radius:4px; padding:5px; display:flex; flex-direction:column; gap:3px; box-shadow:0 1px 3px rgba(0,0,0,0.05); }
-    .fd-svc-icon { width:11px; height:11px; border-radius:2px; background:#ddeaf8; border:1px solid #c0d8ee; }
-    .fd-svc-t { width:80%; height:2.5px; border-radius:1px; background:#1e3d6e; opacity:0.65; }
-    .fd-svc-sub { width:60%; height:2px; border-radius:1px; background:#b0bfce; }
-    .fd-testimonial { background:#f0f5fa; border-radius:4px; padding:5px; border-left:2px solid #2a5499; display:flex; flex-direction:column; gap:2px; }
-    .fd-test-line { height:2px; border-radius:1px; background:rgba(30,61,110,0.28); }
-    .fd-test-author { width:36px; height:2px; border-radius:1px; background:#2a5499; opacity:0.45; margin-top:2px; }
+    .dev-screen {
+      position: absolute; inset: 6px;
+      overflow: hidden;
+      border-radius: inherit;
+    }
+    .dev-laptop-body .dev-screen { inset: 5px; border-radius: 3px; }
+    .dev-screen img {
+      width: 100%;
+      height: auto;
+      display: block;
+      will-change: transform;
+    }
 
-    /* — Resto (Phone, dark elegant) — */
-    .fsite-resto { position:absolute; inset:0; background:#1a1208; display:flex; flex-direction:column; overflow:hidden; }
-    .fr-hero { flex:0 0 44%; background:linear-gradient(160deg,#0d0a05,#1a1208); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end; padding:7px; gap:3px; border-bottom:1px solid rgba(232,184,75,0.12); }
-    .fr-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 65% 35%,rgba(232,184,75,0.1),transparent 55%),radial-gradient(ellipse at 20% 80%,rgba(160,80,15,0.15),transparent 50%); }
-    .fr-hero-tag { width:26px; height:2px; border-radius:1px; background:rgba(232,184,75,0.62); }
-    .fr-hero-h1 { width:82%; height:5px; border-radius:2px; background:rgba(232,184,75,0.88); }
-    .fr-hero-h2 { width:60%; height:5px; border-radius:2px; background:rgba(232,184,75,0.88); }
-    .fr-hero-divider { width:18px; height:1px; background:rgba(232,184,75,0.38); }
-    .fr-hero-sub { width:92%; height:2px; border-radius:1px; background:rgba(245,240,232,0.25); }
-    .fr-hero-sub2 { width:70%; height:2px; border-radius:1px; background:rgba(245,240,232,0.25); }
-    .fr-hero-cta { width:36px; height:8px; border-radius:10px; border:1px solid rgba(232,184,75,0.55); background:transparent; margin-top:2px; }
-    .fr-section { flex:1; padding:7px; display:flex; flex-direction:column; gap:5px; overflow:hidden; }
-    .fr-section-label { width:28px; height:2px; border-radius:1px; background:rgba(232,184,75,0.42); }
-    .fr-dish { display:flex; gap:5px; align-items:center; }
-    .fr-dish-img { width:28px; height:20px; border-radius:3px; background:linear-gradient(135deg,rgba(232,184,75,0.16),rgba(160,70,15,0.22)); border:1px solid rgba(232,184,75,0.14); flex-shrink:0; }
-    .fr-dish-body { display:flex; flex-direction:column; gap:2px; flex:1; }
-    .fr-dish-name { width:72%; height:2.5px; border-radius:1px; background:rgba(245,240,232,0.6); }
-    .fr-dish-price { width:28%; height:2px; border-radius:1px; background:rgba(232,184,75,0.52); }
-    .fr-reserve-btn { margin-top:auto; height:10px; border-radius:4px; background:#E8B84B; opacity:0.82; }
+    .device-label { text-align: center; }
+    .device-industry { font-size: 1rem; font-weight: 800; letter-spacing: -0.02em; color: var(--text); }
+    .device-type { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
     @media (max-width: 767px) {
-      .showcase-track { flex-direction: column; transform: none !important; }
-      .showcase-panel { min-width: 100%; height: auto; padding: 48px 0; }
-      .dev-laptop { width: 280px; height: 168px; }
+      .devices-row { flex-direction: column; gap: 40px; padding: 32px 0 48px; }
     }
   </style>
 </head>
