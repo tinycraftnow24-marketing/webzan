@@ -6,6 +6,7 @@
   <title>WebZan — Websites, die bleiben.</title>
   <link rel="icon" type="image/png" href="assets/logo/favicon-32.png">
   <!-- Inter self-hosted — DSGVO-konform -->
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
@@ -382,13 +383,16 @@
       background: radial-gradient(circle, rgba(232, 184, 75, 0.06) 0%, transparent 70%);
       pointer-events: none;
     }
-    #constellationCanvas {
+    #stage {
       position: fixed;
       inset: 0;
-      width: 100%;
-      height: 100%;
       pointer-events: none;
       z-index: 0;
+    }
+    #stage canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
     }
 
     /* Ensure all page sections stack above the fixed canvas */
@@ -1404,8 +1408,8 @@
 </head>
 <body>
 
-  <!-- Global constellation canvas — fixed background, both themes -->
-  <canvas id="constellationCanvas" aria-hidden="true"></canvas>
+  <!-- Three.js wZ mark — fixed background -->
+  <div id="stage" aria-hidden="true"></div>
 
   <!-- Progress Bar -->
   <div class="progress-bar" id="progressBar"></div>
@@ -2104,6 +2108,7 @@
       themeBtn.textContent = t === 'dark' ? '☀' : '🌙';
       overlayThemeBtn.textContent = t === 'dark' ? '☀' : '🌙';
       localStorage.setItem('theme', t);
+      if (typeof wzApplyTheme === 'function') wzApplyTheme(t);
     }
 
     var savedTheme = localStorage.getItem('theme') || 'light';
@@ -2443,116 +2448,332 @@
     gsap.registerPlugin(ScrollTrigger);
 
     /* ==========================================
-       FLOATING CONSTELLATIONS CANVAS (full page, both themes)
+       THREE.JS wZ MARK — full-page background
     ========================================== */
     (function() {
-      var canvas = document.getElementById('constellationCanvas');
-      if (!canvas) return;
-      var ctx = canvas.getContext('2d');
-      var nodes = [];
-      var vw = window.innerWidth;
-      var NODE_COUNT = vw < 480 ? 20 : vw < 768 ? 28 : 56;
-      var MAX_DIST = 150;
-      var startTime = Date.now();
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (typeof THREE === 'undefined') return;
 
-      function resize() {
-        canvas.width  = window.innerWidth;
-        canvas.height = window.innerHeight;
+      var TWEAKS = {
+        theme:     localStorage.getItem('theme') || 'light',
+        mode:      'flow',
+        speed:     0.22,
+        thickness: 0.075,
+        glow:      0.55,
+        particles: 55,
+        trail:     2,
+        rotation:  0.42
+      };
+
+      /* ---- BUILD wZ STROKES ---- */
+      function buildStrokes() {
+        var wPts = [
+          new THREE.Vector3(-2.70,  0.78, 0),
+          new THREE.Vector3(-2.05, -0.95, 0),
+          new THREE.Vector3(-1.30,  0.55, 0),
+          new THREE.Vector3(-0.55, -0.95, 0),
+          new THREE.Vector3( 0.10,  0.40, 0)
+        ];
+        var wCurve = new THREE.CatmullRomCurve3(wPts, false, 'catmullrom', 0.35);
+        var Zl = 0.45, Zr = 2.65, Zt = 1.05, Zb = -1.05;
+        var zPath = new THREE.CurvePath();
+        zPath.add(new THREE.LineCurve3(new THREE.Vector3(Zl, Zt, 0), new THREE.Vector3(Zr, Zt, 0)));
+        zPath.add(new THREE.LineCurve3(new THREE.Vector3(Zr, Zt, 0), new THREE.Vector3(Zl, Zb, 0)));
+        zPath.add(new THREE.LineCurve3(new THREE.Vector3(Zl, Zb, 0), new THREE.Vector3(Zr, Zb, 0)));
+        return [
+          { name:'w', curve: wCurve, len: wCurve.getLength(), segs: 400 },
+          { name:'z', curve: zPath,  len: zPath.getLength(),  segs: 240 }
+        ];
       }
-      resize();
-      window.addEventListener('resize', resize, { passive: true });
+      var strokes = buildStrokes();
+      var totalLen = strokes.reduce(function(s, x) { return s + x.len; }, 0);
+      strokes.reduce(function(acc, s) {
+        s.gStart = acc / totalLen;
+        s.gEnd   = (acc + s.len) / totalLen;
+        return acc + s.len;
+      }, 0);
 
-      for (var i = 0; i < NODE_COUNT; i++) {
-        nodes.push({
-          x:        Math.random() * canvas.width,
-          y:        Math.random() * canvas.height,
-          vx:       (Math.random() - 0.5) * 0.35,
-          vy:       (Math.random() - 0.5) * 0.35,
-          r:        Math.random() * 1.0 + 0.4,
-          lr:       Math.random() * 9 + 5,
-          rot:      Math.random() * Math.PI * 2,
-          rotSpeed: (Math.random() * 0.012 + 0.004) * (Math.random() < 0.5 ? 1 : -1),
-          phase:    Math.random() * Math.PI * 2
+      /* ---- SCENE ---- */
+      var stageEl = document.getElementById('stage');
+      var scene   = new THREE.Scene();
+      var camera  = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
+      camera.position.set(0.3, 0, 8.6);
+
+      var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      stageEl.appendChild(renderer.domElement);
+
+      var group = new THREE.Group();
+      scene.add(group);
+
+      var amb  = new THREE.AmbientLight(0xffffff, 0.45);
+      scene.add(amb);
+      var key  = new THREE.PointLight(0xffd58a, 1.6, 30);
+      key.position.set(3, 3, 5); scene.add(key);
+      var rim  = new THREE.PointLight(0xb88040, 0.9, 30);
+      rim.position.set(-5, -2, 3); scene.add(rim);
+      var travel = new THREE.PointLight(0xffe0a0, 1.4, 4.5);
+      scene.add(travel);
+
+      /* ---- PALETTES ---- */
+      function palette() {
+        var dark = TWEAKS.theme === 'dark';
+        return {
+          primary:  new THREE.Color(dark ? '#F0CC85' : '#B8842F'),
+          deep:     new THREE.Color(dark ? '#8a5a20' : '#7a4a14'),
+          glow:     new THREE.Color(dark ? '#FFD884' : '#E6A845'),
+          particle: new THREE.Color(dark ? '#FFE6B0' : '#9a6a22')
+        };
+      }
+
+      var parts = [], particles = null, strokeBundles = [];
+
+      function disposeAll() {
+        parts.forEach(function(p) {
+          if (p.geometry) p.geometry.dispose();
+          if (p.material) {
+            if (Array.isArray(p.material)) p.material.forEach(function(m) { m.dispose(); });
+            else p.material.dispose();
+          }
+          group.remove(p);
+        });
+        parts = []; strokeBundles = []; particles = null;
+      }
+
+      function buildStrokeBundle(stroke) {
+        var pal   = palette();
+        var thick = TWEAKS.thickness;
+        var bundle = { stroke: stroke, ghosts: [] };
+
+        var mainGeo = new THREE.TubeGeometry(stroke.curve, stroke.segs, thick, 18, false);
+        var mainMat = new THREE.MeshStandardMaterial({
+          color: pal.primary, roughness: 0.30, metalness: 0.35,
+          emissive: pal.deep, emissiveIntensity: 0.35 * TWEAKS.glow
+        });
+        bundle.main = new THREE.Mesh(mainGeo, mainMat);
+        group.add(bundle.main); parts.push(bundle.main);
+
+        var haloGeo = new THREE.TubeGeometry(stroke.curve, Math.max(180, stroke.segs / 2), thick * 2.6, 14, false);
+        var haloMat = new THREE.MeshBasicMaterial({
+          color: pal.glow, transparent: true,
+          opacity: 0.10 * TWEAKS.glow,
+          blending: THREE.AdditiveBlending, depthWrite: false
+        });
+        bundle.halo = new THREE.Mesh(haloGeo, haloMat);
+        group.add(bundle.halo); parts.push(bundle.halo);
+
+        var N = Math.max(0, Math.round(TWEAKS.trail));
+        for (var i = 1; i <= N; i++) {
+          var t   = i / (N + 1);
+          var r   = thick * (1 - t * 0.45);
+          var gGeo = new THREE.TubeGeometry(stroke.curve, Math.max(180, stroke.segs / 2), r, 12, false);
+          var gMat = new THREE.MeshStandardMaterial({
+            color: pal.primary.clone().lerp(pal.deep, 0.3 + t * 0.5),
+            roughness: 0.5, metalness: 0.2,
+            transparent: true, opacity: 0.55 * (1 - t * 0.6),
+            emissive: pal.deep, emissiveIntensity: 0.2 * (1 - t) * TWEAKS.glow
+          });
+          var m = new THREE.Mesh(gGeo, gMat);
+          m.position.z = -i * 0.18;
+          group.add(m); parts.push(m); bundle.ghosts.push(m);
+        }
+        return bundle;
+      }
+
+      function buildParticles() {
+        var Pcount = Math.max(0, Math.round(TWEAKS.particles));
+        if (Pcount === 0) return null;
+        var pal   = palette();
+        var thick = TWEAKS.thickness;
+        var pGeo  = new THREE.BufferGeometry();
+        var positions  = new Float32Array(Pcount * 3);
+        var seeds      = new Float32Array(Pcount);
+        var radial     = new Float32Array(Pcount * 2);
+        var strokeIdx  = new Uint8Array(Pcount);
+        for (var i = 0; i < Pcount; i++) {
+          seeds[i] = Math.random();
+          var ang = Math.random() * Math.PI * 2;
+          var rr  = (Math.random() * 0.6 + 0.2) * thick * 5;
+          radial[i * 2]     = Math.cos(ang) * rr;
+          radial[i * 2 + 1] = Math.sin(ang) * rr;
+          strokeIdx[i] = (Math.random() < strokes[0].len / totalLen) ? 0 : 1;
+        }
+        pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        pGeo.userData = { seeds: seeds, radial: radial, strokeIdx: strokeIdx };
+
+        var c   = document.createElement('canvas'); c.width = c.height = 64;
+        var ctx = c.getContext('2d');
+        var g   = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        g.addColorStop(0,    'rgba(255,232,170,1)');
+        g.addColorStop(0.35, 'rgba(255,200,120,.7)');
+        g.addColorStop(1,    'rgba(255,160,80,0)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, 64, 64);
+        var tex = new THREE.CanvasTexture(c);
+        tex.colorSpace = THREE.SRGBColorSpace;
+
+        var pMat = new THREE.PointsMaterial({
+          size: thick * 0.9, map: tex, color: pal.particle,
+          transparent: true, opacity: 0.85,
+          blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true
+        });
+        var pts = new THREE.Points(pGeo, pMat);
+        group.add(pts); parts.push(pts);
+        return pts;
+      }
+
+      function buildMark() {
+        disposeAll();
+        strokeBundles = strokes.map(buildStrokeBundle);
+        particles = buildParticles();
+        /* flow mode: keep only 1 ghost per stroke */
+        strokeBundles.forEach(function(b) {
+          b.ghosts.forEach(function(g, i) { g.visible = i < 1; });
         });
       }
+      buildMark();
 
-      function draw() {
-        var t = (Date.now() - startTime) * 0.001;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      /* ---- RESIZE ---- */
+      function wzResize() {
+        var w = innerWidth, h = innerHeight;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        var z;
+        if (w / h < 1)        { camera.fov = 50; z = 10;  camera.position.set(0,   0,   z); }
+        else if (w / h < 1.4) { camera.fov = 42; z = 9;   camera.position.set(0.2, 0,   z); }
+        else                  { camera.fov = 36; z = 8.4;  camera.position.set(0.3, 0.1, z); }
+        camera.userData.baseZ = z;
+        camera.updateProjectionMatrix();
+      }
+      addEventListener('resize', wzResize); wzResize();
 
-        var isDark    = html.getAttribute('data-theme') !== 'light';
-        var nodeRgb   = isDark ? '232,184,75' : '140,95,15';
-        var lineAlpha = isDark ? 0.22 : 0.22;
-        var lineWidth = isDark ? 1.4 : 1.6;
+      /* ---- MOUSE PARALLAX ---- */
+      var mxT = 0, myT = 0, mx = 0, my = 0;
+      addEventListener('pointermove', function(e) {
+        mxT = (e.clientX / innerWidth  - 0.5);
+        myT = (e.clientY / innerHeight - 0.5);
+      });
 
-        nodes.forEach(function(n) {
-          n.x += n.vx;
-          n.y += n.vy;
-          if (n.x < 0 || n.x > canvas.width)  n.vx *= -1;
-          if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
-          n.rot += n.rotSpeed;
+      /* ---- TICK ---- */
+      var clock = new THREE.Clock();
+      var tmp = new THREE.Vector3(), tmpT = new THREE.Vector3();
+      var tmpN = new THREE.Vector3(), tmpB = new THREE.Vector3();
+
+      function tick() {
+        var dt   = clock.getDelta();
+        var time = clock.elapsedTime;
+        var spd  = TWEAKS.speed;
+
+        /* smooth mouse — slower follow for a calmer feel */
+        mx += (mxT - mx) * 0.04;
+        my += (myT - my) * 0.04;
+
+        /* slow, sine-based rotation — never snaps */
+        var rot = TWEAKS.rotation;
+        group.rotation.y = Math.sin(time * spd * 0.45) * (0.55 * rot) + mx * 0.45;
+        group.rotation.x = Math.sin(time * spd * 0.30 + 1.0) * (0.22 * rot) - my * 0.25;
+        group.rotation.z = Math.sin(time * spd * 0.22 + 2.0) * 0.04;
+
+        /* drawing cycle — longer = more breathing room */
+        var cycleDur = 9.0;
+        var phase    = ((time * spd) % cycleDur) / cycleDur;
+        var visStart = 0, visEnd = 1;
+        if (phase < 0.45)      { visEnd   = phase / 0.45; }
+        else if (phase < 0.65) { visEnd   = 1; }
+        else                   { visStart = (phase - 0.65) / 0.35; }
+
+        function applyDrawRange(mesh, s, e) {
+          if (!mesh || !mesh.visible) return;
+          var idx = mesh.geometry.index;
+          if (!idx) return;
+          var total = idx.count;
+          var a = Math.floor(s * total), b = Math.floor(e * total);
+          mesh.geometry.setDrawRange(a, Math.max(0, b - a));
+        }
+        function localRange(stroke, gs, ge) {
+          var span = stroke.gEnd - stroke.gStart;
+          var s = Math.max(0, Math.min(1, (gs - stroke.gStart) / span));
+          var e = Math.max(0, Math.min(1, (ge - stroke.gStart) / span));
+          return [s, e];
+        }
+        strokeBundles.forEach(function(b) {
+          var lr = localRange(b.stroke, visStart, visEnd);
+          applyDrawRange(b.main, lr[0], lr[1]);
+          applyDrawRange(b.halo, Math.max(0, lr[0] - 0.02), Math.min(1, lr[1] + 0.02));
+          b.ghosts.forEach(function(g, i) {
+            var lag = (i + 1) * 0.04;
+            applyDrawRange(g, Math.max(0, lr[0] - lag), Math.max(0, lr[1] - lag));
+          });
         });
 
-        // Curved connecting lines
-        for (var i = 0; i < nodes.length; i++) {
-          for (var j = i + 1; j < nodes.length; j++) {
-            var dx = nodes[i].x - nodes[j].x;
-            var dy = nodes[i].y - nodes[j].y;
-            var d  = Math.sqrt(dx * dx + dy * dy);
-            if (d < MAX_DIST) {
-              var ratio  = 1 - d / MAX_DIST;
-              var px     = -dy / d;
-              var py     =  dx / d;
-              var amp    = d * 0.14;
-              var phase  = nodes[i].phase + nodes[j].phase;
-              var offset = Math.sin(t * 0.6 + phase) * amp * ratio;
-              var mx = (nodes[i].x + nodes[j].x) / 2 + px * offset;
-              var my = (nodes[i].y + nodes[j].y) / 2 + py * offset;
-              ctx.beginPath();
-              ctx.moveTo(nodes[i].x, nodes[i].y);
-              ctx.quadraticCurveTo(mx, my, nodes[j].x, nodes[j].y);
-              ctx.strokeStyle = 'rgba(' + nodeRgb + ',' + (ratio * lineAlpha) + ')';
-              ctx.lineWidth   = lineWidth;
-              ctx.stroke();
+        /* traveling light */
+        var head = visEnd > 0.001 ? Math.min(0.9999, visEnd) : 0;
+        if (head > 0) {
+          var active = strokeBundles[strokeBundles.length - 1];
+          for (var si = 0; si < strokeBundles.length; si++) {
+            if (head >= strokeBundles[si].stroke.gStart && head <= strokeBundles[si].stroke.gEnd) {
+              active = strokeBundles[si]; break;
             }
           }
+          var localT = (head - active.stroke.gStart) / (active.stroke.gEnd - active.stroke.gStart);
+          active.stroke.curve.getPointAt(Math.max(0, Math.min(1, localT)), tmp);
+          tmp.applyMatrix4(group.matrixWorld);
+          travel.position.copy(tmp);
+          travel.intensity = (phase < 0.45 ? 1.4 : phase < 0.65 ? 0.9 : 0.2) * TWEAKS.glow;
+        } else {
+          travel.intensity = 0;
         }
 
-        // Dark mode: small filled dots
-        if (isDark) {
-          nodes.forEach(function(n) {
-            ctx.beginPath();
-            ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(232,184,75,0.45)';
-            ctx.fill();
-          });
+        /* particles */
+        if (particles) {
+          var pos = particles.geometry.attributes.position.array;
+          var ud  = particles.geometry.userData;
+          var count = ud.seeds.length;
+          var flowSpeed = 0.07 * spd;
+          for (var i = 0; i < count; i++) {
+            var stroke = strokes[ud.strokeIdx[i]];
+            var u  = (ud.seeds[i] + time * flowSpeed) % 1;
+            var span2 = stroke.gEnd - stroke.gStart;
+            var ls = Math.max(0, Math.min(1, (visStart - stroke.gStart) / span2));
+            var le = Math.max(0, Math.min(1, (visEnd   - stroke.gStart) / span2));
+            if (u < ls - 0.02 || u > le + 0.02) {
+              pos[i*3] = 9999; pos[i*3+1] = 9999; pos[i*3+2] = 9999; continue;
+            }
+            stroke.curve.getPointAt(u, tmpT);
+            stroke.curve.getTangentAt(u, tmpN);
+            tmpB.set(0, 0, 1).cross(tmpN).normalize();
+            tmpN.copy(tmpB).cross(stroke.curve.getTangentAt(u)).normalize();
+            pos[i*3]   = tmpT.x + tmpB.x * ud.radial[i*2]   + tmpN.x * ud.radial[i*2+1];
+            pos[i*3+1] = tmpT.y + tmpB.y * ud.radial[i*2]   + tmpN.y * ud.radial[i*2+1];
+            pos[i*3+2] = tmpT.z + tmpB.z * ud.radial[i*2]   + tmpN.z * ud.radial[i*2+1];
+          }
+          particles.geometry.attributes.position.needsUpdate = true;
+          particles.material.opacity = 0.7 + Math.sin(time * 1.6) * 0.15;
         }
 
-        // Light mode: large spinning partial-arc rings — fade out toward center
-        if (!isDark) {
-          var cx = canvas.width / 2;
-          var cy = canvas.height / 2;
-          var diag = Math.sqrt(cx * cx + cy * cy);
-          var clearFraction = canvas.width < 768 ? 0.16 : 0.28; // smaller zone on mobile
-          ctx.lineWidth = 1.2;
-          nodes.forEach(function(n) {
-            var ddx = n.x - cx, ddy = n.y - cy;
-            var dist = Math.sqrt(ddx * ddx + ddy * ddy) / diag; // 0=center, ~1=corner
-            if (dist < clearFraction) return;
-            var alpha  = Math.min(0.38, 0.10 + dist * 0.32);
-            var radius = n.lr * (0.55 + dist * 0.45);
-            ctx.beginPath();
-            ctx.arc(n.x, n.y, radius, n.rot, n.rot + Math.PI * 1.55);
-            ctx.strokeStyle = 'rgba(140,95,15,' + alpha.toFixed(2) + ')';
-            ctx.stroke();
-          });
+        /* gentle camera breathing */
+        if (camera.userData.baseZ != null) {
+          camera.position.z = camera.userData.baseZ + Math.sin(time * 0.22) * 0.05;
         }
 
-        requestAnimationFrame(draw);
+        renderer.render(scene, camera);
+        requestAnimationFrame(tick);
       }
+      tick();
 
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      draw();
+      /* ---- THEME HOOK ---- */
+      window.wzApplyTheme = function(theme) {
+        TWEAKS.theme = theme;
+        var dark = theme === 'dark';
+        amb.intensity    = dark ? 0.45 : 0.65;
+        key.color.set(dark ? 0xffd58a : 0xffcf88); key.intensity = dark ? 1.6 : 1.0;
+        rim.color.set(dark ? 0xb88040 : 0x8a5a20); rim.intensity = dark ? 0.9 : 0.7;
+        travel.color.set(dark ? 0xffe0a0 : 0xffc070);
+        buildMark();
+      };
+      /* init with current page theme */
+      wzApplyTheme(localStorage.getItem('theme') || 'light');
+
     }());
 
     /* ==========================================
