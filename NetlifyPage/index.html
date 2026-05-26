@@ -1375,7 +1375,9 @@
       width: 100%;
       height: auto;
       display: block;
+      transform: translateY(0);
       will-change: transform;
+      vertical-align: top;
     }
 
     .device-label { text-align: center; }
@@ -3012,6 +3014,8 @@
         return rowMid - elMid;
       }
 
+      gsap.set(['#devImg0','#devImg1','#devImg2'], { y: 0 });
+
       var tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -3022,44 +3026,39 @@
         }
       });
 
-      /* Phase 0–20 %: Eingang */
+      /* Phase 0–20%: Eingang */
       tl.from(['#devItem0','#devItem1','#devItem2'], {
         opacity: 0, y: 40, stagger: 0.08, duration: 0.2
       });
 
-      /* Phase 20–40 %: Gerät 0 (Tablet — Handwerk) */
+      /* Phase 20–40%: Gerät 0 (Tablet — Handwerk) */
       tl.to('#devItem0', {
             scale: SCALE_FOCUS,
             x: function() { return getCenterOffset(document.getElementById('devItem0')); },
             duration: 0.18, ease: 'power2.inOut'
           }, 0.2)
         .to(['#devItem1','#devItem2'], { opacity: OPACITY_DIM, duration: 0.12 }, 0.2)
-        .to('#devImg0', { y: '-40%', ease: 'none', duration: 0.18 }, 0.22)
-        .to('#devItem0', { scale: 1, x: 0, duration: 0.14, ease: 'power2.inOut' }, 0.38)
-        .to(['#devItem1','#devItem2'], { opacity: 1, duration: 0.1 }, 0.38);
+        .to('#devImg0', { y: '-35%', ease: 'none', duration: 0.18 }, 0.22)
+        .to('#devItem0', { scale: 1, x: 0, duration: 0.12, ease: 'power2.inOut' }, 0.38)
+        .to(['#devItem1','#devItem2'], { opacity: 1, duration: 0.03 }, 0.38);
 
-      /* Phase 40–60 %: Gerät 1 (Laptop — Zahnarzt) */
-      tl.to('#devItem1', { scale: SCALE_FOCUS, duration: 0.18, ease: 'power2.inOut' }, 0.4)
-        .to(['#devItem0','#devItem2'], { opacity: OPACITY_DIM, duration: 0.12 }, 0.4)
-        .to('#devImg1', { y: '-40%', ease: 'none', duration: 0.18 }, 0.42)
-        .to('#devItem1', { scale: 1, duration: 0.14, ease: 'power2.inOut' }, 0.58)
-        .to(['#devItem0','#devItem2'], { opacity: 1, duration: 0.1 }, 0.58);
+      /* Phase 42–60%: Gerät 1 (Laptop — Zahnarzt) */
+      tl.to('#devItem1', { scale: SCALE_FOCUS, duration: 0.18, ease: 'power2.inOut' }, 0.42)
+        .to(['#devItem0','#devItem2'], { opacity: OPACITY_DIM, duration: 0.12 }, 0.42)
+        .to('#devImg1', { y: '-35%', ease: 'none', duration: 0.18 }, 0.44)
+        .to('#devItem1', { scale: 1, duration: 0.12, ease: 'power2.inOut' }, 0.60)
+        .to(['#devItem0','#devItem2'], { opacity: 1, duration: 0.03 }, 0.60);
 
-      /* Phase 60–80 %: Gerät 2 (Phone — Restaurant) */
+      /* Phase 64–82%: Gerät 2 (Phone — Restaurant) */
       tl.to('#devItem2', {
             scale: SCALE_FOCUS,
             x: function() { return getCenterOffset(document.getElementById('devItem2')); },
             duration: 0.18, ease: 'power2.inOut'
-          }, 0.6)
-        .to(['#devItem0','#devItem1'], { opacity: OPACITY_DIM, duration: 0.12 }, 0.6)
-        .to('#devImg2', { y: '-40%', ease: 'none', duration: 0.18 }, 0.62)
-        .to('#devItem2', { scale: 1, x: 0, duration: 0.14, ease: 'power2.inOut' }, 0.78)
-        .to(['#devItem0','#devItem1'], { opacity: 1, duration: 0.1 }, 0.78);
-
-      /* Phase 80–100 %: Ausgang */
-      tl.to(['#devItem0','#devItem1','#devItem2'], {
-        opacity: 0, duration: 0.15
-      }, 0.85);
+          }, 0.64)
+        .to(['#devItem0','#devItem1'], { opacity: OPACITY_DIM, duration: 0.12 }, 0.64)
+        .to('#devImg2', { y: '-35%', ease: 'none', duration: 0.18 }, 0.66)
+        .to('#devItem2', { scale: 1, x: 0, duration: 0.12, ease: 'power2.inOut' }, 0.82)
+        .to(['#devItem0','#devItem1'], { opacity: 1, duration: 0.03 }, 0.82);
 
       gsap.to('#projectsLabel', {
         scrollTrigger: { trigger: section, start: 'top 80%' },
